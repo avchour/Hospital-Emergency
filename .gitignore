@@ -1,0 +1,10 @@
+# Build output
+pe.exe
+*.exe
+*.out
+*.o
+*.obj
+*.pdb
+
+# Build directories
+build/
