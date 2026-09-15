@@ -5,6 +5,8 @@
 PatientManager::PatientManager()
 {
     head = nullptr;
+    tail = nullptr;
+    count = 0;
 }
 
 PatientManager::~PatientManager()
@@ -17,15 +19,17 @@ PatientManager::~PatientManager()
 
         current = current->next;
 
-        delete temp->patient;
         delete temp;
     }
 
     head = nullptr;
+    tail = nullptr;
+    count = 0;
 }
 
-bool PatientManager::checkEmpty (){
-    return head== nullptr;
+bool PatientManager::checkEmpty()
+{
+    return head == nullptr;
 }
 
 void PatientManager::addPatient(Patient *patient)
@@ -35,11 +39,10 @@ void PatientManager::addPatient(Patient *patient)
     patientNode->patient = patient;
     patientNode->next = nullptr;
 
-    if (checkEmpty == nullptr)
+    if (checkEmpty())
     {
         head = patientNode;
         tail = patientNode;
-        std::cout << "First Node Added.\n";
         count++;
         return;
     }
@@ -77,4 +80,3 @@ Patient *PatientManager::findPatient(int id)
     }
     return nullptr;
 };
-
