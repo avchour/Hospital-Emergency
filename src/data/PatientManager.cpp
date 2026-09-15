@@ -2,10 +2,7 @@
 
 #include <iostream>
 
-PatientManager::PatientManager()
-{
-    head = nullptr;
-}
+PatientManager::PatientManager() {}
 
 PatientManager::~PatientManager()
 {
@@ -14,40 +11,44 @@ PatientManager::~PatientManager()
     while (current != nullptr)
     {
         PatientNode *temp = current;
-
         current = current->next;
-
-        delete temp->patient;
+       // delete temp->patient;
         delete temp;
     }
 
     head = nullptr;
+    tail = nullptr;
+    count = 0;
 }
 
-bool PatientManager::checkEmpty (){
-    return head== nullptr;
+bool PatientManager::checkEmpty()
+{
+    return head == nullptr;
 }
 
 void PatientManager::addPatient(Patient *patient)
 {
+
+    if (patient == nullptr)
+        return;
+
     PatientNode *patientNode = new PatientNode;
 
     patientNode->patient = patient;
     patientNode->next = nullptr;
 
-    if (checkEmpty == nullptr)
+    if (checkEmpty())
     {
         head = patientNode;
         tail = patientNode;
-        std::cout << "First Node Added.\n";
-        count++;
-        return;
     }
-
-    tail->next = patientNode;
-    tail = patientNode;
+    else
+    {
+        tail->next = patientNode;
+        tail = patientNode;
+    }
     count++;
-};
+}
 
 void PatientManager::displayPatient()
 {
@@ -64,7 +65,7 @@ int PatientManager::getPatientCount()
     return count;
 }
 
-Patient *PatientManager::findPatient(int id)
+Patient *PatientManager::findPatientInfo(int id)
 {
     PatientNode *curPatient = head;
 
@@ -74,7 +75,46 @@ Patient *PatientManager::findPatient(int id)
         {
             return curPatient->patient;
         }
+        curPatient = curPatient->next;
     }
     return nullptr;
-};
+}
 
+bool PatientManager::removePatient(int id)
+{
+    if (checkEmpty())
+        return false;
+
+    PatientNode *cur = head;
+    PatientNode *prev = nullptr;
+
+    while (cur != nullptr)
+    {
+        if (cur->patient->id == id)
+        {
+            if (cur == head)
+            {
+                head = cur->next;
+                if (head == nullptr)
+                    tail = nullptr;
+            }
+            else if (cur == tail)
+            {
+                tail = prev;
+                tail->next = nullptr;
+            }
+            else
+            {
+                prev->next = cur->next;
+            }
+
+            delete cur;
+            count--;
+            return true;
+        }
+        prev = cur;
+        cur = cur->next;
+    }
+
+    return false;
+}

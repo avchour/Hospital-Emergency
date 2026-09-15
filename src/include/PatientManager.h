@@ -1,3 +1,6 @@
+#ifndef PATIENTMANAGER_H
+#define PATIENTMANAGER_H
+
 #include "../data/Patient.h"
 
 class PatientManager
@@ -14,12 +17,14 @@ private:
     int count = 0;
 
 public:
-    PatientManager(/* args */);
+    PatientManager();
     ~PatientManager();
-    bool checkEmpty ();
+    bool checkEmpty();
     void addPatient(Patient *patient);
     int getPatientCount();
     void displayPatient();
-    Patient *findPatient(int id);
-    
+    Patient *findPatientInfo(int id);
+    bool removePatient(int id);
 };
+
+#endif

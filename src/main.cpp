@@ -1,7 +1,6 @@
 #include "./data/Patient.h"
 #include "./include/PatientManager.h"
 
-#include <string>
 #include <iostream>
 
 int main()
@@ -28,14 +27,26 @@ int main()
         "09:30",
         "Waiting"};
 
+    Patient patient3 = {
+        1003,
+        "Sok Dara",
+        22,
+        "Male",
+        "Severe chest pain and difficulty breathing",
+        1,
+        "09:30",
+        "Waiting"};
+
     patientManager.addPatient(&patient1);
     patientManager.addPatient(&patient2);
+    patientManager.addPatient(&patient3);
 
-    std::string sym = patientManager.findPatient(patient1.id)->symptoms;
+    std::string sym = patientManager.findPatientInfo(patient1.id)->symptoms;
 
+    patientManager.removePatient(1003);
+
+    std::cout << patientManager.getPatientCount()  <<std::endl;
     patientManager.displayPatient();
-
-    std::cout << sym << std::endl;
 
     return 0;
 }
