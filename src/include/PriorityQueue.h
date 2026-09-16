@@ -16,8 +16,10 @@ private:
     int count = 0;
 
 public:
-    void addPatient(Patient *patient);
-    void treatNextPatient();
+    PriorityQueue();
+    ~PriorityQueue();
+    void enqueuePatient(Patient *patient);
+    Patient *treatNextPatient();
     void displayQueue();
     bool checkEmpty();
 };

@@ -13,7 +13,7 @@ int main()
         22,
         "Male",
         "Severe chest pain and difficulty breathing",
-        1,
+        "Crictical",
         "09:30",
         "Waiting"};
 
@@ -23,7 +23,7 @@ int main()
         22,
         "Female",
         "Severe chest pain and difficulty breathing",
-        1,
+        "Urgent",
         "09:30",
         "Waiting"};
 
@@ -33,7 +33,7 @@ int main()
         22,
         "Male",
         "Severe chest pain and difficulty breathing",
-        1,
+        "Normal",
         "09:30",
         "Waiting"};
 

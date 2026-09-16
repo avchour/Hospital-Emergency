@@ -2,7 +2,12 @@
 #define PATIENT_H
 
 #include <string>
-
+enum Priority
+{
+    CRITICAL = 1,
+    URGENT = 2,
+    NORMAL = 3
+};
 struct Patient
 {
     int id;
@@ -10,7 +15,7 @@ struct Patient
     int age;
     std::string gender;
     std::string symptoms;
-    int priority;
+    Priority priority;
     std::string arrivalTime;
     std::string status;
 };
