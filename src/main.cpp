@@ -1,52 +1,48 @@
 #include "./data/Patient.h"
 #include "./include/PatientManager.h"
 
+#include <string>
 #include <iostream>
 
 int main()
 {
     PatientManager patientManager;
 
-    Patient patient1 = {
-        1001,
-        "Sok Dara",
-        22,
-        "Male",
-        "Severe chest pain and difficulty breathing",
-        "Crictical",
-        "09:30",
-        "Waiting"};
+    std::cout << "Initial checkEmpty(): " << (patientManager.checkEmpty() ? "True" : "False") << "\n\n";
 
-    Patient patient2 = {
-        1002,
-        "Sok Tara",
-        22,
-        "Female",
-        "Severe chest pain and difficulty breathing",
-        "Urgent",
-        "09:30",
-        "Waiting"};
+    // Create patients with different priorities (1 = High, 2 = Medium, 3 = Low)
+    Patient *patient1 = new Patient{
+        1001, "Sok Dara", 22, "Male", "Minor headache", 3, "09:30", "Waiting"};
 
-    Patient patient3 = {
-        1003,
-        "Sok Dara",
-        22,
-        "Male",
-        "Severe chest pain and difficulty breathing",
-        "Normal",
-        "09:30",
-        "Waiting"};
+    Patient *patient2 = new Patient{
+        1002, "Sok Tara", 25, "Female", "Severe chest pain", 1, "09:32", "Waiting"};
 
-    patientManager.addPatient(&patient1);
-    patientManager.addPatient(&patient2);
-    patientManager.addPatient(&patient3);
+    Patient *patient3 = new Patient{
+        1003, "Chan Vanna", 30, "Male", "Fever and cough", 2, "09:35", "Waiting"};
 
-    std::string sym = patientManager.findPatientInfo(patient1.id)->symptoms;
+    std::cout << "Adding Patient 1 (Priority 3 - Low)...\n";
+    patientManager.addPatient(patient1);
 
-    patientManager.removePatient(1003);
+    std::cout << "Adding Patient 2 (Priority 1 - Emergency/High)...\n";
+    patientManager.addPatient(patient2);
 
-    std::cout << patientManager.getPatientCount()  <<std::endl;
-    patientManager.displayPatient();
+    std::cout << "Adding Patient 3 (Priority 2 - Medium)...\n";
+    patientManager.addPatient(patient3);
+
+    std::cout << "\nDisplaying Priority Queue:\n";
+    patientManager.displayQueue();
+
+    std::cout << "\nTreating highest priority patient:\n";
+    patientManager.treatNextPatient();
+
+    std::cout << "\nDisplaying Queue after treating top patient:\n";
+    patientManager.displayQueue();
+
+    std::cout << "\nTreating remaining patients...\n";
+    patientManager.treatNextPatient();
+    patientManager.treatNextPatient();
+
+    std::cout << "\nCheck empty after treating all: " << (patientManager.checkEmpty() ? "True" : "False") << "\n";
 
     return 0;
 }

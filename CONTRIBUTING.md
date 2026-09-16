@@ -18,25 +18,7 @@ project-hospital/
 ```
 
 ## How It Works
-Achitecture
 
-                  ┌──────────────┐
-                  │   main.cpp   │
-                  └──────┬───────┘
-                         ↓
-                ┌──────────────────┐
-                │  HospitalSystem  │
-                │    CLI / Menu    │
-                └────────┬─────────┘
-                         │
-        ┌────────────────┼────────────────┐
-        ↓                ↓                ↓
- PatientManager    PriorityQueue        Queue
-   Linked List      Emergency DSA       FIFO DSA
-        │                │                │
-        └────────────────┼────────────────┘
-                         ↓
-                  Search / Sort
 ### Patient (src/data/Patient.h)
 Stores a single patient record:
 - `id` - unique identifier
@@ -55,7 +37,7 @@ Manages a list of patients using a linked list. Available functions:
 - `findPatient(int id)` - find a patient by ID
 - `getPatientCount()` - get total number of patients
 - `checkEmpty()` - check if list has no patients
-- ` removePatient()`
+
 ## Building
 
 Using g++ (Linux/Mac):

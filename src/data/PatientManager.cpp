@@ -2,7 +2,10 @@
 
 #include <iostream>
 
-PatientManager::PatientManager() {}
+PatientManager::PatientManager()
+{
+    head = nullptr;
+}
 
 PatientManager::~PatientManager()
 {
@@ -11,29 +14,23 @@ PatientManager::~PatientManager()
     while (current != nullptr)
     {
         PatientNode *temp = current;
+
         current = current->next;
-       // delete temp->patient;
+
+        delete temp->patient;
         delete temp;
     }
 
     head = nullptr;
-    tail = nullptr;
-    count = 0;
 }
 
-bool PatientManager::checkEmpty()
-{
-    return head == nullptr;
+bool PatientManager::checkEmpty (){
+    return head== nullptr;
 }
 
 void PatientManager::addPatient(Patient *patient)
 {
-
-    if (patient == nullptr)
-        return;
-
     PatientNode *patientNode = new PatientNode;
-
     patientNode->patient = patient;
     patientNode->next = nullptr;
 
@@ -41,11 +38,29 @@ void PatientManager::addPatient(Patient *patient)
     {
         head = patientNode;
         tail = patientNode;
+        count++;
+        return;
+    }
+
+    // Insert based on priority (1 = high, 2 = medium, 3 = low)
+    if (patient->priority < head->patient->priority)
+    {
+        patientNode->next = head;
+        head = patientNode;
     }
     else
     {
-        tail->next = patientNode;
-        tail = patientNode;
+        PatientNode *current = head;
+        while (current->next != nullptr && current->next->patient->priority <= patient->priority)
+        {
+            current = current->next;
+        }
+        patientNode->next = current->next;
+        current->next = patientNode;
+        if (patientNode->next == nullptr)
+        {
+            tail = patientNode;
+        }
     }
     count++;
 }
@@ -60,12 +75,60 @@ void PatientManager::displayPatient()
     }
 }
 
+void PatientManager::displayQueue()
+{
+    if (checkEmpty())
+    {
+        std::cout << "Priority Queue is empty." << std::endl;
+        return;
+    }
+
+    std::cout << "--- Hospital Emergency Priority Queue (Total Patients: " << count << ") ---" << std::endl;
+    PatientNode *curPatient = head;
+    while (curPatient != nullptr)
+    {
+        std::cout << "[ID: " << curPatient->patient->id 
+                  << "] " << curPatient->patient->name 
+                  << " | Age: " << curPatient->patient->age 
+                  << " | Gender: " << curPatient->patient->gender 
+                  << " | Priority: " << curPatient->patient->priority 
+                  << " | Symptoms: " << curPatient->patient->symptoms 
+                  << " | Status: " << curPatient->patient->status 
+                  << std::endl;
+        curPatient = curPatient->next;
+    }
+}
+
+void PatientManager::treatNextPatient()
+{
+    if (checkEmpty())
+    {
+        std::cout << "Queue is empty. Cannot dequeue / treat next patient." << std::endl;
+        return;
+    }
+
+    PatientNode *temp = head;
+    Patient *patientToTreat = temp->patient;
+
+    head = head->next;
+    if (head == nullptr)
+    {
+        tail = nullptr;
+    }
+    count--;
+
+    std::cout << "Treating Patient [ID: " << patientToTreat->id << "] " << patientToTreat->name << " (Priority: " << patientToTreat->priority << ")" << std::endl;
+
+    delete patientToTreat;
+    delete temp;
+}
+
 int PatientManager::getPatientCount()
 {
     return count;
 }
 
-Patient *PatientManager::findPatientInfo(int id)
+Patient *PatientManager::findPatient(int id)
 {
     PatientNode *curPatient = head;
 
@@ -75,46 +138,7 @@ Patient *PatientManager::findPatientInfo(int id)
         {
             return curPatient->patient;
         }
-        curPatient = curPatient->next;
     }
     return nullptr;
-}
+};
 
-bool PatientManager::removePatient(int id)
-{
-    if (checkEmpty())
-        return false;
-
-    PatientNode *cur = head;
-    PatientNode *prev = nullptr;
-
-    while (cur != nullptr)
-    {
-        if (cur->patient->id == id)
-        {
-            if (cur == head)
-            {
-                head = cur->next;
-                if (head == nullptr)
-                    tail = nullptr;
-            }
-            else if (cur == tail)
-            {
-                tail = prev;
-                tail->next = nullptr;
-            }
-            else
-            {
-                prev->next = cur->next;
-            }
-
-            delete cur;
-            count--;
-            return true;
-        }
-        prev = cur;
-        cur = cur->next;
-    }
-
-    return false;
-}
