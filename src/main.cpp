@@ -1,6 +1,6 @@
 #include "./data/Patient.h"
 #include "./include/PatientManager.h"
-
+#include "./include/PriorityQueue.h"
 #include <iostream>
 
 int main()
