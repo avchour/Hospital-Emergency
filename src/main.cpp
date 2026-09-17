@@ -13,7 +13,7 @@ int main()
         22,
         "Male",
         "Severe chest pain and difficulty breathing",
-        "Crictical",
+        CRITICAL,
         "09:30",
         "Waiting"};
 
@@ -23,7 +23,7 @@ int main()
         22,
         "Female",
         "Severe chest pain and difficulty breathing",
-        "Urgent",
+        URGENT,
         "09:30",
         "Waiting"};
 
@@ -33,7 +33,7 @@ int main()
         22,
         "Male",
         "Severe chest pain and difficulty breathing",
-        "Normal",
+        NORMAL,
         "09:30",
         "Waiting"};
 
@@ -45,7 +45,7 @@ int main()
 
     patientManager.removePatient(1003);
 
-    std::cout << patientManager.getPatientCount()  <<std::endl;
+    std::cout << patientManager.getPatientCount() << std::endl;
     patientManager.displayPatient();
 
     return 0;
