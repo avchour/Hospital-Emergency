@@ -48,5 +48,36 @@ int main()
     std::cout << patientManager.getPatientCount() << std::endl;
     patientManager.displayPatient();
 
+    //
+    Patient p1{1, "Alice", 25, "Female", "Headache", NORMAL, "10:00", "Waiting"};
+    Patient p2{2, "Bob", 40, "Male", "Chest pain", CRITICAL, "10:05", "Waiting"};
+    Patient p3{3, "Charlie", 30, "Male", "Fever", URGENT, "10:10", "Waiting"};
+    Patient p4{4, "David", 55, "Male", "Severe bleeding", URGENT, "10:15", "Waiting"};
+    PriorityQueue emergencyQueue;
+
+    emergencyQueue.enqueuePatient(&p1);
+    emergencyQueue.enqueuePatient(&p2);
+    emergencyQueue.enqueuePatient(&p3);
+    emergencyQueue.enqueuePatient(&p4);
+
+    
+    std::cout << "\n=== Emergency Queue ===\n";
+    emergencyQueue.displayQueue();
+
+    std::cout << "\n=== Treatment Order ===\n";
+
+    Patient *patient;
+
+    while (!emergencyQueue.checkEmpty())
+    {
+        patient = emergencyQueue.treatNextPatient();
+
+        std::cout << "Treating: "
+                  << patient->name
+                  << " (Priority: "
+                  << patient->priority
+                  << ")\n";
+    }
+
     return 0;
 }
