@@ -22,7 +22,7 @@ public:
     bool checkEmpty();
     void addPatient(Patient *patient);
     int getPatientCount();
-    void displayPatient();
+    void displayPatient();//temporary
     Patient *findPatientInfo(int id);
     bool removePatient(int id);
 };
