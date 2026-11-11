@@ -1,5 +1,5 @@
 #include "../include/PatientManager.h"
-
+#include "../include/utils.h"
 #include <iostream>
 
 PatientManager::PatientManager() = default;
@@ -142,4 +142,47 @@ bool PatientManager::removePatient(int id)
     }
 
     return false;
+}
+
+bool PatientManager::updatePatient(
+    int id,
+    const std::string &targetMember,
+    const std::string &newValue)
+{
+    // Find patient
+    PatientNode *node = findNode(id);
+
+    if (node == nullptr)
+        return false;
+
+    // Update patient information
+    if (targetMember == "name")
+    {
+        node->patient->name = newValue;
+    }
+    else if (targetMember == "gender")
+    {
+        node->patient->gender = newValue;
+    }
+    else if (targetMember == "phone")
+    {
+        node->patient->phone = newValue;
+    }
+    else if (targetMember == "address")
+    {
+        node->patient->address = newValue;
+    }
+    else if (targetMember == "age")
+    {
+        if (!isValidNonNegativeInteger(newValue))
+            return false;
+
+        node->patient->age = std::stoi(newValue);
+    }
+    else
+    {
+        return false;
+    }
+
+    return true;
 }

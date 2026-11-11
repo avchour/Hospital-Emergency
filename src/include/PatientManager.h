@@ -25,9 +25,10 @@ public:
     bool checkEmpty() const;
     int addPatient(Patient *patient);
     int getPatientCount() const;
-    void displayPatient() const;//temporary
+    void displayPatient() const; // temporary
     Patient *findPatientInfo(int id);
     bool removePatient(int id);
+    bool updatePatient(int id, const std::string &targetMember, const std::string &newValue);
 };
 
 #endif
