@@ -13,6 +13,8 @@ namespace Utils
     bool isValidPhone(const std::string &phone);
 
     std::string toLowerCase(std::string text);
+
+    bool isValidNonNegativeInteger(const std::string &value);
 }
 
 #endif

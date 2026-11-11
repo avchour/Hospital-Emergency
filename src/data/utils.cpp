@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cctype>
 #include <ctime>
+#include <climits>
 
 namespace Utils
 {
@@ -58,5 +59,28 @@ namespace Utils
             });
 
         return text;
+    }
+    bool isValidNonNegativeInteger(const std::string &value)
+    {
+        if (value.empty())
+            return false;
+
+        int number = 0;
+
+        for (char c : value)
+        {
+            if (c < '0' || c > '9')
+                return false;
+
+            int digit = c - '0';
+
+            // Prevent integer overflow
+            if (number > (INT_MAX - digit) / 10)
+                return false;
+
+            number = number * 10 + digit;
+        }
+
+        return true;
     }
 }
