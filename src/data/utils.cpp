@@ -1,8 +1,6 @@
 
-#include "../include/Utils.h"
+#include "../include/utils.h"
 
-#include <iostream>
-#include <limits>
 #include <algorithm>
 #include <cctype>
 #include <ctime>
@@ -10,12 +8,6 @@
 
 namespace Utils
 {
-    void clearInputBuffer()
-    {
-        std::cin.ignore(
-            std::numeric_limits<std::streamsize>::max(),
-            '\n');
-    }
 
     std::string getCurrentDateTime()
     {
