@@ -1,19 +1,57 @@
 Achitecture
 
-                  ┌──────────────┐
-                  │   main.cpp   │
-                  └──────┬───────┘
-                         ↓
-                ┌──────────────────┐
-                │  HospitalSystem  │
-                │    CLI / Menu    │
-                └────────┬─────────┘
-                         │
-        ┌────────────────┼────────────────┐
-        ↓                ↓                ↓
- PatientManager    PriorityQueue        Queue
-   Linked List      Emergency DSA       FIFO DSA
-        │                │                │
-        └────────────────┼────────────────┘
-                         ↓
-                  Search / Sort
+project-hospital/
+│
+├── CMakeLists.txt
+│
+├── src/
+│   │
+│   ├── main.cpp
+│   │
+│   ├── models/                       [NEW]
+│   │   ├── Patient.h                 [MOVE]
+│   │   ├── EmergencyCase.h
+│   │   ├── Doctor.h
+│   │   └── Room.h
+│   │
+│   ├── data_structures/              [EXISTING + ORGANIZE]
+│   │   ├── PatientManager.h          [MOVE]
+│   │   ├── PatientManager.cpp        [MOVE]
+│   │   ├── PriorityQueue.h           [MOVE]
+│   │   ├── PriorityQueue.cpp         [MOVE]
+│   │   └── Queue.h                   [MOVE]
+│   │
+│   ├── services/                     [NEW]
+│   │   ├── PatientService.h
+│   │   ├── PatientService.cpp
+│   │   ├── EmergencyService.h
+│   │   ├── EmergencyService.cpp
+│   │   ├── TriageService.h
+│   │   ├── TriageService.cpp
+│   │   ├── AssignmentService.h
+│   │   └── AssignmentService.cpp
+│   │
+│   ├── gui/                          [PHASE 2]
+│   │   ├── MainWindow.h
+│   │   ├── MainWindow.cpp
+│   │   ├── PatientForm.h
+│   │   ├── PatientForm.cpp
+│   │   ├── EmergencyDashboard.h
+│   │   └── EmergencyDashboard.cpp
+│   │
+│   └── database/                     [PHASE 3]
+│       ├── DatabaseConnection.h
+│       ├── DatabaseConnection.cpp
+│       ├── PatientRepository.h
+│       ├── PatientRepository.cpp
+│       ├── EmergencyRepository.h
+│       └── EmergencyRepository.cpp
+│
+├── resources/
+│   ├── icons/
+│   └── styles/
+│
+├── database/
+│   └── emergency_extension.sql
+│
+└── README.md

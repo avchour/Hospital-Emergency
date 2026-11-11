@@ -9,10 +9,8 @@ struct Patient
     std::string name;
     int age;
     std::string gender;
-    std::string symptoms;
-    int priority;
-    std::string arrivalTime;
-    std::string status;
+    std::string phone;
+    std::string address;
 };
 
 #endif

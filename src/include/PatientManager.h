@@ -1,7 +1,7 @@
 #ifndef PATIENTMANAGER_H
 #define PATIENTMANAGER_H
 
-#include "../data/Patient.h"
+#include "../model/Patient.h"
 
 class PatientManager
 {
@@ -22,7 +22,7 @@ public:
     bool checkEmpty();
     void addPatient(Patient *patient);
     int getPatientCount();
-    void displayPatient();
+    void displayPatient();//temporary
     Patient *findPatientInfo(int id);
     bool removePatient(int id);
 };
