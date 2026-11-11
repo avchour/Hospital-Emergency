@@ -1,7 +1,7 @@
 #ifndef PATIENTMANAGER_H
 #define PATIENTMANAGER_H
 
-#include "../data/Patient.h"
+#include "../model/Patient.h"
 
 class PatientManager
 {

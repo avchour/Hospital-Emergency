@@ -1,7 +1,7 @@
 #ifndef PRIORITYQUEUE_H
 #define PRIORITYQUEUE_H
 
-#include "../data/Patient.h"
+#include "../model/Patient.h"
 
 
 class PriorityQueue
