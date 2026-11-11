@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-PatientManager::PatientManager() {}
+PatientManager::PatientManager() = default;
 
 PatientManager::~PatientManager()
 {
