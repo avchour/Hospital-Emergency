@@ -41,14 +41,16 @@ int main()
     patientManager.addPatient(&patient2);
     patientManager.addPatient(&patient3);
 
+    patientManager.displayPatient(); 
+    std::cout << "Patient Total Numbers : " << patientManager.getPatientCount() << std::endl;
     std::string sym = patientManager.findPatientInfo(patient1.id)->symptoms;
 
     patientManager.removePatient(1003);
 
-    std::cout << patientManager.getPatientCount() << std::endl;
+    std::cout << "Patient Total Numbers : " << patientManager.getPatientCount() << std::endl;
     patientManager.displayPatient();
 
-    //
+    
     Patient p1{1, "Alice", 25, "Female", "Headache", NORMAL, "10:00", "Waiting"};
     Patient p2{2, "Bob", 40, "Male", "Chest pain", CRITICAL, "10:05", "Waiting"};
     Patient p3{3, "Charlie", 30, "Male", "Fever", URGENT, "10:10", "Waiting"};

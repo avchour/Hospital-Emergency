@@ -12,7 +12,7 @@ PatientManager::~PatientManager()
     {
         PatientNode *temp = current;
         current = current->next;
-       // delete temp->patient;
+        //delete temp->patient;
         delete temp;
     }
 
@@ -55,7 +55,7 @@ void PatientManager::displayPatient()
     PatientNode *curPatient = head;
     while (curPatient != nullptr)
     {
-        std::cout << curPatient->patient->name << std::endl;
+        std::cout <<" Name: "<< curPatient->patient->name << std::endl;
         curPatient = curPatient->next;
     }
 }
