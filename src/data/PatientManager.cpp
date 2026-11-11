@@ -1,7 +1,7 @@
 #include "../include/PatientManager.h"
 #include "../include/utils.h"
 #include <iostream>
-
+#include <string>
 PatientManager::PatientManager() = default;
 
 PatientManager::~PatientManager()
@@ -174,7 +174,7 @@ bool PatientManager::updatePatient(
     }
     else if (targetMember == "age")
     {
-        if (!isValidNonNegativeInteger(newValue))
+        if (!Utils::isValidNonNegativeInteger(newValue))
             return false;
 
         node->patient->age = std::stoi(newValue);
