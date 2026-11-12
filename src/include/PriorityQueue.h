@@ -1,15 +1,15 @@
 #ifndef PRIORITYQUEUE_H
 #define PRIORITYQUEUE_H
 
-#include "../model/Patient.h"
-
+#include "./PatientManager.h"
+#include "../model/triage.h"
 
 class PriorityQueue
 {
 private:
     struct QueueNode
     {
-        Patient *patient;
+        TriageRecord *triage;
         QueueNode *next;
     };
     QueueNode *head = nullptr;
@@ -19,10 +19,14 @@ private:
 public:
     PriorityQueue();
     ~PriorityQueue();
-    void enqueuePatient(Patient *patient);
-    Patient *treatNextPatient();
-    void displayQueue();
-    bool checkEmpty();
+    void enqueuePatient(TriageRecord *triage);
+    TriageRecord *treatNextPatient();
+
+    bool updatePriority(int patientID, TriagePriority newPriority);
+
+    void displayQueue(const PatientManager &manager) const;
+    bool checkEmpty() const;
+    int getQueueCount() const;
 };
 
 #endif

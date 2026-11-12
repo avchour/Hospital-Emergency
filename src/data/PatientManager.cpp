@@ -99,7 +99,7 @@ int PatientManager::getPatientCount() const
     return count;
 }
 
-Patient *PatientManager::findPatientInfo(int id)
+Patient *PatientManager::findPatientInfo(int id)const
 {
     PatientNode *node = findNode(id);
 
