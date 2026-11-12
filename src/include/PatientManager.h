@@ -26,7 +26,7 @@ public:
     int addPatient(Patient *patient);
     int getPatientCount() const;
     void displayPatient() const; // temporary
-    Patient *findPatientInfo(int id);
+    Patient *findPatientInfo(int id) const;
     bool removePatient(int id);
     bool updatePatient(int id, const std::string &targetMember, const std::string &newValue);
 };
