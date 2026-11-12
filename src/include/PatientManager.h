@@ -3,6 +3,14 @@
 
 #include "../model/Patient.h"
 
+enum PatientField
+{
+    NAME,
+    AGE,
+    GENDER,
+    PHONE,
+    ADDRESS
+};
 class PatientManager
 {
 private:
@@ -28,7 +36,7 @@ public:
     void displayPatient() const; // temporary
     Patient *findPatientInfo(int id) const;
     bool removePatient(int id);
-    bool updatePatient(int id, const std::string &targetMember, const std::string &newValue);
+    bool updatePatient(int id, PatientField field, const std::string &newValue);
 };
 
 #endif

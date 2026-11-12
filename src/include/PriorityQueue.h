@@ -19,7 +19,7 @@ private:
 public:
     PriorityQueue();
     ~PriorityQueue();
-    void enqueuePatient(TriageRecord *triage);
+    bool enqueuePatient(TriageRecord *triage);
     TriageRecord *treatNextPatient();
 
     bool updatePriority(int patientID, TriagePriority newPriority);

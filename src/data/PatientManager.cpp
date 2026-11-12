@@ -144,43 +144,48 @@ bool PatientManager::removePatient(int id)
     return false;
 }
 
-bool PatientManager::updatePatient(
-    int id,
-    const std::string &targetMember,
-    const std::string &newValue)
+bool PatientManager::updatePatient(int id, PatientField field, const std::string &newValue)
 {
-    // Find patient
     PatientNode *node = findNode(id);
 
     if (node == nullptr)
         return false;
 
-    // Update patient information
-    if (targetMember == "name")
+    switch (field)
     {
+    case NAME:
+        if (newValue.empty())
+            return false;
+
         node->patient->name = newValue;
-    }
-    else if (targetMember == "gender")
-    {
-        node->patient->gender = newValue;
-    }
-    else if (targetMember == "phone")
-    {
-        node->patient->phone = newValue;
-    }
-    else if (targetMember == "address")
-    {
-        node->patient->address = newValue;
-    }
-    else if (targetMember == "age")
-    {
+        break;
+
+    case AGE:
         if (!Utils::isValidNonNegativeInteger(newValue))
             return false;
 
         node->patient->age = std::stoi(newValue);
-    }
-    else
-    {
+        break;
+
+    case GENDER:
+        if (newValue.empty())
+            return false;
+
+        node->patient->gender = newValue;
+        break;
+
+    case PHONE:
+        if (!Utils::isValidPhone(newValue))
+            return false;
+
+        node->patient->phone = newValue;
+        break;
+
+    case ADDRESS:
+        node->patient->address = newValue;
+        break;
+
+    default:
         return false;
     }
 
