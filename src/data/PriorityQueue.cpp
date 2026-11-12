@@ -29,10 +29,10 @@ int PriorityQueue::getQueueCount() const
     return count;
 }
 
-void PriorityQueue::enqueuePatient(TriageRecord *triage) 
+bool PriorityQueue::enqueuePatient(TriageRecord *triage) 
 { 
     if (triage == nullptr) 
-        return; 
+        return false; 
  
     QueueNode *queueNode = new QueueNode{triage, nullptr}; 
     QueueNode *cur = head; 
@@ -67,7 +67,8 @@ void PriorityQueue::enqueuePatient(TriageRecord *triage)
         }  
  
     }
-    count++; 
+    count++;
+    return true;
 }
 
 TriageRecord *PriorityQueue::treatNextPatient()
@@ -141,4 +142,74 @@ void PriorityQueue::displayQueue(const PatientManager &manager) const
 
         cur = cur->next;
     }
+}
+
+bool PriorityQueue::updatePriority(int patientID,TriagePriority newPriority)
+{
+    // Validate priority
+    if (newPriority < RESUSCITATION ||
+        newPriority > NON_URGENT)
+        return false;
+
+    QueueNode *cur = head;
+    QueueNode *prev = nullptr;
+
+    // Find patient
+    while (cur != nullptr &&
+           cur->triage->patientID != patientID)
+    {
+        prev = cur;
+        cur = cur->next;
+    }
+
+    if (cur == nullptr)
+        return false;
+
+    // No repositioning needed
+    if (cur->triage->priority == newPriority)
+        return true;
+
+    // Remove node from current position
+    if (prev == nullptr)
+        head = cur->next;
+    else
+        prev->next = cur->next;
+
+    if (cur == tail)
+        tail = prev;
+
+    // Update priority
+    cur->triage->priority = newPriority;
+    cur->next = nullptr;
+
+    // Find new position
+    prev = nullptr;
+    QueueNode *position = head;
+
+    while (position != nullptr &&
+           position->triage->priority <= newPriority)
+    {
+        prev = position;
+        position = position->next;
+    }
+
+    // Insert node into new position
+    if (prev == nullptr)
+    {
+        cur->next = head;
+        head = cur;
+
+        if (tail == nullptr)
+            tail = cur;
+    }
+    else
+    {
+        prev->next = cur;
+        cur->next = position;
+
+        if (position == nullptr)
+            tail = cur;
+    }
+
+    return true;
 }
