@@ -213,3 +213,24 @@ bool PriorityQueue::updatePriority(int patientID,TriagePriority newPriority)
 
     return true;
 }
+ TriageRecord *PriorityQueue::getQueueRecordAt(int index) const
+
+{
+
+    if (index < 0 || index >= count)
+
+        return nullptr;
+
+    QueueNode *cur = head;
+
+    for (int i = 0; i < index; i++)
+
+    {
+
+        cur = cur->next;
+
+    }
+
+    return cur->triage;
+
+}

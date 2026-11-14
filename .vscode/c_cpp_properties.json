@@ -1,0 +1,24 @@
+@'
+{
+    "configurations": [
+        {
+            "name": "Qt MinGW 64-bit",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/src/include",
+                "${workspaceFolder}/src/model",
+                "${workspaceFolder}/src/gui/include",
+                "C:/Qt/6.12.0/mingw_64/include",
+                "C:/Qt/6.12.0/mingw_64/include/QtWidgets",
+                "C:/Qt/6.12.0/mingw_64/include/QtCore",
+                "C:/Qt/6.12.0/mingw_64/include/QtGui"
+            ],
+            "compilerPath": "C:/Qt/Tools/mingw1510_64/bin/g++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}
+'@ | Set-Content -Encoding UTF8 ".vscode/c_cpp_properties.json"

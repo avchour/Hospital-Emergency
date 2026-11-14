@@ -27,6 +27,7 @@ public:
     void displayQueue(const PatientManager &manager) const;
     bool checkEmpty() const;
     int getQueueCount() const;
+    TriageRecord *getQueueRecordAt(int index) const;
 };
 
 #endif
