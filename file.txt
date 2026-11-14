@@ -8,16 +8,16 @@ project-hospital/
 │   │
 │   ├── models/                       [NEW]
 │   │   ├── Patient.h                 [MOVE]
-│   │   ├── EmergencyCase.h
+│   │   ├── triage.h
 │   │   ├── Doctor.h
 │   │   └── Room.h
 │   │
 │   ├── data_structures/              [EXISTING + ORGANIZE]
-│   │   ├── PatientManager.h          [MOVE]
-│   │   ├── PatientManager.cpp        [MOVE]
-│   │   ├── PriorityQueue.h           [MOVE]
-│   │   ├── PriorityQueue.cpp         [MOVE]
-│   │   └── Queue.h                   [MOVE]
+│   │   ├── PatientManager.h          [Done]
+│   │   ├── PatientManager.cpp        [Done]
+│   │   ├── PriorityQueue.h           [Done]
+│   │   ├── PriorityQueue.cpp         [Done]
+│   │   └── Queue.h                   [Done]
 │   │
 │   ├── services/                     [NEW]
 │   │   ├── PatientService.h

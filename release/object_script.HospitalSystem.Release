@@ -1,0 +1,10 @@
+release/main.o
+release/PatientManager.o
+release/PriorityQueue.o
+release/utils.o
+release/mainwindow.o
+release/dashboard.o
+release/patient.o
+release/dashboard.o
+release/triage.o
+release/emergency.o
