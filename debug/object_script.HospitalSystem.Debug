@@ -1,0 +1,10 @@
+debug/main.o
+debug/PatientManager.o
+debug/PriorityQueue.o
+debug/utils.o
+debug/mainwindow.o
+debug/dashboard.o
+debug/patient.o
+debug/dashboard.o
+debug/triage.o
+debug/emergency.o

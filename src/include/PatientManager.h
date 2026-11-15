@@ -3,6 +3,14 @@
 
 #include "../model/Patient.h"
 
+enum PatientField
+{
+    NAME,
+    AGE,
+    GENDER,
+    PHONE,
+    ADDRESS
+};
 class PatientManager
 {
 private:
@@ -15,16 +23,20 @@ private:
     PatientNode *head = nullptr;
     PatientNode *tail = nullptr;
     int count = 0;
+    int nextPatientID = 1;
+    void clearList();
+    PatientNode *findNode(int id) const;
 
 public:
     PatientManager();
     ~PatientManager();
-    bool checkEmpty();
-    void addPatient(Patient *patient);
-    int getPatientCount();
-    void displayPatient();//temporary
-    Patient *findPatientInfo(int id);
+    bool checkEmpty() const;
+    int addPatient(Patient *patient);
+    int getPatientCount() const;
+    void displayPatient() const; // temporary
+    Patient *findPatientInfo(int id) const;
     bool removePatient(int id);
+    bool updatePatient(int id, PatientField field, const std::string &newValue);
 };
 
 #endif

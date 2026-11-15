@@ -1,8 +1,8 @@
 #include "../include/PriorityQueue.h"
-
+#include "../model/Patient.h"
 #include <iostream>
 
-PriorityQueue::PriorityQueue() {};
+PriorityQueue::PriorityQueue() = default;
 
 PriorityQueue::~PriorityQueue()
 {
@@ -14,19 +14,27 @@ PriorityQueue::~PriorityQueue()
         current = current->next;
         delete temp;
     }
+    head = nullptr;
+    tail = nullptr;
+    count = 0;
 };
 
-bool PriorityQueue::checkEmpty() //"Is the emergency treatment queue currently empty?"
+bool PriorityQueue::checkEmpty()const 
 {
     return head == nullptr;
 };
 
-void PriorityQueue::enqueuePatient(Patient *patient) 
+int PriorityQueue::getQueueCount() const
+{
+    return count;
+}
+
+bool PriorityQueue::enqueuePatient(TriageRecord *triage) 
 { 
-    if (patient == nullptr) 
-        return; 
+    if (triage == nullptr) 
+        return false; 
  
-    QueueNode *queueNode = new QueueNode{patient, nullptr}; 
+    QueueNode *queueNode = new QueueNode{triage, nullptr}; 
     QueueNode *cur = head; 
     QueueNode *prev = nullptr; 
  
@@ -36,25 +44,12 @@ void PriorityQueue::enqueuePatient(Patient *patient)
         tail = queueNode; 
     } 
     else 
-    { 
-        while (cur != nullptr) 
-        { 
-            if (cur->patient->priority > patient->priority) 
-            { 
-                break; 
-            } 
-            else if (cur->patient->priority < patient->priority) 
-            { 
-                prev = cur; 
-                cur = cur->next; 
-            } 
-            else 
-            { 
-                prev = cur; 
-                cur = cur->next; 
-            } 
-        } 
- 
+    {
+        while (cur != nullptr && cur->triage->priority <= triage->priority)
+        {
+            prev = cur;
+            cur = cur->next;
+        }
         if (prev == nullptr) 
         { 
             queueNode->next = head; 
@@ -69,13 +64,14 @@ void PriorityQueue::enqueuePatient(Patient *patient)
             { 
                 tail = queueNode; 
             } 
-        } 
-    } 
+        }  
  
-    count++; 
+    }
+    count++;
+    return true;
 }
 
-Patient* PriorityQueue::treatNextPatient()
+TriageRecord *PriorityQueue::treatNextPatient()
 {
     if (checkEmpty())
     {
@@ -83,7 +79,7 @@ Patient* PriorityQueue::treatNextPatient()
     }
 
     QueueNode *temp = head;
-    Patient *patient = head->patient;
+    TriageRecord *triage = temp->triage;
 
     head = head->next;
 
@@ -95,11 +91,10 @@ Patient* PriorityQueue::treatNextPatient()
     delete temp;
     count--;
 
-    return patient;
+    return triage;
 }
 
-
-void PriorityQueue::displayQueue()
+void PriorityQueue::displayQueue(const PatientManager &manager) const
 {
     if (checkEmpty())
     {
@@ -111,11 +106,131 @@ void PriorityQueue::displayQueue()
 
     while (cur != nullptr)
     {
-        std::cout << "ID: " << cur->patient->id << std::endl;
-        std::cout << "Name: " << cur->patient->name << std::endl;
-        std::cout << "Priority: " << cur->patient->priority << std::endl;
-        std::cout << "Symptoms: " << cur->patient->symptoms << std::endl;
+        Patient *patient = manager.findPatientInfo(cur->triage->patientID);
+
+        if (patient != nullptr)
+        {
+            // Patient information
+            std::cout << "\n===== PATIENT INFORMATION =====\n";
+            std::cout << "ID: " << patient->id << '\n';
+            std::cout << "Name: " << patient->name << '\n';
+            std::cout << "Age: " << patient->age << '\n';
+            std::cout << "Gender: " << patient->gender << '\n';
+            std::cout << "Phone: " << patient->phone << '\n';
+
+            // Triage information
+            std::cout << "\n===== TRIAGE ASSESSMENT =====\n";
+            std::cout << "Priority: " << cur->triage->priority << '\n';
+            std::cout << "Symptoms: " << cur->triage->symptoms << '\n';
+            std::cout << "Temperature: " << cur->triage->temperature << '\n';
+            std::cout << "Heart Rate: " << cur->triage->heartRate << '\n';
+
+            std::cout << "Blood Pressure: "
+                      << cur->triage->bloodPressureSystolic << "/"
+                      << cur->triage->bloodPressureDiastolic << '\n';
+
+            std::cout << "Oxygen Saturation: "
+                      << cur->triage->oxygenSaturation << "%\n";
+        }
+        else
+        {
+            std::cout << "Patient record not found. ID: "
+                      << cur->triage->patientID << '\n';
+        }
+
+        std::cout << "================================\n";
 
         cur = cur->next;
     }
+}
+
+bool PriorityQueue::updatePriority(int patientID,TriagePriority newPriority)
+{
+    // Validate priority
+    if (newPriority < RESUSCITATION ||
+        newPriority > NON_URGENT)
+        return false;
+
+    QueueNode *cur = head;
+    QueueNode *prev = nullptr;
+
+    // Find patient
+    while (cur != nullptr &&
+           cur->triage->patientID != patientID)
+    {
+        prev = cur;
+        cur = cur->next;
+    }
+
+    if (cur == nullptr)
+        return false;
+
+    // No repositioning needed
+    if (cur->triage->priority == newPriority)
+        return true;
+
+    // Remove node from current position
+    if (prev == nullptr)
+        head = cur->next;
+    else
+        prev->next = cur->next;
+
+    if (cur == tail)
+        tail = prev;
+
+    // Update priority
+    cur->triage->priority = newPriority;
+    cur->next = nullptr;
+
+    // Find new position
+    prev = nullptr;
+    QueueNode *position = head;
+
+    while (position != nullptr &&
+           position->triage->priority <= newPriority)
+    {
+        prev = position;
+        position = position->next;
+    }
+
+    // Insert node into new position
+    if (prev == nullptr)
+    {
+        cur->next = head;
+        head = cur;
+
+        if (tail == nullptr)
+            tail = cur;
+    }
+    else
+    {
+        prev->next = cur;
+        cur->next = position;
+
+        if (position == nullptr)
+            tail = cur;
+    }
+
+    return true;
+}
+ TriageRecord *PriorityQueue::getQueueRecordAt(int index) const
+
+{
+
+    if (index < 0 || index >= count)
+
+        return nullptr;
+
+    QueueNode *cur = head;
+
+    for (int i = 0; i < index; i++)
+
+    {
+
+        cur = cur->next;
+
+    }
+
+    return cur->triage;
+
 }

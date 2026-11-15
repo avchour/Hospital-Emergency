@@ -1,0 +1,45 @@
+{
+    "configurations": [
+        {
+            "name": "Qt MinGW 64-bit",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/src/include",
+                "${workspaceFolder}/src/model",
+                "${workspaceFolder}/src/gui/include",
+                "C:/Qt/6.12.0/mingw_64/include",
+                "C:/Qt/6.12.0/mingw_64/include/QtCore",
+                "C:/Qt/6.12.0/mingw_64/include/QtGui",
+                "C:/Qt/6.12.0/mingw_64/include/QtWidgets",
+                "C:/Qt/6.12.0/mingw_64/include/QtPrintSupport",
+                "C:/Qt/6.12.0/mingw_64/include/QtOpenGL",
+                "C:/Qt/6.12.0/mingw_64/include/QtOpenGLWidgets",
+                "C:/Qt/6.12.0/mingw_64/include/QtNetwork",
+                "C:/Qt/6.12.0/mingw_64/include/QtSql",
+                "C:/Qt/6.12.0/mingw_64/include/**"
+            ],
+            "defines": [
+                "UNICODE",
+                "_UNICODE",
+                "WIN32",
+                "WIN64",
+                "QT_CORE_LIB",
+                "QT_GUI_LIB",
+                "QT_WIDGETS_LIB"
+            ],
+            "compilerPath": "C:/Qt/Tools/mingw1510_64/bin/g++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-gcc-x64",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/**",
+                    "C:/Qt/6.12.0/mingw_64/include"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}
