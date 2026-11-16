@@ -2,7 +2,6 @@
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QGridLayout>
 #include <QFrame>
 #include <QLabel>
 #include <QPushButton>
@@ -17,11 +16,22 @@
 #include <QMessageBox>
 #include <QDateTime>
 #include <QAbstractItemView>
-#include <QVariant>
 
-// Constructor
+// ==========================================
+// CONSTRUCTOR
+// ==========================================
+
 EmergencyQueue::EmergencyQueue(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mainLayout(nullptr),
+      criticalCount(nullptr),
+      mediumCount(nullptr),
+      normalCount(nullptr),
+      patientTable(nullptr),
+      searchInput(nullptr),
+      priorityFilter(nullptr),
+      addButton(nullptr),
+      removeButton(nullptr)
 {
     setupUI();
 }
@@ -38,6 +48,7 @@ void EmergencyQueue::setupUI()
 
     // Page title
     QLabel *title = new QLabel("Emergency Queue");
+
     title->setStyleSheet(
         "font-size: 24px;"
         "font-weight: bold;"
@@ -49,7 +60,9 @@ void EmergencyQueue::setupUI()
     setupPriorityCards();
 
     // Patient management title
-    QLabel *managementTitle = new QLabel("Patient Management");
+    QLabel *managementTitle =
+        new QLabel("Patient Management");
+
     managementTitle->setStyleSheet(
         "font-size: 18px;"
         "font-weight: bold;"
@@ -61,11 +74,13 @@ void EmergencyQueue::setupUI()
     QHBoxLayout *controlLayout = new QHBoxLayout();
 
     searchInput = new QLineEdit();
-    searchInput->setPlaceholderText("Search by ID or name...");
+    searchInput->setPlaceholderText(
+        "Search by ID or name...");
     searchInput->setMinimumHeight(38);
 
     addButton = new QPushButton("+ Add Patient");
     addButton->setMinimumHeight(38);
+
     addButton->setStyleSheet(
         "QPushButton {"
         "background-color: #16A34A;"
@@ -90,6 +105,7 @@ void EmergencyQueue::setupUI()
     QLabel *filterLabel = new QLabel("Filter Priority:");
 
     priorityFilter = new QComboBox();
+
     priorityFilter->addItems({"All Patients",
                               "Critical",
                               "Medium",
@@ -103,19 +119,24 @@ void EmergencyQueue::setupUI()
 
     mainLayout->addLayout(filterLayout);
 
-    // Patient table
+    // Patient table title
     QLabel *tableTitle = new QLabel("All Patients");
+
     tableTitle->setStyleSheet(
         "font-size: 18px;"
         "font-weight: bold;");
 
     mainLayout->addWidget(tableTitle);
 
+    // Patient table
     setupPatientTable();
 
     // Remove button
-    removeButton = new QPushButton("Remove Selected Patient");
+    removeButton =
+        new QPushButton("Remove Selected Patient");
+
     removeButton->setMinimumHeight(36);
+
     removeButton->setStyleSheet(
         "QPushButton {"
         "background-color: #DC2626;"
@@ -130,18 +151,30 @@ void EmergencyQueue::setupUI()
 
     mainLayout->addWidget(removeButton);
 
-    // Connections
-    connect(addButton, &QPushButton::clicked,
-            this, &EmergencyQueue::addPatient);
+    // Signal and slot connections
+    connect(
+        addButton,
+        &QPushButton::clicked,
+        this,
+        &EmergencyQueue::addPatient);
 
-    connect(removeButton, &QPushButton::clicked,
-            this, &EmergencyQueue::removeSelectedPatient);
+    connect(
+        removeButton,
+        &QPushButton::clicked,
+        this,
+        &EmergencyQueue::removeSelectedPatient);
 
-    connect(searchInput, &QLineEdit::textChanged,
-            this, &EmergencyQueue::searchPatient);
+    connect(
+        searchInput,
+        &QLineEdit::textChanged,
+        this,
+        &EmergencyQueue::searchPatient);
 
-    connect(priorityFilter, &QComboBox::currentTextChanged,
-            this, &EmergencyQueue::applyFilters);
+    connect(
+        priorityFilter,
+        &QComboBox::currentTextChanged,
+        this,
+        &EmergencyQueue::applyFilters);
 }
 
 // ==========================================
@@ -153,9 +186,10 @@ void EmergencyQueue::setupPriorityCards()
     QHBoxLayout *cardLayout = new QHBoxLayout();
     cardLayout->setSpacing(15);
 
-    auto createCard = [](const QString &title,
-                         const QString &color,
-                         QLabel *&countLabel) -> QFrame *
+    auto createCard = [](
+                          const QString &title,
+                          const QString &color,
+                          QLabel *&countLabel) -> QFrame *
     {
         QFrame *card = new QFrame();
 
@@ -171,17 +205,27 @@ void EmergencyQueue::setupPriorityCards()
         QVBoxLayout *layout = new QVBoxLayout(card);
 
         QLabel *name = new QLabel(title);
+
         name->setStyleSheet(
-            QString("color: %1; font-size: 15px; font-weight: bold;")
+            QString(
+                "color: %1;"
+                "font-size: 15px;"
+                "font-weight: bold;")
                 .arg(color));
 
         countLabel = new QLabel("0");
+
         countLabel->setStyleSheet(
-            QString("color: %1; font-size: 28px; font-weight: bold;")
+            QString(
+                "color: %1;"
+                "font-size: 28px;"
+                "font-weight: bold;")
                 .arg(color));
 
         QLabel *description = new QLabel("Patients");
-        description->setStyleSheet("color: #64748B;");
+
+        description->setStyleSheet(
+            "color: #64748B;");
 
         layout->addWidget(name);
         layout->addWidget(countLabel);
@@ -224,8 +268,8 @@ void EmergencyQueue::setupPatientTable()
                                              "Stay",
                                              "Details"});
 
-    patientTable->horizontalHeader()->setSectionResizeMode(
-        QHeaderView::Stretch);
+    patientTable->horizontalHeader()
+        ->setSectionResizeMode(QHeaderView::Stretch);
 
     patientTable->setSelectionBehavior(
         QAbstractItemView::SelectRows);
@@ -263,9 +307,12 @@ void EmergencyQueue::setupPatientTable()
 bool EmergencyQueue::patientIDExists(
     const QString &patientID) const
 {
-    for (int row = 0; row < patientTable->rowCount(); row++)
+    for (int row = 0;
+         row < patientTable->rowCount();
+         row++)
     {
-        QTableWidgetItem *item = patientTable->item(row, 0);
+        QTableWidgetItem *item =
+            patientTable->item(row, 0);
 
         if (item && item->text() == patientID)
         {
@@ -283,6 +330,7 @@ bool EmergencyQueue::patientIDExists(
 void EmergencyQueue::addPatient()
 {
     QDialog dialog(this);
+
     dialog.setWindowTitle("Add New Patient");
     dialog.setMinimumWidth(350);
 
@@ -292,12 +340,14 @@ void EmergencyQueue::addPatient()
     QLineEdit *nameInput = new QLineEdit();
 
     QSpinBox *ageInput = new QSpinBox();
-    ageInput->setRange(0, 120);
+    ageInput->setRange(1, 120);
 
     QLineEdit *stayInput = new QLineEdit();
+
     stayInput->setPlaceholderText("Example: 2 days");
 
     QComboBox *priorityInput = new QComboBox();
+
     priorityInput->addItems({"Critical",
                              "Medium",
                              "Normal"});
@@ -305,6 +355,7 @@ void EmergencyQueue::addPatient()
     QLineEdit *symptomsInput = new QLineEdit();
 
     QComboBox *statusInput = new QComboBox();
+
     statusInput->addItems({"Waiting",
                            "In Treatment",
                            "Admitted",
@@ -328,11 +379,17 @@ void EmergencyQueue::addPatient()
 
     form.addRow(buttonLayout);
 
-    connect(saveButton, &QPushButton::clicked,
-            &dialog, &QDialog::accept);
+    connect(
+        saveButton,
+        &QPushButton::clicked,
+        &dialog,
+        &QDialog::accept);
 
-    connect(cancelButton, &QPushButton::clicked,
-            &dialog, &QDialog::reject);
+    connect(
+        cancelButton,
+        &QPushButton::clicked,
+        &dialog,
+        &QDialog::reject);
 
     if (dialog.exec() != QDialog::Accepted)
         return;
@@ -341,30 +398,39 @@ void EmergencyQueue::addPatient()
     QString name = nameInput->text().trimmed();
     QString stay = stayInput->text().trimmed();
 
-    if (id.isEmpty() || name.isEmpty() || stay.isEmpty())
+    // Validate required fields
+    if (id.isEmpty() ||
+        name.isEmpty() ||
+        stay.isEmpty())
     {
         QMessageBox::warning(
             this,
             "Invalid Input",
             "Please fill in Patient ID, Name and Stay.");
+
         return;
     }
 
+    // Check duplicate ID
     if (patientIDExists(id))
     {
         QMessageBox::warning(
             this,
             "Duplicate ID",
             "This Patient ID already exists.");
+
         return;
     }
 
+    // Add new row
     int row = patientTable->rowCount();
 
     patientTable->insertRow(row);
 
-    QTableWidgetItem *idItem = new QTableWidgetItem(id);
+    QTableWidgetItem *idItem =
+        new QTableWidgetItem(id);
 
+    // Store additional patient information
     idItem->setData(
         Qt::UserRole,
         priorityInput->currentText());
@@ -385,18 +451,22 @@ void EmergencyQueue::addPatient()
     patientTable->setItem(row, 0, idItem);
 
     patientTable->setItem(
-        row, 1,
+        row,
+        1,
         new QTableWidgetItem(name));
 
     patientTable->setItem(
-        row, 2,
+        row,
+        2,
         new QTableWidgetItem(
             QString::number(ageInput->value())));
 
     patientTable->setItem(
-        row, 3,
+        row,
+        3,
         new QTableWidgetItem(stay));
 
+    // Details button
     QPushButton *detailsButton =
         new QPushButton("View");
 
@@ -413,11 +483,18 @@ void EmergencyQueue::addPatient()
         "}");
 
     patientTable->setCellWidget(
-        row, 4, detailsButton);
+        row,
+        4,
+        detailsButton);
 
-    connect(detailsButton, &QPushButton::clicked,
-            this, [this, id]()
-            { viewPatientDetails(id); });
+    connect(
+        detailsButton,
+        &QPushButton::clicked,
+        this,
+        [this, id]()
+        {
+            viewPatientDetails(id);
+        });
 
     updatePriorityCounts();
     applyFilters();
@@ -448,20 +525,28 @@ void EmergencyQueue::applyFilters()
          row < patientTable->rowCount();
          row++)
     {
-        QString id =
-            patientTable->item(row, 0)->text();
+        QTableWidgetItem *idItem =
+            patientTable->item(row, 0);
 
-        QString name =
-            patientTable->item(row, 1)->text();
+        QTableWidgetItem *nameItem =
+            patientTable->item(row, 1);
+
+        if (!idItem || !nameItem)
+            continue;
+
+        QString id = idItem->text();
+        QString name = nameItem->text();
 
         QString priority =
-            patientTable->item(row, 0)
-                ->data(Qt::UserRole)
-                .toString();
+            idItem->data(Qt::UserRole).toString();
 
         bool matchesSearch =
-            id.contains(searchText, Qt::CaseInsensitive) ||
-            name.contains(searchText, Qt::CaseInsensitive);
+            id.contains(
+                searchText,
+                Qt::CaseInsensitive) ||
+            name.contains(
+                searchText,
+                Qt::CaseInsensitive);
 
         bool matchesPriority =
             selectedPriority == "All Patients" ||
@@ -487,10 +572,14 @@ void EmergencyQueue::updatePriorityCounts()
          row < patientTable->rowCount();
          row++)
     {
+        QTableWidgetItem *item =
+            patientTable->item(row, 0);
+
+        if (!item)
+            continue;
+
         QString priority =
-            patientTable->item(row, 0)
-                ->data(Qt::UserRole)
-                .toString();
+            item->data(Qt::UserRole).toString();
 
         if (priority == "Critical")
             critical++;
@@ -502,9 +591,14 @@ void EmergencyQueue::updatePriorityCounts()
             normal++;
     }
 
-    criticalCount->setText(QString::number(critical));
-    mediumCount->setText(QString::number(medium));
-    normalCount->setText(QString::number(normal));
+    criticalCount->setText(
+        QString::number(critical));
+
+    mediumCount->setText(
+        QString::number(medium));
+
+    normalCount->setText(
+        QString::number(normal));
 }
 
 // ==========================================
@@ -549,9 +643,14 @@ void EmergencyQueue::viewPatientDetails(
 {
     int row = -1;
 
-    for (int i = 0; i < patientTable->rowCount(); i++)
+    for (int i = 0;
+         i < patientTable->rowCount();
+         i++)
     {
-        if (patientTable->item(i, 0)->text() == patientID)
+        QTableWidgetItem *item =
+            patientTable->item(i, 0);
+
+        if (item && item->text() == patientID)
         {
             row = i;
             break;
