@@ -1,6 +1,8 @@
 
 #include "../include/mainwindow.h"
 #include "../include/dashboard.h"
+#include "../include/triage.h"
+#include "../include/emergency.h"
 
 #include <QWidget>
 #include <QPushButton>
@@ -114,28 +116,36 @@ void MainWindow::setupUI()
 
     pages->addWidget(dashboard);
 
-    // ✏️ MANUAL CHANGE:
-    // Add or remove pages here when your project grows.
-    QStringList pageNames = {
-        "Patient Management",
-        "Emergency Triage",
-        "Emergency Queue",
-        "Treatment Management"};
-
-    for (const QString &name : pageNames)
+    // ================= GUI PAGES ORDER =================
+    // Page 1: Patient Management
+    QWidget *patientPage = new QWidget();
     {
-        QWidget *page = new QWidget();
-
-        QVBoxLayout *layout = new QVBoxLayout(page);
-
-        QLabel *title = new QLabel(name);
+        QVBoxLayout *layout = new QVBoxLayout(patientPage);
+        QLabel *title = new QLabel("Patient Management");
         title->setObjectName("pageTitle");
-
         layout->addWidget(title);
         layout->addStretch();
-
-        pages->addWidget(page);
     }
+    pages->addWidget(patientPage);
+
+    // Page 2: Emergency Triage (from src/gui/data/triage.cpp)
+    Emergency *triagePage = new Emergency();
+    pages->addWidget(triagePage);
+
+    // Page 3: Emergency Queue (from src/gui/data/emergency.cpp)
+    EmergencyQueue *emergencyQueuePage = new EmergencyQueue();
+    pages->addWidget(emergencyQueuePage);
+
+    // Page 4: Treatment Management
+    QWidget *treatmentPage = new QWidget();
+    {
+        QVBoxLayout *layout = new QVBoxLayout(treatmentPage);
+        QLabel *title = new QLabel("Treatment Management");
+        title->setObjectName("pageTitle");
+        layout->addWidget(title);
+        layout->addStretch();
+    }
+    pages->addWidget(treatmentPage);
 
     // ================= NAVIGATION BUTTONS =================
 

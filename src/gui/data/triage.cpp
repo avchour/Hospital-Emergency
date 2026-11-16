@@ -67,7 +67,7 @@ void Emergency::setupUI()
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
     // Page title
-    QLabel *title = new QLabel("Emergency Queue");
+    QLabel *title = new QLabel("Emergency Triage");
 
     title->setStyleSheet(
         "font-size: 24px;"
@@ -75,7 +75,7 @@ void Emergency::setupUI()
         "color: #192F50;");
 
     QLabel *subtitle = new QLabel(
-        "Manage and monitor emergency patients");
+        "Manage and monitor emergency triage patients");
 
     subtitle->setStyleSheet(
         "font-size: 13px;"
