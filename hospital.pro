@@ -32,3 +32,4 @@ HEADERS += \
     src/gui/include/patient.h \
     src/gui/include/triage.h \
     src/gui/include/emergency.h
+RESOURCES += resources/resources.qrc

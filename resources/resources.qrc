@@ -1,0 +1,14 @@
+
+<RCC>
+    <qresource prefix="/">
+        <!-- 🎨 Global application stylesheet -->
+        <file alias="styles/main.qss">styles/main.qss</file>
+
+        <!-- ✏️ MANUAL CHANGE:
+             Add future images here once files exist.
+
+        <file alias="images/background.png">images/background.png</file>
+        <file alias="images/logo.png">images/logo.png</file>
+        -->
+    </qresource>
+</RCC>

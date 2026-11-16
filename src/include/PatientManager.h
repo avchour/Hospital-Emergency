@@ -1,7 +1,8 @@
 #ifndef PATIENTMANAGER_H
 #define PATIENTMANAGER_H
-
+#include <string>
 #include "../model/Patient.h"
+#include <array>
 
 enum PatientField
 {
@@ -33,10 +34,11 @@ public:
     bool checkEmpty() const;
     int addPatient(Patient *patient);
     int getPatientCount() const;
-    void displayPatient() const; // temporary
+    // void displayPatient() const; // temporary
     Patient *findPatientInfo(int id) const;
     bool removePatient(int id);
     bool updatePatient(int id, PatientField field, const std::string &newValue);
+    std::array<int, 5> getPriorityCounts() const;
 };
 
 #endif
