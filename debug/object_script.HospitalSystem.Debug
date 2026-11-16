@@ -8,3 +8,4 @@ debug/dashboard.o
 debug/triage.o
 debug/emergency.o
 debug/qrc_resources.o
+debug/moc_emergency.o

@@ -8,3 +8,4 @@ release/dashboard.o
 release/triage.o
 release/emergency.o
 release/qrc_resources.o
+release/moc_emergency.o

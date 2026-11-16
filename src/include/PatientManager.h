@@ -38,7 +38,6 @@ public:
     Patient *findPatientInfo(int id) const;
     bool removePatient(int id);
     bool updatePatient(int id, PatientField field, const std::string &newValue);
-    std::array<int, 5> getPriorityCounts() const;
 };
 
 #endif

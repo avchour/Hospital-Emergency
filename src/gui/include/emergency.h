@@ -4,12 +4,12 @@
 #include <QWidget>
 #include <QString>
 
+class QVBoxLayout;
 class QTableWidget;
 class QLineEdit;
 class QComboBox;
 class QLabel;
 class QPushButton;
-class QVBoxLayout;
 
 class EmergencyQueue : public QWidget
 {
@@ -19,12 +19,11 @@ public:
     explicit EmergencyQueue(QWidget *parent = nullptr);
 
 private:
+    QVBoxLayout *mainLayout;
+
     QLabel *criticalCount;
     QLabel *mediumCount;
     QLabel *normalCount;
-
-    QVBoxLayout *mainLayout;
-
     QTableWidget *patientTable;
     QLineEdit *searchInput;
     QComboBox *priorityFilter;

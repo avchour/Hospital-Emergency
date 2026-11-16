@@ -3,6 +3,7 @@
 
 #include "./PatientManager.h"
 #include "../model/triage.h"
+#include <array>
 
 class PriorityQueue
 {
@@ -28,6 +29,7 @@ public:
     bool checkEmpty() const;
     int getQueueCount() const;
     TriageRecord *getQueueRecordAt(int index) const;
+    std::array<int, 5> getPriorityCounts() const;
 };
 
 #endif
