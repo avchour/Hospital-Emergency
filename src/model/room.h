@@ -1,4 +1,4 @@
-#ifdef ROOM_H
+#ifndef ROOM_H
 #define ROOM_H
 
 #include <string>
