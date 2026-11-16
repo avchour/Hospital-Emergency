@@ -24,7 +24,9 @@ void PatientManager::clearList()
         PatientNode *temp = current;
         current = current->next;
 
+        delete temp->patient;
         delete temp;
+        //delete temp;
     }
 
     head = nullptr;
@@ -74,25 +76,25 @@ int PatientManager::addPatient( Patient *patient)
     return patient->id;
 }
 
-void PatientManager::displayPatient() const
-{
-    if (checkEmpty())
-    {
-        std::cout << "No patients found.\n";
-        return;
-    }
-    PatientNode *curPatient = head;
-    while (curPatient != nullptr)
-    {
-        std::cout << "ID: " << curPatient->patient->id << '\n';
-        std::cout << "Name: " << curPatient->patient->name << '\n';
-        std::cout << "Age: " << curPatient->patient->age << '\n';
-        std::cout << "Gender: " << curPatient->patient->gender << '\n';
-        std::cout << "----------------------\n";
+// void PatientManager::displayPatient() const
+// {
+//     if (checkEmpty())
+//     {
+//         std::cout << "No patients found.\n";
+//         return;
+//     }
+//     PatientNode *curPatient = head;
+//     while (curPatient != nullptr)
+//     {
+//         std::cout << "ID: " << curPatient->patient->id << '\n';
+//         std::cout << "Name: " << curPatient->patient->name << '\n';
+//         std::cout << "Age: " << curPatient->patient->age << '\n';
+//         std::cout << "Gender: " << curPatient->patient->gender << '\n';
+//         std::cout << "----------------------\n";
 
-        curPatient = curPatient->next;
-    }
-}
+//         curPatient = curPatient->next;
+//     }
+// }
 
 int PatientManager::getPatientCount() const
 {
@@ -133,7 +135,9 @@ bool PatientManager::removePatient(int id)
                 tail = prev;
             }
 
+            delete cur->patient;
             delete cur;
+            //delete cur;
             count--;
             return true;
         }

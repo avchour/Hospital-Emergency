@@ -234,3 +234,33 @@ bool PriorityQueue::updatePriority(int patientID,TriagePriority newPriority)
     return cur->triage;
 
 }
+
+// ==========================================================
+// 📊 COUNT PATIENTS BY TRIAGE PRIORITY
+// ==========================================================
+
+std::array<int, 5> PriorityQueue::getPriorityCounts() const
+{
+    std::array<int, 5> priorityCounts = {0, 0, 0, 0, 0};
+
+    QueueNode *current = head;
+
+    while (current != nullptr)
+    {
+        if (current->triage != nullptr)
+        {
+            int priorityIndex =
+                static_cast<int>(current->triage->priority) - 1;
+
+            // Validate priority before accessing the array.
+            if (priorityIndex >= 0 && priorityIndex < 5)
+            {
+                priorityCounts[priorityIndex]++;
+            }
+        }
+
+        current = current->next;
+    }
+
+    return priorityCounts;
+}

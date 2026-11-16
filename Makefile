@@ -278,7 +278,8 @@ Makefile: hospital.pro C:/Qt/6.12.0/mingw_64/mkspecs/win32-g++/qmake.conf C:/Qt/
 		C:/Qt/6.12.0/mingw_64/lib/Qt6Gui.prl \
 		C:/Qt/6.12.0/mingw_64/lib/Qt6Core.prl \
 		C:/Qt/6.12.0/mingw_64/lib/Qt6EntryPoint.prl \
-		C:/Qt/6.12.0/mingw_64/mkspecs/features/build_pass.prf
+		C:/Qt/6.12.0/mingw_64/mkspecs/features/build_pass.prf \
+		resources/resources.qrc
 	$(QMAKE) -o Makefile hospital.pro
 C:/Qt/6.12.0/mingw_64/mkspecs/features/spec_pre.prf:
 C:/Qt/6.12.0/mingw_64/mkspecs/features/device_config.prf:
@@ -489,6 +490,7 @@ C:/Qt/6.12.0/mingw_64/lib/Qt6Gui.prl:
 C:/Qt/6.12.0/mingw_64/lib/Qt6Core.prl:
 C:/Qt/6.12.0/mingw_64/lib/Qt6EntryPoint.prl:
 C:/Qt/6.12.0/mingw_64/mkspecs/features/build_pass.prf:
+resources/resources.qrc:
 qmake: FORCE
 	@$(QMAKE) -o Makefile hospital.pro
 

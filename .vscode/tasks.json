@@ -1,0 +1,48 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Qt: Configure Hospital System",
+      "type": "process",
+      "command": "C:/Qt/6.12.0/mingw_64/bin/qmake.exe",
+      "args": ["hospital.pro"],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "C:/Qt/Tools/mingw1510_64/bin;C:/Qt/6.12.0/mingw_64/bin"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Qt: Clean Hospital System",
+      "type": "process",
+      "command": "C:/Qt/Tools/mingw1510_64/bin/mingw32-make.exe",
+      "args": ["clean"],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "C:/Qt/Tools/mingw1510_64/bin;C:/Qt/6.12.0/mingw_64/bin"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Qt: Build Hospital System",
+      "type": "process",
+      "command": "C:/Qt/Tools/mingw1510_64/bin/mingw32-make.exe",
+      "args": ["-j1"],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "C:/Qt/Tools/mingw1510_64/bin;C:/Qt/6.12.0/mingw_64/bin"
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$gcc"
+    }
+  ]
+}
