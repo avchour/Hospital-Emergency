@@ -2,77 +2,137 @@
 #include "./include/PatientManager.h"
 #include "./include/PriorityQueue.h"
 #include <iostream>
+using namespace std;
+
 
 int main()
 {
-    PatientManager patientManager;
+    PatientManager manager;
 
-    Patient patient1 = {
-        1001,
-        "Sok Dara",
-        22,
-        "Male",
-        "Severe chest pain and difficulty breathing",
-        "09:30",
-        };
+    Patient p1;
+    p1.name = "John Smith";
+    p1.age = 25;
+    p1.gender = "Male";
+    p1.phone = "012345678";
+    p1.address = "Phnom Penh";
 
-    Patient patient2 = {
-        1002,
-        "Sok Tara",
-        22,
-        "Female",
-        "Severe chest pain and difficulty breathing",
-        "Waiting"};
+    Patient p2;
+    p2.name = "Sarah Johnson";
+    p2.age = 32;
+    p2.gender = "Female";
+    p2.phone = "098765432";
+    p2.address = "Siem Reap";
 
-    Patient patient3 = {
-        1003,
-        "Sok Dara",
-        22,
-        "Male",
-        "Severe chest pain and difficulty breathing",
-        "Waiting"};
+    Patient p3;
+    p3.name = "David Brown";
+    p3.age = 45;
+    p3.gender = "Male";
+    p3.phone = "011223344";
+    p3.address = "Battambang";
 
-    patientManager.addPatient(&patient1);
-    patientManager.addPatient(&patient2);
-    patientManager.addPatient(&patient3);
+    Patient p4;
+    p4.name = "Emily Davis";
+    p4.age = 19;
+    p4.gender = "Female";
+    p4.phone = "096112233";
+    p4.address = "Kampot";
 
-    patientManager.displayPatient(); 
-    std::cout << "Patient Total Numbers : " << patientManager.getPatientCount() << std::endl;
+    // =================================
+    // 2. Test addPatient()
+    // =================================
 
+    cout << "\n===== ADD PATIENTS =====\n";
 
-    patientManager.removePatient(1003);
+    cout << "Generated ID: "
+         << manager.addPatient(&p1) << endl;
 
-    std::cout << "Patient Total Numbers : " << patientManager.getPatientCount() << std::endl;
-    patientManager.displayPatient();
+    cout << "Generated ID: "
+         << manager.addPatient(&p2) << endl;
 
-    
-    Patient p1{1, "Alice", 25, "Female", "Headache", "Waiting"};
-    Patient p2{2, "Bob", 40, "Male", "Chest pain", "Waiting"};
-    Patient p3{3, "Charlie", 30, "Male", "Fever", "Waiting"};
-    Patient p4{4, "David", 55, "Male", "Severe bleeding", "Waiting"};
-    PriorityQueue emergencyQueue;
+    cout << "Generated ID: "
+         << manager.addPatient(&p3) << endl;
 
-    emergencyQueue.enqueuePatient(&p1);
-    emergencyQueue.enqueuePatient(&p2);
-    emergencyQueue.enqueuePatient(&p3);
-    emergencyQueue.enqueuePatient(&p4);
+    cout << "Generated ID: "
+         << manager.addPatient(&p4) << endl;
 
-    
-    std::cout << "\n=== Emergency Queue ===\n";
-    emergencyQueue.displayQueue();
+    // =================================
+    // 3. Test displayPatient()
+    // =================================
 
-    std::cout << "\n=== Treatment Order ===\n";
+    cout << "\n===== DISPLAY PATIENTS =====\n";
 
-    Patient *patient;
+    manager.displayPatient();
 
-    while (!emergencyQueue.checkEmpty())
+    // =================================
+    // 4. Test getPatientCount()
+    // =================================
+
+    cout << "\n===== PATIENT COUNT =====\n";
+
+    cout << "Total: "
+         << manager.getPatientCount() << endl;
+
+    // =================================
+    // 5. Test findPatientInfo()
+    // =================================
+
+    cout << "\n===== SEARCH PATIENT =====\n";
+
+    Patient *found = manager.findPatientInfo(2);
+
+    if (found != nullptr)
     {
-        patient = emergencyQueue.treatNextPatient();
-
-        std::cout << "Treating: "
-                  << patient->name
-                  << "\n";
+        cout << "Patient found: "
+             << found->name << endl;
     }
+    else
+    {
+        cout << "Patient not found.\n";
+    }
+
+    // Search nonexistent ID
+    found = manager.findPatientInfo(99);
+
+    if (found == nullptr)
+    {
+        cout << "ID 99 not found.\n";
+    }
+
+    // =================================
+    // 6. Test removePatient()
+    // =================================
+
+    cout << "\n===== REMOVE PATIENT =====\n";
+
+    if (manager.removePatient(2))
+        cout << "Patient ID 2 removed.\n";
+    else
+        cout << "Removal failed.\n";
+
+    manager.displayPatient();
+
+    cout << "Total: "
+         << manager.getPatientCount() << endl;
+
+    // =================================
+    // 7. Test ID generation after deletion
+    // =================================
+
+    cout << "\n===== ADD AFTER DELETE =====\n";
+
+    Patient p5;
+    p5.name = "Michael Wilson";
+    p5.age = 28;
+    p5.gender = "Male";
+    p5.phone = "015667788";
+    p5.address = "Kampong Cham";
+
+    cout << "Generated ID: "
+         << manager.addPatient(&p5) << endl;
+
+    manager.displayPatient();
+
+    cout << "\n===== END TEST =====\n";
 
     return 0;
 }

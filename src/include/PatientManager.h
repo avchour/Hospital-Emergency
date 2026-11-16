@@ -15,14 +15,17 @@ private:
     PatientNode *head = nullptr;
     PatientNode *tail = nullptr;
     int count = 0;
+    int nextPatientID = 1;
+    void clearList();
+    PatientNode *findNode(int id) const;
 
 public:
     PatientManager();
     ~PatientManager();
-    bool checkEmpty();
-    void addPatient(Patient *patient);
-    int getPatientCount();
-    void displayPatient();//temporary
+    bool checkEmpty() const;
+    int addPatient(Patient *patient);
+    int getPatientCount() const;
+    void displayPatient() const;//temporary
     Patient *findPatientInfo(int id);
     bool removePatient(int id);
 };
