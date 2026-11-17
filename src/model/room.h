@@ -2,8 +2,9 @@
 #define ROOM_H
 
 #include <string>
+using namespace std;
 
-typedef {
+typedef struct{
     int roomID;
     string roomNumber;
     string roomType;
