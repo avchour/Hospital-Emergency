@@ -32,7 +32,7 @@
       "type": "process",
       "command": "/usr/bin/qmake6",
       "args": [
-        "hospital.pro"
+        "config/hospital.pro"
       ],
       "options": {
         "cwd": "${workspaceFolder}"
@@ -88,7 +88,7 @@
         "-ExecutionPolicy",
         "Bypass",
         "-Command",
-        "$ErrorActionPreference = 'Stop'; Set-Location '${workspaceFolder}'; if (Test-Path 'Makefile') { Remove-Item 'Makefile' -Force }; & 'C:/Qt/6.12.0/mingw_64/bin/qmake.exe' 'hospital.pro'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; & 'C:/Qt/Tools/mingw1510_64/bin/mingw32-make.exe' 'clean'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; & 'C:/Qt/Tools/mingw1510_64/bin/mingw32-make.exe' '-j1'; exit $LASTEXITCODE"
+        "$ErrorActionPreference = 'Stop'; Set-Location '${workspaceFolder}'; if (Test-Path 'Makefile') { Remove-Item 'Makefile' -Force }; & 'C:/Qt/6.12.0/mingw_64/bin/qmake.exe' 'config/hospital.pro'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; & 'C:/Qt/Tools/mingw1510_64/bin/mingw32-make.exe' 'clean'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; & 'C:/Qt/Tools/mingw1510_64/bin/mingw32-make.exe' '-j1'; exit $LASTEXITCODE"
       ],
       "options": {
         "cwd": "${workspaceFolder}",

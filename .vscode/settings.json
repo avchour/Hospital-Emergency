@@ -26,5 +26,5 @@
     "cmake.cmakePath": "",
     "cmake.ninjaPath": ""
   },
-  "cmake.sourceDirectory": "C:/Users/User/OneDrive - Cambodia Academy of Digital Technology/dsa and c++ class/project midterm/project-hospital/config"
+  "cmake.sourceDirectory": "${workspaceFolder}/config"
 }

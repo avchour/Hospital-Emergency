@@ -1,13 +1,11 @@
 #ifndef EMERGENCY_H
 #define EMERGENCY_H
-
 #include <QWidget>
 #include <QString>
 #include <QVector>
 
-#include "Patient.h"
+#include "../../model/Patient.h"
 #include "../../model/triage.h"
-
 class QVBoxLayout;
 class QLabel;
 class QTableWidget;
