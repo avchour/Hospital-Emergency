@@ -2,41 +2,62 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "CMake: Build Emergency Queue Test",
+      "type": "process",
+      "command": "/usr/bin/cmake",
+      "args": ["--build", "build", "--target", "emergency_test", "-j"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "CMake: Run Emergency Queue Test",
+      "type": "process",
+      "command": "${workspaceFolder}/build/emergency_test",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Qt: Configure Hospital System",
       "type": "process",
-      "command": "C:/Qt/6.12.0/mingw_64/bin/qmake.exe",
+      "command": "/usr/bin/qmake6",
       "args": ["hospital.pro"],
       "options": {
-        "cwd": "${workspaceFolder}",
-        "env": {
-          "PATH": "C:/Qt/Tools/mingw1510_64/bin;C:/Qt/6.12.0/mingw_64/bin"
-        }
+        "cwd": "${workspaceFolder}"
       },
       "problemMatcher": []
     },
     {
       "label": "Qt: Clean Hospital System",
       "type": "process",
-      "command": "C:/Qt/Tools/mingw1510_64/bin/mingw32-make.exe",
+      "command": "/usr/bin/make",
       "args": ["clean"],
       "options": {
-        "cwd": "${workspaceFolder}",
-        "env": {
-          "PATH": "C:/Qt/Tools/mingw1510_64/bin;C:/Qt/6.12.0/mingw_64/bin"
-        }
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Qt: Generate Compile Commands",
+      "type": "process",
+      "command": "/usr/bin/python3",
+      "args": [".vscode/generate_compile_commands.py"],
+      "options": {
+        "cwd": "${workspaceFolder}"
       },
       "problemMatcher": []
     },
     {
       "label": "Qt: Build Hospital System",
       "type": "process",
-      "command": "C:/Qt/Tools/mingw1510_64/bin/mingw32-make.exe",
-      "args": ["-j1"],
+      "command": "/usr/bin/make",
+      "args": ["-j"],
       "options": {
-        "cwd": "${workspaceFolder}",
-        "env": {
-          "PATH": "C:/Qt/Tools/mingw1510_64/bin;C:/Qt/6.12.0/mingw_64/bin"
-        }
+        "cwd": "${workspaceFolder}"
       },
       "group": {
         "kind": "build",

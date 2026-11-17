@@ -1,4 +1,8 @@
 #include "../include/dashboard.h"
+#include "../../include/PatientManager.h"
+#include "../../include/PriorityQueue.h"
+#include "../../include/Queue.h"
+
 #include <QPainter>
 #include <QPaintEvent>
 #include <QVector>
@@ -34,6 +38,12 @@ public:
         setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     }
 
+    void setCounts(const QVector<int> &counts)
+    {
+        priorityCounts = counts;
+        update();
+    }
+
 protected:
     void paintEvent(QPaintEvent *event) override
     {
@@ -42,7 +52,6 @@ protected:
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
 
-        // ✏️ MANUAL CHANGE: Priority colors
         const QVector<QColor> colors = {
             QColor("#EF4444"), // Resuscitation
             QColor("#F97316"), // Emergent
@@ -52,94 +61,69 @@ protected:
         };
 
         int total = 0;
-
         for (int count : priorityCounts)
             total += count;
 
-        // Chart dimensions
-        QRectF chartRect(
-            (width() - 160) / 2.0,
-            (height() - 160) / 2.0,
-            160,
-            160);
+        QRectF chartRect(15, 15, width() - 30, height() - 30);
 
-        const int penWidth = 28;
-
-        if (total > 0)
+        if (total == 0)
         {
-            int startAngle = 90 * 16;
-
-            for (int i = 0; i < priorityCounts.size(); i++)
-            {
-                if (priorityCounts[i] <= 0)
-                    continue;
-
-                // Calculate each segment's angle.
-                int spanAngle = qRound(
-                    360.0 * 16 * priorityCounts[i] / total);
-
-                painter.setPen(Qt::NoPen);
-                painter.setBrush(colors[i]);
-
-                painter.drawPie(
-                    chartRect,
-                    startAngle,
-                    spanAngle);
-
-                startAngle += spanAngle;
-            }
-        }
-        else
-        {
-            // Empty chart when there are no patients.
             painter.setPen(Qt::NoPen);
-            painter.setBrush(QColor("#EAECF0"));
+            painter.setBrush(QColor("#E2E8F0"));
             painter.drawEllipse(chartRect);
+
+            QRectF holeRect(
+                chartRect.center().x() - 48,
+                chartRect.center().y() - 48,
+                96, 96);
+            painter.setBrush(Qt::white);
+            painter.drawEllipse(holeRect);
+
+            painter.setPen(QColor("#64748B"));
+            painter.setFont(QFont("Segoe UI", 10, QFont::Bold));
+            painter.drawText(holeRect, Qt::AlignCenter, "0 Patients");
+            return;
         }
 
-        // Create the donut hole.
-        QRectF innerRect = chartRect.adjusted(
-            penWidth, penWidth, -penWidth, -penWidth);
+        int startAngle = 90 * 16;
+        for (int i = 0; i < priorityCounts.size(); i++)
+        {
+            if (priorityCounts[i] == 0) continue;
+            int spanAngle = (priorityCounts[i] * 360 * 16) / total;
+
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(colors[i % colors.size()]);
+            painter.drawPie(chartRect, startAngle, spanAngle);
+
+            startAngle += spanAngle;
+        }
+
+        QRectF holeRect(
+            chartRect.center().x() - 48,
+            chartRect.center().y() - 48,
+            96, 96);
 
         painter.setBrush(Qt::white);
-        painter.drawEllipse(innerRect);
+        painter.setPen(Qt::NoPen);
+        painter.drawEllipse(holeRect);
 
-        // Center text
-        painter.setPen(QColor("#172337"));
+        painter.setPen(QColor("#0F172A"));
+        painter.setFont(QFont("Segoe UI", 16, QFont::Bold));
 
-        QFont totalFont = painter.font();
-        totalFont.setPointSize(24);
-        totalFont.setBold(true);
-        painter.setFont(totalFont);
+        QRectF textRect(holeRect.left(), holeRect.top() - 8, holeRect.width(), holeRect.height() / 2);
+        painter.drawText(textRect, Qt::AlignBottom | Qt::AlignHCenter, QString::number(total));
 
-        painter.drawText(
-            innerRect.adjusted(0, -8, 0, -8),
-            Qt::AlignCenter,
-            QString::number(total));
-
-        QFont labelFont = painter.font();
-        labelFont.setPointSize(9);
-        labelFont.setBold(false);
-        painter.setFont(labelFont);
-        painter.setPen(QColor("#667085"));
-
-        painter.drawText(
-            innerRect.adjusted(0, 23, 0, 23),
-            Qt::AlignCenter,
-            "Patients");
+        painter.setPen(QColor("#64748B"));
+        painter.setFont(QFont("Segoe UI", 9));
+        QRectF subRect(holeRect.left(), holeRect.center().y(), holeRect.width(), holeRect.height() / 2);
+        painter.drawText(subRect, Qt::AlignTop | Qt::AlignHCenter, "In Queue");
     }
 
 private:
     QVector<int> priorityCounts;
 };
 
-// ==========================================================
-// 🧩 REUSABLE COMPONENT: CONTENT PANEL
-// ==========================================================
-
-static QFrame *createPanel(
-    const QString &title,
-    QVBoxLayout *&contentLayout)
+static QFrame *createPanel(const QString &title, QVBoxLayout *&contentLayout)
 {
     QFrame *panel = new QFrame();
     panel->setObjectName("contentPanel");
@@ -150,454 +134,328 @@ static QFrame *createPanel(
 
     QLabel *heading = new QLabel(title);
     heading->setObjectName("sectionTitle");
-
+    heading->setStyleSheet("font-size: 18px; font-weight: bold; color: #172554;");
     contentLayout->addWidget(heading);
 
     return panel;
 }
 
-// ==========================================================
-// 🧩 REUSABLE COMPONENT: STATISTICS CARD
-// ==========================================================
-
-static QFrame *createStatCard(
-    const QString &title,
-    const QString &value,
-    const QString &description)
+static QFrame *createStatCard(const QString &title, const QString &description, QLabel *&valRef)
 {
     QFrame *card = new QFrame();
     card->setObjectName("dashboardCard");
     card->setMinimumHeight(125);
+    card->setStyleSheet(
+        "QFrame {"
+        "background-color: white;"
+        "border: 1px solid #E2E8F0;"
+        "border-radius: 8px;"
+        "padding: 12px;"
+        "}"
+    );
 
     QVBoxLayout *layout = new QVBoxLayout(card);
-
-    // ✏️ MANUAL CHANGE:
-    // Adjust internal card spacing here.
     layout->setContentsMargins(18, 15, 18, 15);
     layout->setSpacing(7);
 
     QLabel *titleLabel = new QLabel(title);
-    titleLabel->setObjectName("cardTitle");
+    titleLabel->setStyleSheet("font-size: 14px; color: #64748B; font-weight: bold;");
 
-    QLabel *valueLabel = new QLabel(value);
-    valueLabel->setObjectName("cardValue");
+    valRef = new QLabel("0");
+    valRef->setStyleSheet("font-size: 28px; font-weight: bold; color: #172554;");
 
     QLabel *descriptionLabel = new QLabel(description);
-    descriptionLabel->setObjectName("cardDescription");
+    descriptionLabel->setStyleSheet("font-size: 12px; color: #94A3B8;");
 
     layout->addWidget(titleLabel);
-    layout->addWidget(valueLabel);
+    layout->addWidget(valRef);
     layout->addWidget(descriptionLabel);
     layout->addStretch();
 
     return card;
 }
 
-// ==========================================================
-// 🏠 DASHBOARD CONSTRUCTOR
-// ==========================================================
-
 Dashboard::Dashboard(
+    PatientManager *mgr,
+    PriorityQueue *pq,
+    Queue *normQueue,
     std::function<void(int)> navigate,
     QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      patientManager(mgr),
+      priorityQueue(pq),
+      normalQueue(normQueue),
+      navigateFn(navigate),
+      totalPatientsVal(nullptr),
+      emergencyWaitingVal(nullptr),
+      normalWaitingVal(nullptr),
+      treatedCountVal(nullptr),
+      donutChart(nullptr),
+      queueTable(nullptr)
 {
-    setObjectName("dashboardPage");
+    for (int i = 0; i < 5; i++)
+        priorityCountLabels[i] = nullptr;
 
-    // 📜 Scrollable dashboard
+    setupUI();
+    refreshStats();
+}
+
+void Dashboard::setupUI()
+{
     QVBoxLayout *rootLayout = new QVBoxLayout(this);
     rootLayout->setContentsMargins(0, 0, 0, 0);
 
     QScrollArea *scrollArea = new QScrollArea();
     scrollArea->setWidgetResizable(true);
     scrollArea->setFrameShape(QFrame::NoFrame);
-    scrollArea->setObjectName("dashboardScroll");
 
     QWidget *container = new QWidget();
-    container->setObjectName("dashboardContainer");
-
     QVBoxLayout *mainLayout = new QVBoxLayout(container);
-
-    // ✏️ MANUAL CHANGE: Dashboard outer spacing.
-    mainLayout->setContentsMargins(28, 25, 28, 25);
+    mainLayout->setContentsMargins(24, 20, 24, 24);
     mainLayout->setSpacing(20);
 
-    // ======================================================
-    // 01. WELCOME HEADER
-    // ======================================================
-
+    // Header
     QHBoxLayout *headerLayout = new QHBoxLayout();
-
     QVBoxLayout *headingLayout = new QVBoxLayout();
-    headingLayout->setSpacing(5);
 
-    QLabel *welcome =
-        new QLabel("Welcome, Administrator");
+    QLabel *welcome = new QLabel("Welcome, Hospital Administrator");
+    welcome->setStyleSheet("font-size: 24px; font-weight: bold; color: #172554;");
 
-    welcome->setObjectName("pageTitle");
-
-    QLabel *subtitle = new QLabel(
-        "Emergency Management Dashboard  |  Overview");
-
-    subtitle->setObjectName("pageSubtitle");
+    QLabel *subtitle = new QLabel("Emergency Management System  |  Real-Time Overview");
+    subtitle->setStyleSheet("font-size: 14px; color: #64748B;");
 
     headingLayout->addWidget(welcome);
     headingLayout->addWidget(subtitle);
-
-    QLabel *demoLabel = new QLabel("DEMO DATA");
-    demoLabel->setObjectName("demoBadge");
-    demoLabel->setAlignment(Qt::AlignCenter);
-
     headerLayout->addLayout(headingLayout);
     headerLayout->addStretch();
-    headerLayout->addWidget(demoLabel);
 
     mainLayout->addLayout(headerLayout);
 
-    // ======================================================
-    // 02. STATISTICS CARDS
-    // ======================================================
-
+    // 4 Stat Cards
     QGridLayout *cardLayout = new QGridLayout();
     cardLayout->setSpacing(14);
 
-    // 📊 DEMO DATA
-    // ✏️ MANUAL CHANGE:
-    // Replace these values with PatientManager,
-    // PriorityQueue, and other backend calculations.
-    //
-    // Do not treat these sample numbers as real records.
-
-    cardLayout->addWidget(
-        createStatCard(
-            "Total Patients",
-            "128",
-            "Registered patients"),
-        0, 0);
-
-    cardLayout->addWidget(
-        createStatCard(
-            "Waiting Patients",
-            "12",
-            "Emergency waiting queue"),
-        0, 1);
-
-    cardLayout->addWidget(
-        createStatCard(
-            "In Treatment",
-            "8",
-            "Currently receiving care"),
-        0, 2);
-
-    cardLayout->addWidget(
-        createStatCard(
-            "Available Rooms",
-            "15",
-            "Ready for admission"),
-        0, 3);
+    cardLayout->addWidget(createStatCard("Registered Patients", "Total registered in system", totalPatientsVal), 0, 0);
+    cardLayout->addWidget(createStatCard("Emergency Queue", "Waiting for emergency triage", emergencyWaitingVal), 0, 1);
+    cardLayout->addWidget(createStatCard("Normal Queue", "Outpatient FIFO queue", normalWaitingVal), 0, 2);
+    cardLayout->addWidget(createStatCard("System Status", "All backend queues active", treatedCountVal), 0, 3);
 
     for (int col = 0; col < 4; col++)
         cardLayout->setColumnStretch(col, 1);
 
     mainLayout->addLayout(cardLayout);
 
-    // ======================================================
-    // 03. EMERGENCY OVERVIEW - FIVE PRIORITY DONUT CHART
-    // ======================================================
-
+    // Middle Section: Donut chart & legend
     QHBoxLayout *middleLayout = new QHBoxLayout();
     middleLayout->setSpacing(16);
 
     QVBoxLayout *emergencyLayout = nullptr;
+    QFrame *emergencyPanel = createPanel("Emergency Priority Distribution", emergencyLayout);
 
-    QFrame *emergencyPanel =
-        createPanel("Emergency Overview", emergencyLayout);
+    QHBoxLayout *chartLayout = new QHBoxLayout();
+    chartLayout->setSpacing(16);
 
-    QLabel *emergencySubtitle = new QLabel(
-        "Distribution by triage priority");
+    donutChart = new PriorityDonutChart({0, 0, 0, 0, 0});
+    chartLayout->addWidget(donutChart, 0, Qt::AlignCenter);
 
-    emergencySubtitle->setObjectName("pageSubtitle");
-    emergencyLayout->addWidget(emergencySubtitle);
-
-    // ======================================================
-    // 🚨 DEMO PRIORITY DATA
-    //
-    // Order must match your TriagePriority enum:
-    // 1. RESUSCITATION
-    // 2. EMERGENT
-    // 3. URGENT
-    // 4. LESS_URGENT
-    // 5. NON_URGENT
-    //
-    // ✏️ MANUAL CHANGE:
-    // Replace these sample counts with actual backend data.
-    // These values are for demonstration only.
-    // ======================================================
+    QVBoxLayout *legendLayout = new QVBoxLayout();
+    legendLayout->setSpacing(10);
 
     QStringList priorityNames = {
-        "Resuscitation",
-        "Emergent",
-        "Urgent",
-        "Less Urgent",
-        "Non-Urgent"};
-
-    QVector<int> priorityCounts = {
-        2, // RESUSCITATION
-        3, // EMERGENT
-        4, // URGENT
-        3, // LESS_URGENT
-        3  // NON_URGENT
+        "Resuscitation (Level 1)",
+        "Emergent (Level 2)",
+        "Urgent (Level 3)",
+        "Less Urgent (Level 4)",
+        "Non-Urgent (Level 5)"
     };
 
     QVector<QColor> priorityColors = {
-        QColor("#EF4444"), // Red
-        QColor("#F97316"), // Orange
-        QColor("#EAB308"), // Yellow
-        QColor("#22C55E"), // Green
-        QColor("#3B82F6")  // Blue
+        QColor("#EF4444"),
+        QColor("#F97316"),
+        QColor("#EAB308"),
+        QColor("#22C55E"),
+        QColor("#3B82F6")
     };
 
-    // Chart and legend layout
-    QHBoxLayout *chartLayout = new QHBoxLayout();
-    chartLayout->setSpacing(12);
-
-    // Donut chart
-    PriorityDonutChart *donutChart =
-        new PriorityDonutChart(priorityCounts);
-
-    chartLayout->addWidget(
-        donutChart, 0, Qt::AlignCenter);
-
-    // Priority legend
-    QVBoxLayout *legendLayout = new QVBoxLayout();
-    legendLayout->setSpacing(13);
-
-    for (int i = 0; i < priorityNames.size(); i++)
-    {
-        QHBoxLayout *legendRow = new QHBoxLayout();
-        legendRow->setSpacing(7);
-
-        // Colored indicator
-        QLabel *colorIndicator = new QLabel();
-        colorIndicator->setFixedSize(10, 10);
-
-        colorIndicator->setStyleSheet(
-            QString(
-                "background-color: %1;"
-                "border-radius: 5px;")
-                .arg(priorityColors[i].name()));
-
-        // Priority name
-        QLabel *priorityLabel =
-            new QLabel(priorityNames[i]);
-
-        priorityLabel->setObjectName("severityLabel");
-
-        // Patient count
-        QLabel *countLabel =
-            new QLabel(QString::number(priorityCounts[i]));
-
-        countLabel->setObjectName("severityCount");
-        countLabel->setAlignment(Qt::AlignRight);
-
-        legendRow->addWidget(colorIndicator);
-        legendRow->addWidget(priorityLabel, 1);
-        legendRow->addWidget(countLabel);
-
-        legendLayout->addLayout(legendRow);
-    }
-
-    legendLayout->addStretch();
-
-    chartLayout->addLayout(legendLayout, 1);
-
-    emergencyLayout->addLayout(chartLayout);
-    emergencyLayout->addStretch();
-
-    // ======================================================
-    // 04. RECENT ACTIVITIES
-    // ======================================================
-
-    QVBoxLayout *activityLayout = nullptr;
-
-    QFrame *activityPanel =
-        createPanel("Recent Activities", activityLayout);
-
-    // 📝 DEMO DATA
-    // ✏️ MANUAL CHANGE:
-    // Later replace these with actual application events.
-
-    QStringList activities = {
-        "Patient registration completed",
-        "Emergency triage assigned",
-        "Patient moved to treatment",
-        "Treatment record updated"};
-
-    QStringList activityTimes = {
-        "09:15",
-        "09:10",
-        "08:55",
-        "08:40"};
-
-    for (int i = 0; i < activities.size(); i++)
+    for (int i = 0; i < 5; i++)
     {
         QHBoxLayout *row = new QHBoxLayout();
+        QLabel *dot = new QLabel();
+        dot->setFixedSize(12, 12);
+        dot->setStyleSheet(QString("background-color: %1; border-radius: 6px;").arg(priorityColors[i].name()));
 
-        QLabel *activity =
-            new QLabel("•  " + activities[i]);
+        QLabel *lbl = new QLabel(priorityNames[i]);
+        lbl->setStyleSheet("font-size: 13px; color: #334155; font-weight: 500;");
 
-        activity->setObjectName("activityText");
+        priorityCountLabels[i] = new QLabel("0");
+        priorityCountLabels[i]->setStyleSheet("font-size: 14px; font-weight: bold; color: #0F172A;");
 
-        QLabel *time = new QLabel(activityTimes[i]);
-        time->setObjectName("activityTime");
-
-        row->addWidget(activity);
-        row->addStretch();
-        row->addWidget(time);
-
-        activityLayout->addLayout(row);
+        row->addWidget(dot);
+        row->addWidget(lbl, 1);
+        row->addWidget(priorityCountLabels[i]);
+        legendLayout->addLayout(row);
     }
 
-    activityLayout->addStretch();
+    chartLayout->addLayout(legendLayout);
+    emergencyLayout->addLayout(chartLayout);
+    middleLayout->addWidget(emergencyPanel, 3);
 
-    middleLayout->addWidget(emergencyPanel, 1);
-    middleLayout->addWidget(activityPanel, 1);
+    // Quick Actions Panel
+    QVBoxLayout *actionLayout = nullptr;
+    QFrame *actionPanel = createPanel("Quick Navigation", actionLayout);
+
+    QStringList actionNames = {
+        "♙ Patient Management",
+        "♥ Emergency Triage",
+        "☷ Emergency Queue",
+        "✚ Normal Queue & Treatment"
+    };
+
+    int pageIndices[] = {1, 2, 3, 4};
+
+    for (int i = 0; i < 4; i++)
+    {
+        QPushButton *btn = new QPushButton(actionNames[i]);
+        btn->setMinimumHeight(44);
+        btn->setStyleSheet(
+            "QPushButton {"
+            "background-color: #F8FAFC;"
+            "color: #1E293B;"
+            "border: 1px solid #CBD5E1;"
+            "border-radius: 6px;"
+            "font-weight: bold;"
+            "text-align: left;"
+            "padding-left: 16px;"
+            "}"
+            "QPushButton:hover { background-color: #E2E8F0; }"
+        );
+
+        int target = pageIndices[i];
+        if (navigateFn)
+        {
+            connect(btn, &QPushButton::clicked, [this, target]() {
+                navigateFn(target);
+            });
+        }
+        actionLayout->addWidget(btn);
+    }
+    actionLayout->addStretch();
+    middleLayout->addWidget(actionPanel, 2);
 
     mainLayout->addLayout(middleLayout);
 
-    // ======================================================
-    // 05. EMERGENCY QUEUE PREVIEW
-    // ======================================================
-
+    // Bottom Section: Priority Emergency Queue preview table
     QVBoxLayout *queueLayout = nullptr;
+    QFrame *queuePanel = createPanel("High-Priority Emergency Queue (Live)", queueLayout);
 
-    QFrame *queuePanel =
-        createPanel("Emergency Queue - Preview", queueLayout);
-
-    QTableWidget *queueTable = new QTableWidget(3, 4);
-
-    queueTable->setHorizontalHeaderLabels({"Patient ID",
-                                           "Patient Name",
-                                           "Priority",
-                                           "Status"});
-
-    queueTable->setEditTriggers(
-        QAbstractItemView::NoEditTriggers);
-
-    queueTable->setSelectionBehavior(
-        QAbstractItemView::SelectRows);
-
-    queueTable->setAlternatingRowColors(true);
-
+    queueTable = new QTableWidget();
+    queueTable->setColumnCount(5);
+    queueTable->setHorizontalHeaderLabels({
+        "Priority", "Patient ID", "Name", "Age", "Symptoms"
+    });
+    queueTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    queueTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    queueTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     queueTable->verticalHeader()->setVisible(false);
-
-    queueTable->horizontalHeader()->setSectionResizeMode(
-        QHeaderView::Stretch);
-
-    queueTable->setMinimumHeight(160);
-    queueTable->setMaximumHeight(185);
-
-    // 🧪 SAMPLE RECORDS - NOT REAL PATIENTS
-    // ✏️ MANUAL CHANGE:
-    // Later load records from PriorityQueue.
-
-    QString queueData[3][4] = {
-        {"DEMO-001", "Sample Patient A", "Critical", "Waiting"},
-        {"DEMO-002", "Sample Patient B", "Major", "Waiting"},
-        {"DEMO-003", "Sample Patient C", "Moderate", "In Triage"}};
-
-    for (int row = 0; row < 3; row++)
-    {
-        for (int col = 0; col < 4; col++)
-        {
-            QTableWidgetItem *item =
-                new QTableWidgetItem(queueData[row][col]);
-
-            if (col == 2)
-            {
-                const QString priority = queueData[row][col];
-
-                if (priority == "Critical")
-                    item->setForeground(QColor("#EF4444"));
-                else if (priority == "Major")
-                    item->setForeground(QColor("#F97316"));
-                else if (priority == "Moderate")
-                    item->setForeground(QColor("#EAB308"));
-                else
-                    item->setForeground(QColor("#22C55E"));
-
-                QFont font = item->font();
-                font.setBold(true);
-                item->setFont(font);
-            }
-
-            queueTable->setItem(row, col, item);
-        }
-    }
+    queueTable->setMaximumHeight(180);
+    queueTable->setStyleSheet(
+        "QTableWidget {"
+        "background-color: white; border: 1px solid #E2E8F0; border-radius: 8px;"
+        "}"
+        "QHeaderView::section {"
+        "background-color: #F8FAFC; color: #475569; font-weight: bold; padding: 6px;"
+        "border: none; border-bottom: 1px solid #E2E8F0;"
+        "}"
+    );
 
     queueLayout->addWidget(queueTable);
     mainLayout->addWidget(queuePanel);
 
-    // ======================================================
-    // 06. QUICK ACTIONS
-    // ======================================================
-
-    QVBoxLayout *actionLayout = nullptr;
-
-    QFrame *actionPanel =
-        createPanel("Quick Actions", actionLayout);
-
-    QHBoxLayout *buttonLayout = new QHBoxLayout();
-    buttonLayout->setSpacing(12);
-
-    QStringList actionNames = {
-        "+ Register Patient",
-        "Emergency Triage",
-        "View Queue",
-        "Treatment Records"};
-
-    // 🧭 Match MainWindow's QStackedWidget indices.
-    // ✏️ MANUAL CHANGE:
-    // Update indices if you rearrange pages.
-
-    int pageIndices[] = {1, 2, 3, 4};
-
-    for (int i = 0; i < actionNames.size(); i++)
-    {
-        QPushButton *button =
-            new QPushButton(actionNames[i]);
-
-        button->setObjectName("quickActionButton");
-        button->setMinimumHeight(45);
-        button->setCursor(Qt::PointingHandCursor);
-
-        const int targetPage = pageIndices[i];
-
-        // 🔗 Navigate using the callback from MainWindow.
-        // The target pages may still be placeholders.
-        if (navigate)
-        {
-            connect(button, &QPushButton::clicked,
-                    this, [navigate, targetPage]()
-                    { navigate(targetPage); });
-        }
-        else
-        {
-            button->setEnabled(false);
-        }
-
-        buttonLayout->addWidget(button);
-    }
-
-    actionLayout->addLayout(buttonLayout);
-    mainLayout->addWidget(actionPanel);
-
-    mainLayout->addStretch();
-
-    // ======================================================
-    // 07. FINAL SCROLLABLE LAYOUT
-    // ======================================================
-
     scrollArea->setWidget(container);
     rootLayout->addWidget(scrollArea);
+}
+
+void Dashboard::refreshStats()
+{
+    int totalRegistered = patientManager ? patientManager->getPatientCount() : 0;
+    int emergencyWaiting = priorityQueue ? priorityQueue->getQueueCount() : 0;
+
+    int normalWaiting = 0;
+    if (normalQueue)
+    {
+        for (Node *cur = normalQueue->head; cur != nullptr; cur = cur->next)
+            normalWaiting++;
+    }
+
+    if (totalPatientsVal)
+        totalPatientsVal->setText(QString::number(totalRegistered));
+
+    if (emergencyWaitingVal)
+        emergencyWaitingVal->setText(QString::number(emergencyWaiting));
+
+    if (normalWaitingVal)
+        normalWaitingVal->setText(QString::number(normalWaiting));
+
+    if (treatedCountVal)
+        treatedCountVal->setText("Online");
+
+    // Donut chart & legend
+    std::array<int, 5> pCounts = {0, 0, 0, 0, 0};
+    if (priorityQueue)
+        pCounts = priorityQueue->getPriorityCounts();
+
+    QVector<int> countsVec = {pCounts[0], pCounts[1], pCounts[2], pCounts[3], pCounts[4]};
+
+    if (donutChart)
+        donutChart->setCounts(countsVec);
+
+    for (int i = 0; i < 5; i++)
+    {
+        if (priorityCountLabels[i])
+            priorityCountLabels[i]->setText(QString::number(pCounts[i]));
+    }
+
+    // Queue preview table
+    if (queueTable && priorityQueue && patientManager)
+    {
+        queueTable->setRowCount(0);
+        int previewCount = std::min(4, priorityQueue->getQueueCount());
+
+        for (int i = 0; i < previewCount; i++)
+        {
+            TriageRecord *tr = priorityQueue->getQueueRecordAt(i);
+            if (!tr) continue;
+
+            Patient *p = patientManager->findPatientInfo(tr->patientID);
+            int row = queueTable->rowCount();
+            queueTable->insertRow(row);
+
+            QString pName;
+            switch (tr->priority)
+            {
+            case RESUSCITATION: pName = "Resuscitation (1)"; break;
+            case EMERGENT:      pName = "Emergent (2)"; break;
+            case URGENT:        pName = "Urgent (3)"; break;
+            case LESS_URGENT:   pName = "Less Urgent (4)"; break;
+            case NON_URGENT:    pName = "Non Urgent (5)"; break;
+            }
+
+            QTableWidgetItem *pItem = new QTableWidgetItem(pName);
+            QFont f = pItem->font();
+            f.setBold(true);
+            pItem->setFont(f);
+
+            if (tr->priority == RESUSCITATION) pItem->setForeground(QColor("#EF4444"));
+            else if (tr->priority == EMERGENT) pItem->setForeground(QColor("#F97316"));
+            else if (tr->priority == URGENT)   pItem->setForeground(QColor("#EAB308"));
+            else if (tr->priority == LESS_URGENT) pItem->setForeground(QColor("#22C55E"));
+            else pItem->setForeground(QColor("#3B82F6"));
+
+            queueTable->setItem(row, 0, pItem);
+            queueTable->setItem(row, 1, new QTableWidgetItem(QString::number(tr->patientID)));
+            queueTable->setItem(row, 2, new QTableWidgetItem(p ? QString::fromStdString(p->name) : "Unknown"));
+            queueTable->setItem(row, 3, new QTableWidgetItem(p ? QString::number(p->age) : "-"));
+            queueTable->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(tr->symptoms)));
+        }
+    }
 }

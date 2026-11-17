@@ -1,3 +1,6 @@
+#ifndef QUEUE_H
+#define QUEUE_H
+
 #include <iostream>
 
 struct Node
@@ -13,7 +16,7 @@ struct Queue
 };
 
 // Enqueue patient by ID (O(1))
-void enqueue(Queue &queue, int patientId)
+inline void enqueue(Queue &queue, int patientId)
 {
     Node *newNode = new Node{patientId, nullptr};
 
@@ -30,7 +33,7 @@ void enqueue(Queue &queue, int patientId)
 }
 
 // Dequeue next patient (O(1))
-void dequeue(Queue &queue)
+inline void dequeue(Queue &queue)
 {
     if (queue.head == nullptr)
     {
@@ -50,7 +53,7 @@ void dequeue(Queue &queue)
 }
 
 // View next patient ID without removing (O(1))
-int peek(const Queue &queue)
+inline int peek(const Queue &queue)
 {
     if (queue.head == nullptr)
     {
@@ -61,16 +64,18 @@ int peek(const Queue &queue)
 }
 
 // Check if queue has waiting patients (O(1))
-bool isEmpty(const Queue &queue)
+inline bool isEmpty(const Queue &queue)
 {
     return queue.head == nullptr;
 }
 
 // Clean up all dynamically allocated nodes
-void clearQueue(Queue &queue)
+inline void clearQueue(Queue &queue)
 {
     while (!isEmpty(queue))
     {
         dequeue(queue);
     }
 }
+
+#endif

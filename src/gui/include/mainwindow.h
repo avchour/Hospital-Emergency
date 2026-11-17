@@ -4,30 +4,46 @@
 #include <QMainWindow>
 #include <QList>
 
+#include "../../include/PatientManager.h"
+#include "../../include/PriorityQueue.h"
+#include "../../include/Queue.h"
+
 class QStackedWidget;
 class QPushButton;
+class Dashboard;
+class PatientPage;
+class Emergency;
+class EmergencyQueue;
+class TreatmentPage;
 
 class MainWindow : public QMainWindow
 {
+    Q_OBJECT
+
 public:
-    // 🏗️ CONSTRUCTOR
     explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow() override;
 
 private:
-    // 🧭 NAVIGATION
-    QStackedWidget *pages;
+    // Shared backend instances
+    PatientManager patientManager;
+    PriorityQueue priorityQueue;
+    Queue normalQueue;
 
-    // ✏️ MANUAL CHANGE:
-    // Add or remove navigation buttons here if you change the menu.
+    // GUI Pages
+    Dashboard *dashboardPage;
+    PatientPage *patientPage;
+    Emergency *triagePage;
+    EmergencyQueue *emergencyQueuePage;
+    TreatmentPage *treatmentPage;
+
+    // Navigation
+    QStackedWidget *pages;
     QList<QPushButton *> navButtons;
 
-    // 🎨 GUI SETUP
     void setupUI();
-
-    // 🔄 PAGE NAVIGATION
+    void initSampleData();
     void changePage(int index);
-
-    // ⭐ SIDEBAR DESIGN
     void setActiveButton(int activeIndex);
 };
 

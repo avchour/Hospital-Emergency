@@ -1,0 +1,116 @@
+[
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/emergency_test_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/emergency_test.dir/emergency_test_autogen/mocs_compilation.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/build/emergency_test_autogen/mocs_compilation.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/build/emergency_test_autogen/mocs_compilation.cpp",
+  "output": "CMakeFiles/emergency_test.dir/emergency_test_autogen/mocs_compilation.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/emergency_test_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/emergency_test.dir/src/emergency_main.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/emergency_main.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/emergency_main.cpp",
+  "output": "CMakeFiles/emergency_test.dir/src/emergency_main.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/emergency_test_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/emergency_test.dir/src/gui/data/emergency.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/gui/data/emergency.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/gui/data/emergency.cpp",
+  "output": "CMakeFiles/emergency_test.dir/src/gui/data/emergency.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/emergency_test_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/emergency_test.dir/src/data/PatientManager.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/data/PatientManager.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/data/PatientManager.cpp",
+  "output": "CMakeFiles/emergency_test.dir/src/data/PatientManager.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/emergency_test_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/emergency_test.dir/src/data/PriorityQueue.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/data/PriorityQueue.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/data/PriorityQueue.cpp",
+  "output": "CMakeFiles/emergency_test.dir/src/data/PriorityQueue.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/emergency_test_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/emergency_test.dir/src/data/utils.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/data/utils.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/data/utils.cpp",
+  "output": "CMakeFiles/emergency_test.dir/src/data/utils.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/emergency_test_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/emergency_test.dir/emergency_test_autogen/3YJK5W5UP7/qrc_resources.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/build/emergency_test_autogen/3YJK5W5UP7/qrc_resources.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/build/emergency_test_autogen/3YJK5W5UP7/qrc_resources.cpp",
+  "output": "CMakeFiles/emergency_test.dir/emergency_test_autogen/3YJK5W5UP7/qrc_resources.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/HospitalSystem.dir/HospitalSystem_autogen/mocs_compilation.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/mocs_compilation.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/mocs_compilation.cpp",
+  "output": "CMakeFiles/HospitalSystem.dir/HospitalSystem_autogen/mocs_compilation.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/HospitalSystem.dir/src/main.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/main.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/main.cpp",
+  "output": "CMakeFiles/HospitalSystem.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/HospitalSystem.dir/src/data/PatientManager.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/data/PatientManager.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/data/PatientManager.cpp",
+  "output": "CMakeFiles/HospitalSystem.dir/src/data/PatientManager.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/HospitalSystem.dir/src/data/PriorityQueue.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/data/PriorityQueue.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/data/PriorityQueue.cpp",
+  "output": "CMakeFiles/HospitalSystem.dir/src/data/PriorityQueue.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/HospitalSystem.dir/src/data/utils.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/data/utils.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/data/utils.cpp",
+  "output": "CMakeFiles/HospitalSystem.dir/src/data/utils.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/HospitalSystem.dir/src/gui/data/mainwindow.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/gui/data/mainwindow.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/gui/data/mainwindow.cpp",
+  "output": "CMakeFiles/HospitalSystem.dir/src/gui/data/mainwindow.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/HospitalSystem.dir/src/gui/data/patient.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/gui/data/patient.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/gui/data/patient.cpp",
+  "output": "CMakeFiles/HospitalSystem.dir/src/gui/data/patient.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/HospitalSystem.dir/src/gui/data/dashboard.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/gui/data/dashboard.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/gui/data/dashboard.cpp",
+  "output": "CMakeFiles/HospitalSystem.dir/src/gui/data/dashboard.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/HospitalSystem.dir/src/gui/data/triage.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/gui/data/triage.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/gui/data/triage.cpp",
+  "output": "CMakeFiles/HospitalSystem.dir/src/gui/data/triage.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/HospitalSystem.dir/src/gui/data/emergency.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/gui/data/emergency.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/gui/data/emergency.cpp",
+  "output": "CMakeFiles/HospitalSystem.dir/src/gui/data/emergency.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/HospitalSystem.dir/src/gui/data/treatment.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/src/gui/data/treatment.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/src/gui/data/treatment.cpp",
+  "output": "CMakeFiles/HospitalSystem.dir/src/gui/data/treatment.cpp.o"
+},
+{
+  "directory": "/home/pannketya/Documents/Hospital-Emergency/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/include -I/home/pannketya/Documents/Hospital-Emergency/src/include -I/home/pannketya/Documents/Hospital-Emergency/src/model -I/home/pannketya/Documents/Hospital-Emergency/src/gui/include -isystem /usr/include/qt6/QtWidgets -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtGui -std=gnu++17 -o CMakeFiles/HospitalSystem.dir/HospitalSystem_autogen/3YJK5W5UP7/qrc_resources.cpp.o -c /home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/3YJK5W5UP7/qrc_resources.cpp",
+  "file": "/home/pannketya/Documents/Hospital-Emergency/build/HospitalSystem_autogen/3YJK5W5UP7/qrc_resources.cpp",
+  "output": "CMakeFiles/HospitalSystem.dir/HospitalSystem_autogen/3YJK5W5UP7/qrc_resources.cpp.o"
+}
+]
