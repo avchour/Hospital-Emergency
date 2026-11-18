@@ -40,7 +40,7 @@ flowchart TB
         Patient["Patient"]
         Triage["TriageRecord<br/>symptoms + vital signs"]
         Priority["TriagePriority<br/>5 levels"]
-        Room["Room model<br/>room ID, number, type,<br/>capacity, status, patient ID"]
+        Room["Room model<br/>room ID, name, status, patient ID"]
     end
 
     DoctorModule["Doctor module<br/>design / implementation pending"]
