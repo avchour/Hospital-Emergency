@@ -115,9 +115,7 @@ The project already contains `src/model/room.h` with this structure:
 ```cpp
 typedef struct {
     int roomID;
-    std::string roomNumber;
-    std::string roomType;
-    int capacity;
+    std::string roomName;
     std::string status;
     int patientID;
 } Room;
