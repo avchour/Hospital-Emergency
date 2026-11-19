@@ -4,14 +4,18 @@
 #include <string>
 using namespace std;
 
-typedef struct
+enum RoomStatus
+{
+    AVAILABLE,
+    OCCUPIED
+};
+
+struct Room
 {
     int roomID;
-    string roomNumber;
-    string roomType;
-    int capacity;
-    string status;
     int patientID;
-} Room;
+    string roomNumber;
+    RoomStatus status;
+};
 
 #endif
