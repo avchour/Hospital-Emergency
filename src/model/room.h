@@ -3,19 +3,16 @@
 
 #include <string>
 
-typedef {
+typedef
+{
+
     int roomID;
     string roomNumber;
     string roomType;
     int capacity;
     string status;
     int patientID;
-    
-} Room;
-
-
-
-
-
+}
+Room;
 
 #endif
