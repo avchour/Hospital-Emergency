@@ -7,5 +7,11 @@ debug/patient.o
 debug/dashboard.o
 debug/triage.o
 debug/emergency.o
+debug/treatment.o
 debug/qrc_resources.o
+debug/moc_mainwindow.o
+debug/moc_dashboard.o
+debug/moc_patient.o
+debug/moc_triage.o
 debug/moc_emergency.o
+debug/moc_treatment.o

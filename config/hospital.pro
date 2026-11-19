@@ -18,7 +18,8 @@ SOURCES += \
     src/gui/data/patient.cpp \
     src/gui/data/dashboard.cpp \
     src/gui/data/triage.cpp \
-    src/gui/data/emergency.cpp
+    src/gui/data/emergency.cpp \
+    src/gui/data/treatment.cpp
 
 HEADERS += \
     src/include/PatientManager.h \
@@ -31,5 +32,6 @@ HEADERS += \
     src/gui/include/dashboard.h \
     src/gui/include/patient.h \
     src/gui/include/triage.h \
-    src/gui/include/emergency.h
+    src/gui/include/emergency.h \
+    src/gui/include/treatment.h
 RESOURCES += resources/resources.qrc

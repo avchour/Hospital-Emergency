@@ -1,4 +1,3 @@
-
 #ifndef TRIAGE_GUI_H
 #define TRIAGE_GUI_H
 
@@ -9,6 +8,8 @@
 class QPushButton;
 class QTableWidget;
 class QLabel;
+class PatientManager;
+class PriorityQueue;
 
 struct EmergencyPatient
 {
@@ -22,10 +23,22 @@ struct EmergencyPatient
 
 class Emergency : public QWidget
 {
+    Q_OBJECT
+
 public:
-    explicit Emergency(QWidget *parent = nullptr);
+    explicit Emergency(
+        PatientManager *mgr = nullptr,
+        PriorityQueue *pq = nullptr,
+        QWidget *parent = nullptr
+    );
+
+public slots:
+    void refreshData();
 
 private:
+    PatientManager *patientManager;
+    PriorityQueue *priorityQueue;
+
     QVector<EmergencyPatient> patients;
 
     QPushButton *criticalButton;

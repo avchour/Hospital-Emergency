@@ -2,40 +2,98 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "CMake: Build Emergency Queue Test",
+      "type": "process",
+      "command": "/usr/bin/cmake",
+      "args": [
+        "--build",
+        "build",
+        "--target",
+        "emergency_test",
+        "-j"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "CMake: Run Emergency Queue Test",
+      "type": "process",
+      "command": "${workspaceFolder}/build/emergency_test",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Qt: Configure Hospital System",
       "type": "process",
-      "command": "C:/Qt/6.12.0/mingw_64/bin/qmake.exe",
-      "args": ["hospital.pro"],
+      "command": "/usr/bin/qmake6",
+      "args": [
+        "config/hospital.pro"
+      ],
       "options": {
-        "cwd": "${workspaceFolder}",
-        "env": {
-          "PATH": "C:/Qt/Tools/mingw1510_64/bin;C:/Qt/6.12.0/mingw_64/bin"
-        }
+        "cwd": "${workspaceFolder}"
       },
       "problemMatcher": []
     },
     {
       "label": "Qt: Clean Hospital System",
       "type": "process",
-      "command": "C:/Qt/Tools/mingw1510_64/bin/mingw32-make.exe",
-      "args": ["clean"],
+      "command": "/usr/bin/make",
+      "args": [
+        "clean"
+      ],
       "options": {
-        "cwd": "${workspaceFolder}",
-        "env": {
-          "PATH": "C:/Qt/Tools/mingw1510_64/bin;C:/Qt/6.12.0/mingw_64/bin"
-        }
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Qt: Generate Compile Commands",
+      "type": "process",
+      "command": "/usr/bin/python3",
+      "args": [
+        ".vscode/generate_compile_commands.py"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
       },
       "problemMatcher": []
     },
     {
       "label": "Qt: Build Hospital System",
       "type": "process",
-      "command": "C:/Qt/Tools/mingw1510_64/bin/mingw32-make.exe",
-      "args": ["-j1"],
+      "command": "/usr/bin/make",
+      "args": [
+        "-j"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Windows: Qt Clean + Configure + Build Hospital System",
+      "type": "process",
+      "command": "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$ErrorActionPreference = 'Stop'; Set-Location '${workspaceFolder}'; if (Test-Path 'Makefile') { Remove-Item 'Makefile' -Force }; & 'C:/Qt/6.12.0/mingw_64/bin/qmake.exe' 'config/hospital.pro'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; & 'C:/Qt/Tools/mingw1510_64/bin/mingw32-make.exe' 'clean'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; & 'C:/Qt/Tools/mingw1510_64/bin/mingw32-make.exe' '-j1'; exit $LASTEXITCODE"
+      ],
       "options": {
         "cwd": "${workspaceFolder}",
         "env": {
-          "PATH": "C:/Qt/Tools/mingw1510_64/bin;C:/Qt/6.12.0/mingw_64/bin"
+          "PATH": "C:/Qt/Tools/mingw1510_64/bin;C:/Qt/6.12.0/mingw_64/bin;C:/Windows/System32;C:/Windows"
         }
       },
       "group": {
@@ -43,6 +101,37 @@
         "isDefault": true
       },
       "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Windows: Qt Build Hospital System (existing Makefile)",
+      "type": "process",
+      "command": "C:/Qt/Tools/mingw1510_64/bin/mingw32-make.exe",
+      "args": [
+        "-j1"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "C:/Qt/Tools/mingw1510_64/bin;C:/Qt/6.12.0/mingw_64/bin;C:/Windows/System32;C:/Windows"
+        }
+      },
+      "group": "build",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Windows: Qt Run Hospital System",
+      "type": "process",
+      "command": "${workspaceFolder}/release/HospitalSystem.exe",
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "C:/Qt/Tools/mingw1510_64/bin;C:/Qt/6.12.0/mingw_64/bin;C:/Windows/System32;C:/Windows"
+        }
+      },
+      "dependsOn": "Windows: Qt Clean + Configure + Build Hospital System",
+      "dependsOrder": "sequence",
+      "problemMatcher": []
     }
   ]
 }

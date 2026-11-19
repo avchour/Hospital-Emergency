@@ -111,6 +111,20 @@ Patient *PatientManager::findPatientInfo(int id)const
     return node->patient;
 }
 
+Patient *PatientManager::getPatientAt(int index) const
+{
+    if (index < 0 || index >= count)
+        return nullptr;
+
+    PatientNode *cur = head;
+    for (int i = 0; i < index && cur != nullptr; i++)
+    {
+        cur = cur->next;
+    }
+
+    return cur != nullptr ? cur->patient : nullptr;
+}
+
 bool PatientManager::removePatient(int id)
 {
     PatientNode *cur = head;

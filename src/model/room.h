@@ -2,17 +2,16 @@
 #define ROOM_H
 
 #include <string>
+using namespace std;
 
-typedef
+typedef struct
 {
-
     int roomID;
     string roomNumber;
     string roomType;
     int capacity;
     string status;
     int patientID;
-}
-Room;
+} Room;
 
 #endif

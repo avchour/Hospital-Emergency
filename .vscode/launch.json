@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Windows: Hospital System (Qt MinGW)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/release/HospitalSystem.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        {
+          "name": "PATH",
+          "value": "C:/Qt/Tools/mingw1510_64/bin;C:/Qt/6.12.0/mingw_64/bin;${env:PATH}"
+        }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/Qt/Tools/mingw1510_64/bin/gdb.exe",
+      "preLaunchTask": "Windows: Qt Clean + Configure + Build Hospital System"
+    }
+  ]
+}
