@@ -2,18 +2,28 @@
 #define PAYMENT
 #include <string>
 
-struct Payment
+using namespace std;
+
+class Payment
 {
-    int Pay_id;
+    public:
+    int pay_id;
     int patientId;
-    std::string patientName;
-    int patientAge;
-    std::string patientSex;
     int doctorId; // add this for revenue per doctor
     double amount;
-    std::string method; // Cash, Card, Insurance
-    std::string date;   // "YYYY-MM-DD"
-    bool isPaid = false;
+    string method; // Cash, Card, Insurance
+    string date;   // "YYYY-MM-DD"
+    bool isPaid;
+
+    Payment(){
+        pay_id = NULL;
+        patientId = NULL;
+        doctorId = NULL;
+        amount = NULL;
+        method = "Unknown";
+        date = "Unknown";
+        isPaid = false;
+    }
 };
 
 #endif
