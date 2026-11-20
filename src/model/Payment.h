@@ -8,6 +8,7 @@ struct Payment
     int patientId;
     std::string patientName;
     int patientAge;
+    std::string patientSex;
     int doctorId; // add this for revenue per doctor
     double amount;
     std::string method; // Cash, Card, Insurance
