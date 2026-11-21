@@ -10,7 +10,8 @@ class Payment
     int doctorId; // add this for revenue per doctor
     double amount;
     std::string method; // Cash, Card, Insurance
-    std::string date;   // "YYYY-MM-DD"
+    std::string service;
+    std::string date; // "YYYY-MM-DD"
     bool isPaid;
 
     Payment(){
