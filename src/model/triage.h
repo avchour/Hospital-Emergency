@@ -26,6 +26,54 @@ private:
     int oxygenSaturation;
 
     TriagePriority priority;
+
+public:
+    // ✏️ MANUAL CHANGE: Getter methods
+
+    int getPatientID() const
+    {
+        return patientID;
+    }
+
+    std::string getSymptoms() const
+    {
+        return symptoms;
+    }
+
+    double getTemperature() const
+    {
+        return temperature;
+    }
+
+    int getHeartRate() const
+    {
+        return heartRate;
+    }
+
+    int getBloodPressureSystolic() const
+    {
+        return bloodPressureSystolic;
+    }
+
+    int getBloodPressureDiastolic() const
+    {
+        return bloodPressureDiastolic;
+    }
+
+    int getOxygenSaturation() const
+    {
+        return oxygenSaturation;
+    }
+
+    TriagePriority getPriority() const
+    {
+        return priority;
+    }
+
+    void setPriority(TriagePriority newPriority)
+    {
+        priority = newPriority;
+    }
 };
 
 #endif
