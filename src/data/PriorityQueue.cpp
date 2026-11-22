@@ -1,5 +1,6 @@
 #include "../include/PriorityQueue.h"
 #include "../model/Patient.h"
+#include "../model/triage.h"
 #include <iostream>
 #include <array>
 PriorityQueue::PriorityQueue() = default;
