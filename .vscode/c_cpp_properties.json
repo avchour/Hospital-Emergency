@@ -32,3 +32,22 @@
 ],
 "compilerPath": "C:/Qt/Tools/mingw1510_64/bin/g++.exe",
 "cppStandard": "c++17"
+
+{
+    "configurations": [
+        {
+            "name": "Windows",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/Qt/6.12.0/mingw_64/include",
+                "C:/Qt/6.12.0/mingw_64/include/QtWidgets",
+                "C:/Qt/6.12.0/mingw_64/include/QtCore",
+                "C:/Qt/6.12.0/mingw_64/include/QtGui"
+            ],
+            "compilerPath": "C:/Qt/Tools/mingw1510_64/bin/g++.exe",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}
