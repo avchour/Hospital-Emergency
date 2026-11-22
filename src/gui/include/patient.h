@@ -16,6 +16,8 @@ class PatientPage : public QWidget
 
 public:
     explicit PatientPage(PatientManager *manager, QWidget *parent = nullptr);
+    void setPatientManager(PatientManager *manager);
+    PatientManager *getPatientManager() const { return patientManager; }
 
 signals:
     void dataChanged();

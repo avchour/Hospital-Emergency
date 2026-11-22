@@ -6,12 +6,19 @@
 
 class QStackedWidget;
 class QPushButton;
+class PatientManager;
+class PriorityQueue;
+class PatientPage;
+class EmergencyAssessment;
 
 class MainWindow : public QMainWindow
 {
+    Q_OBJECT
+
 public:
     // 🏗️ CONSTRUCTOR
     explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow() override;
 
 private:
     // 🧭 NAVIGATION
@@ -20,6 +27,11 @@ private:
     // ✏️ MANUAL CHANGE:
     // Add or remove navigation buttons here if you change the menu.
     QList<QPushButton *> navButtons;
+
+    PatientManager *patientManager;
+    PriorityQueue *priorityQueue;
+    PatientPage *patientPage;
+    EmergencyAssessment *assessmentPage;
 
     // 🎨 GUI SETUP
     void setupUI();

@@ -1,7 +1,7 @@
 #include "../include/PriorityQueue.h"
 #include "../model/Patient.h"
 #include <iostream>
-
+#include <array>
 PriorityQueue::PriorityQueue() = default;
 
 PriorityQueue::~PriorityQueue()
@@ -263,4 +263,40 @@ std::array<int, 5> PriorityQueue::getPriorityCounts() const
     }
 
     return priorityCounts;
+}
+
+bool PriorityQueue::removePatient(int patientID)
+{
+    QueueNode *cur = head;
+    QueueNode *prev = nullptr;
+
+    while (cur != nullptr)
+    {
+        if (cur->triage != nullptr && cur->triage->patientID == patientID)
+        {
+            if (cur == head)
+            {
+                head = cur->next;
+                if (head == nullptr)
+                    tail = nullptr;
+            }
+            else
+            {
+                prev->next = cur->next;
+            }
+            if (cur == tail)
+            {
+                tail = prev;
+            }
+
+            delete cur->triage;
+            delete cur;
+            count--;
+            return true;
+        }
+        prev = cur;
+        cur = cur->next;
+    }
+
+    return false;
 }

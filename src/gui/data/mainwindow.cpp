@@ -1,6 +1,11 @@
 
 #include "../include/mainwindow.h"
 #include "../include/dashboard.h"
+#include "../include/patient.h"
+#include "../include/triage.h"
+#include "../include/emergency.h"
+#include "../../include/PatientManager.h"
+#include "../../include/PriorityQueue.h"
 
 #include <QWidget>
 #include <QPushButton>
@@ -16,14 +21,34 @@
 // ==========================================================
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent),
+      pages(nullptr),
+      patientManager(new PatientManager()),
+      priorityQueue(new PriorityQueue()),
+      patientPage(nullptr)
 {
     setWindowTitle("Hospital Emergency Management System");
 
     // ✏️ MANUAL CHANGE: Default application window size
     resize(1400, 850);
 
+    // Initial demo patient data if empty
+    if (patientManager->checkEmpty())
+    {
+        patientManager->addPatient(new Patient{0, "Vannak Kim", 58, "Male", "012345678", "Phnom Penh"});
+        patientManager->addPatient(new Patient{0, "Dara Pich", 45, "Male", "012345679", "Kandal"});
+        patientManager->addPatient(new Patient{0, "Bopha Chann", 29, "Female", "012345680", "Siem Reap"});
+        patientManager->addPatient(new Patient{0, "SreyLeak Meas", 62, "Female", "012345681", "Battambang"});
+        patientManager->addPatient(new Patient{0, "Rathana Heng", 24, "Male", "012345682", "Phnom Penh"});
+    }
+
     setupUI();
+}
+
+MainWindow::~MainWindow()
+{
+    delete priorityQueue;
+    delete patientManager;
 }
 
 // ==========================================================
@@ -114,28 +139,62 @@ void MainWindow::setupUI()
 
     pages->addWidget(dashboard);
 
-    // ✏️ MANUAL CHANGE:
-    // Add or remove pages here when your project grows.
-    QStringList pageNames = {
-        "Patient Management",
-        "Emergency Triage",
-        "Emergency Queue",
-        "Treatment Management"};
+    // Page 1: Patient Management (connected to patientManager)
+    patientPage = new PatientPage(patientManager, this);
+    pages->addWidget(patientPage);
 
-    for (const QString &name : pageNames)
-    {
-        QWidget *page = new QWidget();
+    // Page 2: Emergency Triage
+    Emergency *triagePage = new Emergency(patientManager, priorityQueue, this);
+    pages->addWidget(triagePage);
 
-        QVBoxLayout *layout = new QVBoxLayout(page);
+    // Page 3: Emergency Queue
+    EmergencyQueue *queuePage = new EmergencyQueue(patientManager, priorityQueue, this);
+    pages->addWidget(queuePage);
 
-        QLabel *title = new QLabel(name);
-        title->setObjectName("pageTitle");
+    // Synchronize pages when patient data changes
+    connect(patientPage, &PatientPage::dataChanged, queuePage, &EmergencyQueue::refreshQueue);
+    connect(patientPage, &PatientPage::dataChanged, triagePage, &Emergency::refreshData);
 
-        layout->addWidget(title);
-        layout->addStretch();
+    // Page 4: Treatment Management (styled placeholder card)
+    QWidget *treatmentPage = new QWidget();
+    QVBoxLayout *treatmentLayout = new QVBoxLayout(treatmentPage);
+    treatmentLayout->setContentsMargins(20, 20, 20, 20);
+    treatmentLayout->setSpacing(15);
 
-        pages->addWidget(page);
-    }
+    QLabel *treatmentTitle = new QLabel("Treatment Management");
+    treatmentTitle->setObjectName("pageTitle");
+
+    QLabel *treatmentSubtitle = new QLabel("Manage active patient treatments and clinical care records");
+    treatmentSubtitle->setObjectName("pageSubtitle");
+
+    treatmentLayout->addWidget(treatmentTitle);
+    treatmentLayout->addWidget(treatmentSubtitle);
+
+    QFrame *treatmentCard = new QFrame();
+    treatmentCard->setObjectName("contentPanel");
+    QVBoxLayout *cardLayout = new QVBoxLayout(treatmentCard);
+    cardLayout->setContentsMargins(30, 40, 30, 40);
+    cardLayout->setAlignment(Qt::AlignCenter);
+
+    QLabel *placeholderIcon = new QLabel("✚");
+    placeholderIcon->setStyleSheet("font-size: 42px; color: #B58A35;");
+    placeholderIcon->setAlignment(Qt::AlignCenter);
+
+    QLabel *placeholderText = new QLabel("Treatment module is ready for doctor assignment and clinical care tracking.");
+    placeholderText->setStyleSheet("font-size: 15px; font-weight: bold; color: #172337; margin-top: 10px;");
+    placeholderText->setAlignment(Qt::AlignCenter);
+
+    QLabel *placeholderSub = new QLabel("Patients discharged from Emergency Queue will be monitored here.");
+    placeholderSub->setStyleSheet("font-size: 13px; color: #7B8798; margin-top: 5px;");
+    placeholderSub->setAlignment(Qt::AlignCenter);
+
+    cardLayout->addWidget(placeholderIcon);
+    cardLayout->addWidget(placeholderText);
+    cardLayout->addWidget(placeholderSub);
+
+    treatmentLayout->addWidget(treatmentCard);
+    treatmentLayout->addStretch();
+    pages->addWidget(treatmentPage);
 
     // ================= NAVIGATION BUTTONS =================
 

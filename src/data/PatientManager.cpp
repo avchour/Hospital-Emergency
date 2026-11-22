@@ -111,6 +111,25 @@ Patient *PatientManager::findPatientInfo(int id)const
     return node->patient;
 }
 
+Patient *PatientManager::getPatientAt(int index) const
+{
+    if (index < 0 || index >= count)
+        return nullptr;
+
+    PatientNode *cur = head;
+    for (int i = 0; i < index && cur != nullptr; i++)
+    {
+        cur = cur->next;
+    }
+
+    return cur ? cur->patient : nullptr;
+}
+
+std::array<int, 5> PatientManager::getPriorityCounts() const
+{
+    return {0, 0, 0, 0, 0};
+}
+
 bool PatientManager::removePatient(int id)
 {
     PatientNode *cur = head;

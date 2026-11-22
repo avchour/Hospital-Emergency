@@ -1,34 +1,72 @@
 /* ==========================================================
-   13. DASHBOARD
-   🎨 MODERN XIU XIAN
+   🏥 HOSPITAL EMERGENCY SYSTEM - THEME STYLESHEET
+   🎨 THEME: IMPERIAL GOLD & DEEP HOSPITAL NAVY (MODERN XIU XIAN)
    ========================================================== */
 
-QWidget#dashboardPage,
-QWidget#dashboardContainer,
-QScrollArea#dashboardScroll,
-QScrollArea#dashboardScroll > QWidget > QWidget {
-     background-color: #F7F8FA;
-     border: none;
+/* ----------------------------------------------------------
+   01. GLOBAL APPLICATION DEFAULTS
+   ---------------------------------------------------------- */
+
+* {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* 🧪 Sample-data indicator */
-QLabel#demoBadge {
-    background-color: #F7F0DF;
-    color: #92702F;
-    border: 1px solid #D9AD52;
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 10px;
+QWidget {
+    color: #172337;
+    font-size: 13px;
+}
+
+QWidget#centralWidget,
+QWidget#mainContent,
+QWidget#dashboardPage,
+QWidget#dashboardContainer,
+QWidget#patientPage,
+QWidget#emergencyPage,
+QWidget#triagePage,
+QScrollArea#dashboardScroll,
+QScrollArea#dashboardScroll > QWidget > QWidget {
+    background-color: #F7F8FA;
+    border: none;
+}
+
+/* ----------------------------------------------------------
+   02. TYPOGRAPHY & HEADINGS
+   ---------------------------------------------------------- */
+
+QLabel#pageTitle {
+    color: #172337;
+    font-size: 24px;
     font-weight: bold;
 }
 
-/* 🚨 Emergency overview */
-/* ✏️ MANUAL CHANGE: Panel headings */
+QLabel#pageSubtitle {
+    color: #7B8798;
+    font-size: 13px;
+}
+
 QLabel#sectionTitle {
     color: #172337;
     font-size: 17px;
     font-weight: bold;
 }
+
+QLabel#cardTitle {
+    color: #7B8798;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+QLabel#cardValue {
+    color: #B58A35;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+QLabel#cardDescription {
+    color: #667085;
+    font-size: 12px;
+}
+
 QLabel#severityLabel {
     color: #344054;
     font-size: 12px;
@@ -42,40 +80,6 @@ QLabel#severityCount {
     border: none;
 }
 
-/* Progress bars */
-QProgressBar {
-    background-color: #EAECF0;
-    border: none;
-    border-radius: 4px;
-}
-
-QProgressBar::chunk {
-    border-radius: 4px;
-}
-
-QProgressBar#criticalBar::chunk {
-    background-color: #EF4444;
-}
-
-QProgressBar#majorBar::chunk {
-    background-color: #F97316;
-}
-
-QProgressBar#moderateBar::chunk {
-    background-color: #EAB308;
-}
-
-QProgressBar#minorBar::chunk {
-    background-color: #22C55E;
-}
-
-/* 🕘 Recent activities */
-/* ✏️ MANUAL CHANGE: Panel headings */
-QLabel#sectionTitle {
-    color: #172337;
-    font-size: 17px;
-    font-weight: bold;
-}
 QLabel#activityText {
     color: #344054;
     font-size: 12px;
@@ -88,13 +92,128 @@ QLabel#activityTime {
     border: none;
 }
 
-/* ✨ Quick actions */
+/* 🧪 Gold demo badge & status pills */
+QLabel#demoBadge,
+QLabel#goldBadge {
+    background-color: #F7F0DF;
+    color: #92702F;
+    border: 1px solid #D9AD52;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* ----------------------------------------------------------
+   03. CARDS & CONTENT PANELS (DASHBOARD STYLE)
+   ---------------------------------------------------------- */
+
+QFrame#contentPanel,
+QFrame#dashboardCard,
+QFrame#statCard {
+    background-color: #FFFFFF;
+    border: 1px solid #E6E0D2;
+    border-radius: 12px;
+}
+
+QFrame#contentPanel:hover,
+QFrame#dashboardCard:hover,
+QFrame#statCard:hover {
+    border: 1px solid #D9AD52;
+}
+
+/* ----------------------------------------------------------
+   04. FORM INPUTS & CONTROLS
+   ---------------------------------------------------------- */
+
+QLineEdit,
+QComboBox,
+QSpinBox,
+QDoubleSpinBox {
+    background-color: #FFFFFF;
+    border: 1px solid #DCD5C5;
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #172337;
+    font-size: 13px;
+    selection-background-color: #F5EBD5;
+    selection-color: #172337;
+}
+
+QLineEdit:focus,
+QComboBox:focus,
+QSpinBox:focus,
+QDoubleSpinBox:focus {
+    border: 1.5px solid #C49A45;
+    background-color: #FDFAF5;
+}
+
+QComboBox::drop-down {
+    border: none;
+    padding-right: 10px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #FFFFFF;
+    border: 1px solid #E6E0D2;
+    border-radius: 8px;
+    selection-background-color: #F5EBD5;
+    selection-color: #172337;
+    padding: 4px;
+}
+
+/* ----------------------------------------------------------
+   05. BUTTONS (GOLD, NAVY, QUICK-ACTION, DANGER)
+   ---------------------------------------------------------- */
+
+/* ✨ Imperial Gold Primary Button */
+QPushButton#primaryGoldButton {
+    background-color: #C49A45;
+    color: #FFFFFF;
+    border: 1px solid #B58A35;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+QPushButton#primaryGoldButton:hover {
+    background-color: #B58A35;
+    border: 1px solid #9E7628;
+}
+
+QPushButton#primaryGoldButton:pressed {
+    background-color: #9E7628;
+}
+
+/* 🧭 Deep Hospital Navy Button */
+QPushButton#secondaryNavyButton {
+    background-color: #1E2B3E;
+    color: #E6C477;
+    border: 1px solid #34445C;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+QPushButton#secondaryNavyButton:hover {
+    background-color: #27374E;
+    color: #FFFFFF;
+    border-color: #C49A45;
+}
+
+QPushButton#secondaryNavyButton:pressed {
+    background-color: #151D2B;
+}
+
+/* ✨ Soft Gold Quick Action Button */
 QPushButton#quickActionButton {
     background-color: #F7F0DF;
     color: #92702F;
     border: 1px solid #D9AD52;
     border-radius: 9px;
-    padding: 10px;
+    padding: 10px 16px;
     font-size: 12px;
     font-weight: bold;
 }
@@ -102,83 +221,74 @@ QPushButton#quickActionButton {
 QPushButton#quickActionButton:hover {
     background-color: #EFE1BF;
     border: 1px solid #B58A35;
+    color: #785A21;
 }
 
 QPushButton#quickActionButton:pressed {
     background-color: #E6D5AD;
 }
 
-/* Dashboard content panels */
-QFrame#contentPanel {
-    background-color: #FFFFFF;
-    border: 1px solid #E6E0D2;
-    border-radius: 12px;
-}
-
-/* Dashboard cards */
-QFrame#dashboardCard {
-    background-color: #FFFFFF;
-    border: 1px solid #E6E0D2;
-    border-radius: 12px;
-}
-
-QFrame#dashboardCard:hover {
-    border: 1px solid #D9AD52;
-}
-/* ✏️ MANUAL CHANGE: Dashboard heading colors */
-QLabel#pageTitle {
-    color: #172337;
-    font-size: 24px;
+/* 🚨 Subtle Danger Button */
+QPushButton#dangerButton {
+    background-color: #FFF1F0;
+    color: #CF1322;
+    border: 1px solid #FFA39E;
+    border-radius: 8px;
+    padding: 8px 18px;
     font-weight: bold;
-}
-
-QLabel#pageSubtitle {
-    color: #7B8798;
     font-size: 13px;
 }
 
-QLabel#cardTitle {
-    color: #7B8798;
+QPushButton#dangerButton:hover {
+    background-color: #FF4D4F;
+    color: #FFFFFF;
+    border-color: #D9363E;
 }
 
-QLabel#cardValue {
-    color: #B58A35;
-    font-size: 28px;
-    font-weight: bold;
+QPushButton#dangerButton:pressed {
+    background-color: #BA1B25;
 }
 
-QLabel#cardDescription {
-    color: #667085;
-}
-/* =========================================
-   PATIENT TABLE - LIGHT THEME
-   ========================================= */
+/* ----------------------------------------------------------
+   06. TABLES - UNIFIED GOLD & NAVY THEME
+   ---------------------------------------------------------- */
 
-/* ✏️ MANUAL CHANGE: Main table appearance */
 QTableWidget {
     background-color: #FFFFFF;
-    alternate-background-color: #F8F9FC;
-    color: #344054;
-    border: none;
-    gridline-color: #EAECF0;
+    alternate-background-color: #FAF8F5;
+    color: #172337;
+    border: 1px solid #E6E0D2;
+    border-radius: 10px;
+    gridline-color: #EFEBE3;
     selection-background-color: #F5EBD5;
     selection-color: #172337;
+    outline: none;
 }
 
-/* ✏️ MANUAL CHANGE: Table header */
 QHeaderView::section {
-    background-color: #F5F6F8;
-    color: #344054;
+    background-color: #F7F2E7;
+    color: #172337;
     padding: 10px;
     border: none;
-    border-bottom: 1px solid #E5E7EB;
+    border-bottom: 2px solid #E2D7C2;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+QTableWidget::item {
+    padding: 6px;
+    border-bottom: 1px solid #F1ECE2;
+}
+
+QTableWidget::item:selected {
+    background-color: #F5EBD5;
+    color: #172337;
     font-weight: bold;
 }
 
-
-/* ==========================================================
-   SIDEBAR - HOSPITAL NAVY & IMPERIAL GOLD
-   ========================================================== */
+/* ----------------------------------------------------------
+   07. SIDEBAR - HOSPITAL NAVY & IMPERIAL GOLD
+   ---------------------------------------------------------- */
 
 QWidget#sidebar {
     background-color: #151D2B;
@@ -282,4 +392,66 @@ QLabel#systemStatus {
     color: #AAB5C5;
     font-size: 10px;
     border: none;
+}
+
+/* ----------------------------------------------------------
+   08. SCROLLBARS (SLEEK MODERN GOLD/GRAY)
+   ---------------------------------------------------------- */
+
+QScrollBar:vertical {
+    border: none;
+    background-color: #F0EDE4;
+    width: 8px;
+    border-radius: 4px;
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #D5CBB9;
+    border-radius: 4px;
+    min-height: 25px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #B58A35;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+    height: 0;
+}
+
+QScrollBar:horizontal {
+    border: none;
+    background-color: #F0EDE4;
+    height: 8px;
+    border-radius: 4px;
+    margin: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background-color: #D5CBB9;
+    border-radius: 4px;
+    min-width: 25px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background-color: #B58A35;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal {
+    border: none;
+    background: none;
+    width: 0;
+}
+
+/* ----------------------------------------------------------
+   09. DIALOGS
+   ---------------------------------------------------------- */
+
+QDialog {
+    background-color: #F7F8FA;
 }

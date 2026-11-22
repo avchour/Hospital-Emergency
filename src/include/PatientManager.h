@@ -36,6 +36,7 @@ public:
     int getPatientCount() const;
     // void displayPatient() const; // temporary
     Patient *findPatientInfo(int id) const;
+    Patient *getPatientAt(int index) const;
     bool removePatient(int id);
     bool updatePatient(int id, PatientField field, const std::string &newValue);
     std::array<int, 5> getPriorityCounts() const;

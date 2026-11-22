@@ -30,18 +30,26 @@ PatientPage::PatientPage(PatientManager *manager, QWidget *parent)
     refreshTable();
 }
 
+void PatientPage::setPatientManager(PatientManager *manager)
+{
+    patientManager = manager;
+    refreshTable();
+}
+
 void PatientPage::setupUI()
 {
+    setObjectName("patientPage");
+
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setSpacing(15);
     mainLayout->setContentsMargins(20, 20, 20, 20);
 
     // Title & Subtitle
     QLabel *title = new QLabel("Patient Management");
-    title->setStyleSheet("font-size: 26px; font-weight: bold; color: #172554;");
+    title->setObjectName("pageTitle");
 
     QLabel *subtitle = new QLabel("View, register, and update patient records");
-    subtitle->setStyleSheet("font-size: 15px; color: #64748B;");
+    subtitle->setObjectName("pageSubtitle");
 
     mainLayout->addWidget(title);
     mainLayout->addWidget(subtitle);
@@ -55,25 +63,18 @@ void PatientPage::setupUI()
     connect(searchInput, &QLineEdit::textChanged, this, &PatientPage::searchPatient);
 
     addButton = new QPushButton("+ Register New Patient");
+    addButton->setObjectName("primaryGoldButton");
     addButton->setMinimumHeight(40);
-    addButton->setStyleSheet(
-        "QPushButton {"
-        "background-color: #16A34A;"
-        "color: white;"
-        "font-weight: bold;"
-        "border: none;"
-        "border-radius: 6px;"
-        "padding: 0 16px;"
-        "}"
-        "QPushButton:hover { background-color: #15803D; }");
+    addButton->setCursor(Qt::PointingHandCursor);
     connect(addButton, &QPushButton::clicked, this, &PatientPage::addPatient);
 
-    controls->addWidget(searchInput);
+    controls->addWidget(searchInput, 1);
     controls->addWidget(addButton);
     mainLayout->addLayout(controls);
 
     // Table
     patientTable = new QTableWidget();
+    patientTable->setObjectName("patientTable");
     patientTable->setColumnCount(6);
     patientTable->setHorizontalHeaderLabels({"Patient ID", "Full Name", "Age", "Gender", "Phone", "Address"});
     patientTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -81,53 +82,25 @@ void PatientPage::setupUI()
     patientTable->setSelectionMode(QAbstractItemView::SingleSelection);
     patientTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     patientTable->verticalHeader()->setVisible(false);
-    patientTable->setStyleSheet(
-        "QTableWidget {"
-        "background-color: white;"
-        "border: 1px solid #E2E8F0;"
-        "border-radius: 8px;"
-        "gridline-color: #F1F5F9;"
-        "}"
-        "QHeaderView::section {"
-        "background-color: #F8FAFC;"
-        "color: #475569;"
-        "font-weight: bold;"
-        "padding: 8px;"
-        "border: none;"
-        "border-bottom: 1px solid #E2E8F0;"
-        "}");
+    patientTable->setAlternatingRowColors(true);
     mainLayout->addWidget(patientTable);
 
     // Bottom action bar
     QHBoxLayout *bottomLayout = new QHBoxLayout();
 
     totalLabel = new QLabel("Total Registered: 0");
-    totalLabel->setStyleSheet("font-size: 14px; font-weight: bold; color: #475569;");
+    totalLabel->setObjectName("goldBadge");
 
     editButton = new QPushButton("Edit Patient Details");
+    editButton->setObjectName("secondaryNavyButton");
     editButton->setMinimumHeight(38);
-    editButton->setStyleSheet(
-        "QPushButton {"
-        "background-color: #2563EB;"
-        "color: white;"
-        "border-radius: 6px;"
-        "padding: 8px 16px;"
-        "font-weight: bold;"
-        "}"
-        "QPushButton:hover { background-color: #1D4ED8; }");
+    editButton->setCursor(Qt::PointingHandCursor);
     connect(editButton, &QPushButton::clicked, this, &PatientPage::editPatient);
 
     removeButton = new QPushButton("Remove Selected Patient");
+    removeButton->setObjectName("dangerButton");
     removeButton->setMinimumHeight(38);
-    removeButton->setStyleSheet(
-        "QPushButton {"
-        "background-color: #DC2626;"
-        "color: white;"
-        "border-radius: 6px;"
-        "padding: 8px 16px;"
-        "font-weight: bold;"
-        "}"
-        "QPushButton:hover { background-color: #B91C1C; }");
+    removeButton->setCursor(Qt::PointingHandCursor);
     connect(removeButton, &QPushButton::clicked, this, &PatientPage::removeSelectedPatient);
 
     bottomLayout->addWidget(totalLabel);
@@ -212,6 +185,12 @@ void PatientPage::searchPatient()
 
 void PatientPage::addPatient()
 {
+    if (!patientManager)
+    {
+        QMessageBox::critical(this, "Error", "PatientManager is not initialized.");
+        return;
+    }
+
     QDialog dialog(this);
     dialog.setWindowTitle("Register New Patient");
     dialog.setMinimumWidth(420);
@@ -243,7 +222,8 @@ void PatientPage::addPatient()
     QHBoxLayout btnLayout;
     QPushButton saveBtn("Register Patient");
     QPushButton cancelBtn("Cancel");
-    saveBtn.setStyleSheet("background-color: #16A34A; color: white; font-weight: bold; padding: 6px 14px;");
+    saveBtn.setStyleSheet("background-color: #C49A45; color: white; font-weight: bold; padding: 7px 18px; border: 1px solid #B58A35; border-radius: 6px;");
+    cancelBtn.setStyleSheet("background-color: #FFFFFF; color: #667085; font-weight: bold; padding: 7px 18px; border: 1px solid #DCD5C5; border-radius: 6px;");
     btnLayout.addStretch();
     btnLayout.addWidget(&cancelBtn);
     btnLayout.addWidget(&saveBtn);
@@ -278,6 +258,9 @@ void PatientPage::addPatient()
 
 void PatientPage::editPatient()
 {
+    if (!patientManager)
+        return;
+
     int row = patientTable->currentRow();
     if (row < 0)
     {
@@ -320,7 +303,8 @@ void PatientPage::editPatient()
     QHBoxLayout btnLayout;
     QPushButton saveBtn("Save Changes");
     QPushButton cancelBtn("Cancel");
-    saveBtn.setStyleSheet("background-color: #2563EB; color: white; font-weight: bold; padding: 6px 14px;");
+    saveBtn.setStyleSheet("background-color: #1E2B3E; color: #E6C477; font-weight: bold; padding: 7px 18px; border: 1px solid #34445C; border-radius: 6px;");
+    cancelBtn.setStyleSheet("background-color: #FFFFFF; color: #667085; font-weight: bold; padding: 7px 18px; border: 1px solid #DCD5C5; border-radius: 6px;");
     btnLayout.addStretch();
     btnLayout.addWidget(&cancelBtn);
     btnLayout.addWidget(&saveBtn);
@@ -351,6 +335,9 @@ void PatientPage::editPatient()
 
 void PatientPage::removeSelectedPatient()
 {
+    if (!patientManager)
+        return;
+
     int row = patientTable->currentRow();
     if (row < 0)
     {

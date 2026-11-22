@@ -552,15 +552,11 @@ Dashboard::Dashboard(
 
     QStringList actionNames = {
         "+ Register Patient",
-        "Emergency Triage",
-        "View Queue",
+        "Emergency Assessment",
         "Treatment Records"};
 
     // 🧭 Match MainWindow's QStackedWidget indices.
-    // ✏️ MANUAL CHANGE:
-    // Update indices if you rearrange pages.
-
-    int pageIndices[] = {1, 2, 3, 4};
+    int pageIndices[] = {1, 2, 3};
 
     for (int i = 0; i < actionNames.size(); i++)
     {
