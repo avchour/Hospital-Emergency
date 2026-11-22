@@ -82,6 +82,16 @@ void MainWindow::initSampleData()
     Patient *p8 = new Patient{0, "Kosal Voeun", 40, "Male", "012334455", "Kampong Cham"};
     int id8 = patientManager.addPatient(p8);
     enqueue(normalQueue, id8);
+
+    // Initialize Emergency Rooms using RoomManager
+    for (int i = 0; i < 10; ++i)
+    {
+        roomManager.addRoom();
+    }
+
+    // Assign existing sample emergency patients to rooms using actual IDs
+    roomManager.assignRoom(1, id1, patientManager);
+    roomManager.assignRoom(3, id3, patientManager);
 }
 
 void MainWindow::setupUI()
@@ -167,7 +177,7 @@ void MainWindow::setupUI()
     pages->addWidget(treatmentPage);
 
     // 5: Room Management
-    roomPage = new RoomPage(&patientManager);
+    roomPage = new RoomPage(&roomManager, &patientManager);
     pages->addWidget(roomPage);
 
     // Connect cross-page synchronization
@@ -263,6 +273,9 @@ void MainWindow::changePage(int index)
         break;
     case 4:
         if (treatmentPage) treatmentPage->refreshQueue();
+        break;
+    case 5:
+        if (roomPage) roomPage->refreshAll();
         break;
     }
 }

@@ -34,8 +34,17 @@ public:
     bool addRoom();
     bool assignRoom(int roomID, int patientID);
     bool assignRoom(int roomID, int patientID, const PatientManager &patientManager);
+    bool releaseRoom(int roomID);
     bool removeRoom(int roomID);
     void displayRooms() const;
+
+    // Inspection & Query methods
+    int getRoomCount() const { return count; }
+    int getMaxRooms() const { return maxRooms; }
+    Room *getRoomAt(int index) const;
+    Room *findRoom(int roomID) const;
+    int getAvailableCount() const;
+    int getOccupiedCount() const;
 };
 
 #endif

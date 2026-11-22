@@ -298,3 +298,70 @@ bool RoomManager::assignRoom(int roomID, int patientID)
 
     return false;
 }
+
+Room *RoomManager::getRoomAt(int index) const
+{
+    if (index < 0 || index >= count)
+        return nullptr;
+
+    RoomNode *current = head;
+    for (int i = 0; i < index && current != nullptr; ++i)
+    {
+        current = current->next;
+    }
+
+    return current ? &(current->data) : nullptr;
+}
+
+Room *RoomManager::findRoom(int roomID) const
+{
+    RoomNode *current = head;
+    while (current != nullptr)
+    {
+        if (current->data.roomID == roomID)
+            return &(current->data);
+        current = current->next;
+    }
+    return nullptr;
+}
+
+bool RoomManager::releaseRoom(int roomID)
+{
+    Room *room = findRoom(roomID);
+    if (!room)
+        return false;
+
+    if (room->status == AVAILABLE)
+        return false;
+
+    room->patientID = -1;
+    room->status = AVAILABLE;
+    return true;
+}
+
+int RoomManager::getAvailableCount() const
+{
+    int avail = 0;
+    RoomNode *current = head;
+    while (current != nullptr)
+    {
+        if (current->data.status == AVAILABLE)
+            avail++;
+        current = current->next;
+    }
+    return avail;
+}
+
+int RoomManager::getOccupiedCount() const
+{
+    int occ = 0;
+    RoomNode *current = head;
+    while (current != nullptr)
+    {
+        if (current->data.status == OCCUPIED)
+            occ++;
+        current = current->next;
+    }
+    return occ;
+}
+

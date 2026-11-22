@@ -7,6 +7,7 @@
 #include "../../include/PatientManager.h"
 #include "../../include/PriorityQueue.h"
 #include "../../include/Queue.h"
+#include "../../include/RoomManager.h"
 
 class QStackedWidget;
 class QPushButton;
@@ -15,6 +16,7 @@ class PatientPage;
 class Emergency;
 class EmergencyQueue;
 class TreatmentPage;
+class RoomPage;
 
 class MainWindow : public QMainWindow
 {
@@ -29,6 +31,7 @@ private:
     PatientManager patientManager;
     PriorityQueue priorityQueue;
     Queue normalQueue;
+    RoomManager roomManager;
 
     // GUI Pages
     Dashboard *dashboardPage;
@@ -36,6 +39,7 @@ private:
     Emergency *triagePage;
     EmergencyQueue *emergencyQueuePage;
     TreatmentPage *treatmentPage;
+    RoomPage *roomPage;
 
     // Navigation
     QStackedWidget *pages;

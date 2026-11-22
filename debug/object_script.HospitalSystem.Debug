@@ -1,6 +1,7 @@
 debug/main.o
 debug/PatientManager.o
 debug/PriorityQueue.o
+debug/RoomManager.o
 debug/utils.o
 debug/mainwindow.o
 debug/patient.o
@@ -8,6 +9,7 @@ debug/dashboard.o
 debug/triage.o
 debug/emergency.o
 debug/treatment.o
+debug/room.o
 debug/qrc_resources.o
 debug/moc_mainwindow.o
 debug/moc_dashboard.o
@@ -15,3 +17,4 @@ debug/moc_patient.o
 debug/moc_triage.o
 debug/moc_emergency.o
 debug/moc_treatment.o
+debug/moc_room.o
