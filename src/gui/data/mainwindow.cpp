@@ -25,7 +25,8 @@ MainWindow::MainWindow(QWidget *parent)
       pages(nullptr),
       patientManager(new PatientManager()),
       priorityQueue(new PriorityQueue()),
-      patientPage(nullptr)
+      patientPage(nullptr),
+      assessmentPage(nullptr)
 {
     setWindowTitle("Hospital Emergency Management System");
 
@@ -35,11 +36,11 @@ MainWindow::MainWindow(QWidget *parent)
     // Initial demo patient data if empty
     if (patientManager->checkEmpty())
     {
-        patientManager->addPatient(new Patient{0, "Vannak Kim", 58, "Male", "012345678", "Phnom Penh"});
-        patientManager->addPatient(new Patient{0, "Dara Pich", 45, "Male", "012345679", "Kandal"});
-        patientManager->addPatient(new Patient{0, "Bopha Chann", 29, "Female", "012345680", "Siem Reap"});
-        patientManager->addPatient(new Patient{0, "SreyLeak Meas", 62, "Female", "012345681", "Battambang"});
-        patientManager->addPatient(new Patient{0, "Rathana Heng", 24, "Male", "012345682", "Phnom Penh"});
+        patientManager->addPatient(new Patient(0, "Vannak Kim", 58, "Male", "012345678", "Phnom Penh"));
+        patientManager->addPatient(new Patient(0, "Dara Pich", 45, "Male", "012345679", "Kandal"));
+        patientManager->addPatient(new Patient(0, "Bopha Chann", 29, "Female", "012345680", "Siem Reap"));
+        patientManager->addPatient(new Patient(0, "SreyLeak Meas", 62, "Female", "012345681", "Battambang"));
+        patientManager->addPatient(new Patient(0, "Rathana Heng", 24, "Male", "012345682", "Phnom Penh"));
     }
 
     setupUI();
@@ -143,19 +144,15 @@ void MainWindow::setupUI()
     patientPage = new PatientPage(patientManager, this);
     pages->addWidget(patientPage);
 
-    // Page 2: Emergency Triage
-    Emergency *triagePage = new Emergency(patientManager, priorityQueue, this);
-    pages->addWidget(triagePage);
-
-    // Page 3: Emergency Queue
-    EmergencyQueue *queuePage = new EmergencyQueue(patientManager, priorityQueue, this);
-    pages->addWidget(queuePage);
+    // Page 2: Emergency Assessment (Merged Triage Header + Queue Table & Actions)
+    assessmentPage = new EmergencyAssessment(patientManager, priorityQueue, this);
+    pages->addWidget(assessmentPage);
 
     // Synchronize pages when patient data changes
-    connect(patientPage, &PatientPage::dataChanged, queuePage, &EmergencyQueue::refreshQueue);
-    connect(patientPage, &PatientPage::dataChanged, triagePage, &Emergency::refreshData);
+    connect(patientPage, &PatientPage::dataChanged, assessmentPage, &EmergencyAssessment::refreshAssessment);
+    connect(assessmentPage, &EmergencyAssessment::dataChanged, patientPage, &PatientPage::refreshTable);
 
-    // Page 4: Treatment Management (styled placeholder card)
+    // Page 3: Treatment Management (styled placeholder card)
     QWidget *treatmentPage = new QWidget();
     QVBoxLayout *treatmentLayout = new QVBoxLayout(treatmentPage);
     treatmentLayout->setContentsMargins(20, 20, 20, 20);
@@ -203,8 +200,7 @@ void MainWindow::setupUI()
     QStringList menuItems = {
         "▦    Dashboard",
         "♙    Patient Management",
-        "♥    Emergency Triage",
-        "☷    Emergency Queue",
+        "♥    Emergency Assessment",
         "✚    Treatment Management"};
 
     navButtons.clear();

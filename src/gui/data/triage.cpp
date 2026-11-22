@@ -192,19 +192,19 @@ void Emergency::displayPatients()
             if (!tr)
                 continue;
 
-            Patient *p = patientManager->findPatientInfo(tr->patientID);
+            Patient *p = patientManager->findPatientInfo(tr->getPatientID());
             QString pr;
-            if (tr->priority == RESUSCITATION || tr->priority == EMERGENT)
+            if (tr->getPriority() == RESUSCITATION || tr->getPriority() == EMERGENT)
                 pr = "Critical";
-            else if (tr->priority == URGENT)
+            else if (tr->getPriority() == URGENT)
                 pr = "Urgent";
             else
                 pr = "Normal";
 
-            patients.append({tr->patientID,
-                             p ? QString::fromStdString(p->name) : "Unknown",
+            patients.append({tr->getPatientID(),
+                             p ? QString::fromStdString(p->getName()) : "Unknown",
                              pr,
-                             QString::fromStdString(tr->symptoms),
+                             QString::fromStdString(tr->getSymptoms()),
                              "Queue #" + QString::number(i + 1),
                              "Waiting"});
         }

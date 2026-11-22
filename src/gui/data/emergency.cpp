@@ -120,12 +120,12 @@ void EmergencyAssessment::loadSampleDataIfEmpty()
         int pid = 0;
         if (patientManager)
         {
-            Patient *p = new Patient{0, s.name, s.age, s.gender, "012345678", "Phnom Penh"};
+            Patient *p = new Patient(0, s.name, s.age, s.gender, "012345678", "Phnom Penh");
             pid = patientManager->addPatient(p);
         }
 
-        TriageRecord *tr = new TriageRecord{
-            pid, s.symptoms, s.temp, s.hr, s.sys, s.dia, 18, s.o2, s.priority};
+        TriageRecord *tr = new TriageRecord(
+            pid, s.symptoms, s.temp, s.hr, s.sys, s.dia, 18, s.o2, s.priority);
         priorityQueue->enqueuePatient(tr);
     }
 }
@@ -180,12 +180,11 @@ void EmergencyAssessment::setupTriageHeaderCards()
     QHBoxLayout *cardLayout = new QHBoxLayout();
     cardLayout->setSpacing(12);
 
-    auto createCard = [this](const QString &levelTitle, const QString &timeStr,
-                             const QString &color, QLabel *&countRef, int priorityLevel) -> QFrame *
+    auto createCard = [](const QString &levelTitle, const QString &timeStr,
+                         const QString &color, QLabel *&countRef) -> QFrame *
     {
         QFrame *card = new QFrame();
         card->setObjectName("dashboardCard");
-        card->setCursor(Qt::PointingHandCursor);
         card->setStyleSheet(
             "QFrame#dashboardCard {"
             "background-color: #FFFFFF;"
@@ -204,9 +203,9 @@ void EmergencyAssessment::setupTriageHeaderCards()
         dot->setStyleSheet("color: " + color + "; font-size: 13px;");
         QLabel *name = new QLabel(levelTitle);
         name->setStyleSheet("font-size: 12px; font-weight: bold; color: " + color + "; letter-spacing: 0.5px;");
-        topRow.addWidget(dot);
-        topRow.addWidget(name);
-        topRow.addStretch();
+        topRow->addWidget(dot);
+        topRow->addWidget(name);
+        topRow->addStretch();
 
         countRef = new QLabel("0");
         countRef->setStyleSheet("font-size: 26px; font-weight: bold; color: #B58A35;");
@@ -218,17 +217,14 @@ void EmergencyAssessment::setupTriageHeaderCards()
         layout->addWidget(countRef);
         layout->addWidget(desc);
 
-        // Click card to quick filter
-        card->installEventFilter(this);
-
         return card;
     };
 
-    cardLayout->addWidget(createCard("RESUSCITATION (L1)", "Immediate", "#EF4444", resuscitationCount, 1));
-    cardLayout->addWidget(createCard("EMERGENT (L2)", "< 15 min", "#F97316", emergentCount, 2));
-    cardLayout->addWidget(createCard("URGENT (L3)", "< 30 min", "#EAB308", urgentCount, 3));
-    cardLayout->addWidget(createCard("LESS URGENT (L4)", "< 60 min", "#22C55E", lessUrgentCount, 4));
-    cardLayout->addWidget(createCard("NON-URGENT (L5)", "< 120 min", "#3B82F6", nonUrgentCount, 5));
+    cardLayout->addWidget(createCard("RESUSCITATION (L1)", "Immediate", "#EF4444", resuscitationCount));
+    cardLayout->addWidget(createCard("EMERGENT (L2)", "< 15 min", "#F97316", emergentCount));
+    cardLayout->addWidget(createCard("URGENT (L3)", "< 30 min", "#EAB308", urgentCount));
+    cardLayout->addWidget(createCard("LESS URGENT (L4)", "< 60 min", "#22C55E", lessUrgentCount));
+    cardLayout->addWidget(createCard("NON-URGENT (L5)", "< 120 min", "#3B82F6", nonUrgentCount));
 
     mainLayout->addLayout(cardLayout);
 }
@@ -537,13 +533,13 @@ void EmergencyAssessment::displayPatients()
             continue;
 
         // Apply 5-Level Priority Filter
-        if (selectedPriorityFilter > 0 && static_cast<int>(triage->priority) != selectedPriorityFilter)
+        if (selectedPriorityFilter > 0 && static_cast<int>(triage->getPriority()) != selectedPriorityFilter)
             continue;
 
-        Patient *patient = patientManager->findPatientInfo(triage->patientID);
-        QString pidStr = QString::number(triage->patientID);
-        QString nameStr = patient ? QString::fromStdString(patient->name) : "Unknown Patient";
-        QString symptomsStr = QString::fromStdString(triage->symptoms);
+        Patient *patient = patientManager->findPatientInfo(triage->getPatientID());
+        QString pidStr = QString::number(triage->getPatientID());
+        QString nameStr = patient ? QString::fromStdString(patient->getName()) : "Unknown Patient";
+        QString symptomsStr = QString::fromStdString(triage->getSymptoms());
 
         // Apply Search Filter
         if (!search.isEmpty())
@@ -571,14 +567,14 @@ void EmergencyAssessment::displayPatients()
 
         // 2: Age / Gender
         QString ageGender = QString("%1 yrs / %2")
-                                .arg(patient ? QString::number(patient->age) : "-")
-                                .arg(patient ? QString::fromStdString(patient->gender) : "-");
+                                .arg(patient ? QString::number(patient->getAge()) : "-")
+                                .arg(patient ? QString::fromStdString(patient->getGender()) : "-");
         patientTable->setItem(row, 2, new QTableWidgetItem(ageGender));
 
         // 3: Triage Priority (Styled Colored Pill)
-        QTableWidgetItem *pItem = new QTableWidgetItem(getPriorityName(triage->priority));
-        pItem->setForeground(QColor(getPriorityColor(triage->priority)));
-        pItem->setBackground(QColor(getPriorityBgColor(triage->priority)));
+        QTableWidgetItem *pItem = new QTableWidgetItem(getPriorityName(triage->getPriority()));
+        pItem->setForeground(QColor(getPriorityColor(triage->getPriority())));
+        pItem->setBackground(QColor(getPriorityBgColor(triage->getPriority())));
         QFont pFont = pItem->font();
         pFont.setBold(true);
         pItem->setFont(pFont);
@@ -589,11 +585,11 @@ void EmergencyAssessment::displayPatients()
 
         // 5: Vital Signs
         QString vitals = QString("HR: %1 | BP: %2/%3 | SpO2: %4% | Temp: %5°C")
-                             .arg(triage->heartRate)
-                             .arg(triage->bloodPressureSystolic)
-                             .arg(triage->bloodPressureDiastolic)
-                             .arg(triage->oxygenSaturation)
-                             .arg(triage->temperature);
+                             .arg(triage->getHeartRate())
+                             .arg(triage->getBloodPressureSystolic())
+                             .arg(triage->getBloodPressureDiastolic())
+                             .arg(triage->getOxygenSaturation())
+                             .arg(triage->getTemperature());
         patientTable->setItem(row, 5, new QTableWidgetItem(vitals));
 
         // 6: Queue Status
@@ -709,19 +705,19 @@ void EmergencyAssessment::addPatient()
         }
 
         // 1. Register in PatientManager
-        Patient *p = new Patient{
+        Patient *p = new Patient(
             0,
             nameEdit.text().trimmed().toStdString(),
             ageSpin.value(),
             genderCombo.currentText().toStdString(),
             "012345678",
             "Phnom Penh"
-        };
+        );
         int pid = patientManager->addPatient(p);
 
         // 2. Create TriageRecord and Enqueue to PriorityQueue
         TriagePriority prio = static_cast<TriagePriority>(priorityCombo.currentIndex() + 1);
-        TriageRecord *tr = new TriageRecord{
+        TriageRecord *tr = new TriageRecord(
             pid,
             symptomsEdit.text().trimmed().toStdString(),
             tempSpin.value(),
@@ -731,7 +727,7 @@ void EmergencyAssessment::addPatient()
             18,
             o2Spin.value(),
             prio
-        };
+        );
 
         priorityQueue->enqueuePatient(tr);
 
@@ -762,9 +758,9 @@ void EmergencyAssessment::treatNextPatient()
     if (!triage)
         return;
 
-    Patient *p = patientManager ? patientManager->findPatientInfo(triage->patientID) : nullptr;
-    QString name = p ? QString::fromStdString(p->name) : "Unknown";
-    QString prioName = getPriorityName(triage->priority);
+    Patient *p = patientManager ? patientManager->findPatientInfo(triage->getPatientID()) : nullptr;
+    QString name = p ? QString::fromStdString(p->getName()) : "Unknown";
+    QString prioName = getPriorityName(triage->getPriority());
 
     QMessageBox::information(
         this, "Treating Patient",
@@ -772,10 +768,10 @@ void EmergencyAssessment::treatNextPatient()
                 "Priority: %3\n"
                 "Symptoms: %4\n\n"
                 "Patient record successfully transferred to Treatment Management.")
-            .arg(triage->patientID)
+            .arg(triage->getPatientID())
             .arg(name)
             .arg(prioName)
-            .arg(QString::fromStdString(triage->symptoms)));
+            .arg(QString::fromStdString(triage->getSymptoms())));
 
     delete triage;
 
@@ -829,7 +825,7 @@ void EmergencyAssessment::viewPatientDetails(int patientID)
     for (int i = 0; i < priorityQueue->getQueueCount(); i++)
     {
         TriageRecord *r = priorityQueue->getQueueRecordAt(i);
-        if (r && r->patientID == patientID)
+        if (r && r->getPatientID() == patientID)
         {
             triage = r;
             break;
@@ -853,19 +849,19 @@ void EmergencyAssessment::viewPatientDetails(int patientID)
                           "  • Blood Pressure: %10/%11 mmHg\n"
                           "  • Body Temperature: %12 °C\n"
                           "  • Oxygen Saturation (SpO2): %13 %")
-                          .arg(p->id)
-                          .arg(QString::fromStdString(p->name))
-                          .arg(p->age)
-                          .arg(QString::fromStdString(p->gender))
-                          .arg(QString::fromStdString(p->phone))
-                          .arg(QString::fromStdString(p->address))
-                          .arg(getPriorityName(triage->priority))
-                          .arg(QString::fromStdString(triage->symptoms))
-                          .arg(triage->heartRate)
-                          .arg(triage->bloodPressureSystolic)
-                          .arg(triage->bloodPressureDiastolic)
-                          .arg(triage->temperature)
-                          .arg(triage->oxygenSaturation);
+                          .arg(p->getId())
+                          .arg(QString::fromStdString(p->getName()))
+                          .arg(p->getAge())
+                          .arg(QString::fromStdString(p->getGender()))
+                          .arg(QString::fromStdString(p->getPhone()))
+                          .arg(QString::fromStdString(p->getAddress()))
+                          .arg(getPriorityName(triage->getPriority()))
+                          .arg(QString::fromStdString(triage->getSymptoms()))
+                          .arg(triage->getHeartRate())
+                          .arg(triage->getBloodPressureSystolic())
+                          .arg(triage->getBloodPressureDiastolic())
+                          .arg(triage->getTemperature())
+                          .arg(triage->getOxygenSaturation());
 
     QMessageBox::information(this, "Patient Clinical Record", details);
 }

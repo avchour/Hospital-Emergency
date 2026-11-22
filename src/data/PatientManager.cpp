@@ -40,7 +40,7 @@ PatientManager::PatientNode *PatientManager::findNode(int id) const
 
     while (current != nullptr)
     {
-        if (current->patient->id == id)
+        if (current->patient->getId() == id)
             return current;
 
         current = current->next;
@@ -56,7 +56,7 @@ int PatientManager::addPatient( Patient *patient)
     if (patient == nullptr)
         return 0;
 
-    patient->id = nextPatientID++;
+    patient->setId(nextPatientID++);
     PatientNode *patientNode = new PatientNode;
 
     patientNode->patient = patient;
@@ -73,7 +73,7 @@ int PatientManager::addPatient( Patient *patient)
         tail = patientNode;
     }
     count++;
-    return patient->id;
+    return patient->getId();
 }
 
 // void PatientManager::displayPatient() const
@@ -137,7 +137,7 @@ bool PatientManager::removePatient(int id)
 
     while (cur != nullptr)
     {
-        if (cur->patient->id == id)
+        if (cur->patient->getId() == id)
         {
             if (cur == head)
             {
@@ -180,32 +180,32 @@ bool PatientManager::updatePatient(int id, PatientField field, const std::string
         if (newValue.empty())
             return false;
 
-        node->patient->name = newValue;
+        node->patient->setName(newValue);
         break;
 
     case AGE:
         if (!Utils::isValidNonNegativeInteger(newValue))
             return false;
 
-        node->patient->age = std::stoi(newValue);
+        node->patient->setAge(std::stoi(newValue));
         break;
 
     case GENDER:
         if (newValue.empty())
             return false;
 
-        node->patient->gender = newValue;
+        node->patient->setGender(newValue);
         break;
 
     case PHONE:
         if (!Utils::isValidPhone(newValue))
             return false;
 
-        node->patient->phone = newValue;
+        node->patient->setPhone(newValue);
         break;
 
     case ADDRESS:
-        node->patient->address = newValue;
+        node->patient->setAddress(newValue);
         break;
 
     default:

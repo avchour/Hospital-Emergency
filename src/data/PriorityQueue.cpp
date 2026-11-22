@@ -45,7 +45,7 @@ bool PriorityQueue::enqueuePatient(TriageRecord *triage)
     } 
     else 
     {
-        while (cur != nullptr && cur->triage->priority <= triage->priority)
+        while (cur != nullptr && cur->triage->getPriority() <= triage->getPriority())
         {
             prev = cur;
             cur = cur->next;
@@ -106,36 +106,36 @@ void PriorityQueue::displayQueue(const PatientManager &manager) const
 
     while (cur != nullptr)
     {
-        Patient *patient = manager.findPatientInfo(cur->triage->patientID);
+        Patient *patient = manager.findPatientInfo(cur->triage->getPatientID());
 
         if (patient != nullptr)
         {
             // Patient information
             std::cout << "\n===== PATIENT INFORMATION =====\n";
-            std::cout << "ID: " << patient->id << '\n';
-            std::cout << "Name: " << patient->name << '\n';
-            std::cout << "Age: " << patient->age << '\n';
-            std::cout << "Gender: " << patient->gender << '\n';
-            std::cout << "Phone: " << patient->phone << '\n';
+            std::cout << "ID: " << patient->getId() << '\n';
+            std::cout << "Name: " << patient->getName() << '\n';
+            std::cout << "Age: " << patient->getAge() << '\n';
+            std::cout << "Gender: " << patient->getGender() << '\n';
+            std::cout << "Phone: " << patient->getPhone() << '\n';
 
             // Triage information
             std::cout << "\n===== TRIAGE ASSESSMENT =====\n";
-            std::cout << "Priority: " << cur->triage->priority << '\n';
-            std::cout << "Symptoms: " << cur->triage->symptoms << '\n';
-            std::cout << "Temperature: " << cur->triage->temperature << '\n';
-            std::cout << "Heart Rate: " << cur->triage->heartRate << '\n';
+            std::cout << "Priority: " << cur->triage->getPriority() << '\n';
+            std::cout << "Symptoms: " << cur->triage->getSymptoms() << '\n';
+            std::cout << "Temperature: " << cur->triage->getTemperature() << '\n';
+            std::cout << "Heart Rate: " << cur->triage->getHeartRate() << '\n';
 
             std::cout << "Blood Pressure: "
-                      << cur->triage->bloodPressureSystolic << "/"
-                      << cur->triage->bloodPressureDiastolic << '\n';
+                      << cur->triage->getBloodPressureSystolic() << "/"
+                      << cur->triage->getBloodPressureDiastolic() << '\n';
 
             std::cout << "Oxygen Saturation: "
-                      << cur->triage->oxygenSaturation << "%\n";
+                      << cur->triage->getOxygenSaturation() << "%\n";
         }
         else
         {
             std::cout << "Patient record not found. ID: "
-                      << cur->triage->patientID << '\n';
+                      << cur->triage->getPatientID() << '\n';
         }
 
         std::cout << "================================\n";
@@ -156,7 +156,7 @@ bool PriorityQueue::updatePriority(int patientID,TriagePriority newPriority)
 
     // Find patient
     while (cur != nullptr &&
-           cur->triage->patientID != patientID)
+           cur->triage->getPatientID() != patientID)
     {
         prev = cur;
         cur = cur->next;
@@ -166,7 +166,7 @@ bool PriorityQueue::updatePriority(int patientID,TriagePriority newPriority)
         return false;
 
     // No repositioning needed
-    if (cur->triage->priority == newPriority)
+    if (cur->triage->getPriority() == newPriority)
         return true;
 
     // Remove node from current position
@@ -179,7 +179,7 @@ bool PriorityQueue::updatePriority(int patientID,TriagePriority newPriority)
         tail = prev;
 
     // Update priority
-    cur->triage->priority = newPriority;
+    cur->triage->setPriority(newPriority);
     cur->next = nullptr;
 
     // Find new position
@@ -187,7 +187,7 @@ bool PriorityQueue::updatePriority(int patientID,TriagePriority newPriority)
     QueueNode *position = head;
 
     while (position != nullptr &&
-           position->triage->priority <= newPriority)
+           position->triage->getPriority() <= newPriority)
     {
         prev = position;
         position = position->next;
@@ -250,7 +250,7 @@ std::array<int, 5> PriorityQueue::getPriorityCounts() const
         if (current->triage != nullptr)
         {
             int priorityIndex =
-                static_cast<int>(current->triage->priority) - 1;
+                static_cast<int>(current->triage->getPriority()) - 1;
 
             // Validate priority before accessing the array.
             if (priorityIndex >= 0 && priorityIndex < 5)
@@ -272,7 +272,7 @@ bool PriorityQueue::removePatient(int patientID)
 
     while (cur != nullptr)
     {
-        if (cur->triage != nullptr && cur->triage->patientID == patientID)
+        if (cur->triage != nullptr && cur->triage->getPatientID() == patientID)
         {
             if (cur == head)
             {

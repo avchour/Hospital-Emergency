@@ -2496,9 +2496,6 @@ release/emergency.o: src/gui/data/emergency.cpp src/gui/include/emergency.h \
 		C:/Qt/6.12.0/mingw_64/include/QtWidgets/QMessageBox \
 		C:/Qt/6.12.0/mingw_64/include/QtWidgets/qmessagebox.h \
 		C:/Qt/6.12.0/mingw_64/include/QtWidgets/qdialogbuttonbox.h \
-		C:/Qt/6.12.0/mingw_64/include/QtCore/QDateTime \
-		C:/Qt/6.12.0/mingw_64/include/QtCore/qdatetime.h \
-		C:/Qt/6.12.0/mingw_64/include/QtCore/qcalendar.h \
 		C:/Qt/6.12.0/mingw_64/include/QtWidgets/QAbstractItemView \
 		C:/Qt/6.12.0/mingw_64/include/QtGui/QFont
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\emergency.o src\gui\data\emergency.cpp

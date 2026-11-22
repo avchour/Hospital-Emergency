@@ -130,12 +130,12 @@ void PatientPage::refreshTable()
         int row = patientTable->rowCount();
         patientTable->insertRow(row);
 
-        patientTable->setItem(row, 0, new QTableWidgetItem(QString::number(p->id)));
-        patientTable->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(p->name)));
-        patientTable->setItem(row, 2, new QTableWidgetItem(QString::number(p->age)));
-        patientTable->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(p->gender)));
-        patientTable->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(p->phone)));
-        patientTable->setItem(row, 5, new QTableWidgetItem(QString::fromStdString(p->address)));
+        patientTable->setItem(row, 0, new QTableWidgetItem(QString::number(p->getId())));
+        patientTable->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(p->getName())));
+        patientTable->setItem(row, 2, new QTableWidgetItem(QString::number(p->getAge())));
+        patientTable->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(p->getGender())));
+        patientTable->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(p->getPhone())));
+        patientTable->setItem(row, 5, new QTableWidgetItem(QString::fromStdString(p->getAddress())));
     }
 }
 
@@ -161,8 +161,8 @@ void PatientPage::searchPatient()
         if (!p)
             continue;
 
-        QString idStr = QString::number(p->id);
-        QString nameStr = QString::fromStdString(p->name);
+        QString idStr = QString::number(p->getId());
+        QString nameStr = QString::fromStdString(p->getName());
 
         if (idStr.contains(query, Qt::CaseInsensitive) ||
             nameStr.contains(query, Qt::CaseInsensitive))
@@ -172,10 +172,10 @@ void PatientPage::searchPatient()
 
             patientTable->setItem(row, 0, new QTableWidgetItem(idStr));
             patientTable->setItem(row, 1, new QTableWidgetItem(nameStr));
-            patientTable->setItem(row, 2, new QTableWidgetItem(QString::number(p->age)));
-            patientTable->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(p->gender)));
-            patientTable->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(p->phone)));
-            patientTable->setItem(row, 5, new QTableWidgetItem(QString::fromStdString(p->address)));
+            patientTable->setItem(row, 2, new QTableWidgetItem(QString::number(p->getAge())));
+            patientTable->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(p->getGender())));
+            patientTable->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(p->getPhone())));
+            patientTable->setItem(row, 5, new QTableWidgetItem(QString::fromStdString(p->getAddress())));
             matchCount++;
         }
     }
@@ -238,14 +238,14 @@ void PatientPage::addPatient()
             return;
         }
 
-        Patient *newPatient = new Patient{
+        Patient *newPatient = new Patient(
             0,
             nameEdit.text().trimmed().toStdString(),
             ageSpin.value(),
             genderCombo.currentText().toStdString(),
             phoneEdit.text().trimmed().toStdString(),
             addressEdit.text().trimmed().toStdString()
-        };
+        );
 
         int newId = patientManager->addPatient(newPatient);
         QMessageBox::information(this, "Success", "Registered patient successfully with ID: " + QString::number(newId));
@@ -282,17 +282,17 @@ void PatientPage::editPatient()
 
     QFormLayout form(&dialog);
 
-    QLineEdit nameEdit(QString::fromStdString(p->name));
+    QLineEdit nameEdit(QString::fromStdString(p->getName()));
     QSpinBox ageSpin;
     ageSpin.setRange(0, 130);
-    ageSpin.setValue(p->age);
+    ageSpin.setValue(p->getAge());
 
     QComboBox genderCombo;
     genderCombo.addItems({"Male", "Female", "Other"});
-    genderCombo.setCurrentText(QString::fromStdString(p->gender));
+    genderCombo.setCurrentText(QString::fromStdString(p->getGender()));
 
-    QLineEdit phoneEdit(QString::fromStdString(p->phone));
-    QLineEdit addressEdit(QString::fromStdString(p->address));
+    QLineEdit phoneEdit(QString::fromStdString(p->getPhone()));
+    QLineEdit addressEdit(QString::fromStdString(p->getAddress()));
 
     form.addRow("Full Name *:", &nameEdit);
     form.addRow("Age *:", &ageSpin);

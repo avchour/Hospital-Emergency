@@ -11,8 +11,10 @@ enum TriagePriority
     LESS_URGENT = 4,
     NON_URGENT = 5
 };
-struct TriageRecord
+
+class TriageRecord
 {
+private:
     int patientID;
     std::string symptoms;
 

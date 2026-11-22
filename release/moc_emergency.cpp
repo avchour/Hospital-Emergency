@@ -31,91 +31,99 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 QT_WARNING_DISABLE_GCC("-Wuseless-cast")
 namespace {
-struct qt_meta_tag_ZN14EmergencyQueueE_t {};
+struct qt_meta_tag_ZN19EmergencyAssessmentE_t {};
 } // unnamed namespace
 
-template <> constexpr inline auto EmergencyQueue::qt_create_metaobjectdata<qt_meta_tag_ZN14EmergencyQueueE_t>()
+template <> constexpr inline auto EmergencyAssessment::qt_create_metaobjectdata<qt_meta_tag_ZN19EmergencyAssessmentE_t>()
 {
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
-        "EmergencyQueue",
+        "EmergencyAssessment",
         "dataChanged",
         "",
-        "refreshQueue"
+        "refreshAssessment",
+        "displayPatients",
+        "updatePriorityCounts"
     };
 
     QtMocHelpers::UintData qt_methods {
         // Signal 'dataChanged'
         QtMocHelpers::SignalData<void()>(1, 2, QMC::AccessPublic, QMetaType::Void),
-        // Slot 'refreshQueue'
+        // Slot 'refreshAssessment'
         QtMocHelpers::SlotData<void()>(3, 2, QMC::AccessPublic, QMetaType::Void),
+        // Slot 'displayPatients'
+        QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPublic, QMetaType::Void),
+        // Slot 'updatePriorityCounts'
+        QtMocHelpers::SlotData<void()>(5, 2, QMC::AccessPublic, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
     QtMocHelpers::UintData qt_enums {
     };
-    return QtMocHelpers::metaObjectData<EmergencyQueue, qt_meta_tag_ZN14EmergencyQueueE_t>(QMC::MetaObjectFlag{}, qt_stringData,
+    return QtMocHelpers::metaObjectData<EmergencyAssessment, qt_meta_tag_ZN19EmergencyAssessmentE_t>(QMC::MetaObjectFlag{}, qt_stringData,
             qt_methods, qt_properties, qt_enums);
 }
-Q_CONSTINIT const QMetaObject EmergencyQueue::staticMetaObject = { {
+Q_CONSTINIT const QMetaObject EmergencyAssessment::staticMetaObject = { {
     QMetaObject::SuperData::link<QWidget::staticMetaObject>(),
-    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN14EmergencyQueueE_t>.stringdata,
-    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN14EmergencyQueueE_t>.data,
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN19EmergencyAssessmentE_t>.stringdata,
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN19EmergencyAssessmentE_t>.data,
     qt_static_metacall,
     nullptr,
-    qt_staticMetaObjectRelocatingContent<qt_meta_tag_ZN14EmergencyQueueE_t>.metaTypes,
+    qt_staticMetaObjectRelocatingContent<qt_meta_tag_ZN19EmergencyAssessmentE_t>.metaTypes,
     nullptr
 } };
 
-void EmergencyQueue::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void EmergencyAssessment::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
-    auto *_t = static_cast<EmergencyQueue *>(_o);
+    auto *_t = static_cast<EmergencyAssessment *>(_o);
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: _t->dataChanged(); break;
-        case 1: _t->refreshQueue(); break;
+        case 1: _t->refreshAssessment(); break;
+        case 2: _t->displayPatients(); break;
+        case 3: _t->updatePriorityCounts(); break;
         default: ;
         }
     }
     if (_c == QMetaObject::IndexOfMethod) {
-        if (QtMocHelpers::indexOfMethod<void (EmergencyQueue::*)()>(_a, &EmergencyQueue::dataChanged, 0))
+        if (QtMocHelpers::indexOfMethod<void (EmergencyAssessment::*)()>(_a, &EmergencyAssessment::dataChanged, 0))
             return;
     }
 }
 
-const QMetaObject *EmergencyQueue::metaObject() const
+const QMetaObject *EmergencyAssessment::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *EmergencyQueue::qt_metacast(const char *_clname)
+void *EmergencyAssessment::qt_metacast(const char *_clname)
 {
     if (!_clname) return nullptr;
-    if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN14EmergencyQueueE_t>.strings))
+    if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN19EmergencyAssessmentE_t>.strings))
         return static_cast<void*>(this);
     return QWidget::qt_metacast(_clname);
 }
 
-int EmergencyQueue::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int EmergencyAssessment::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QWidget::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 4)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 4;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 2)
+        if (_id < 4)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 2;
+        _id -= 4;
     }
     return _id;
 }
 
 // SIGNAL 0
-void EmergencyQueue::dataChanged()
+void EmergencyAssessment::dataChanged()
 {
     QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
 }
