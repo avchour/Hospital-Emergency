@@ -32,6 +32,23 @@ void DoctorManager::addDoctor(const Doctor& d){
     }
     doctorCount++;
 }
+
+bool DoctorManager::updateDoctor(int id, const Doctor &newData)
+{
+    Doctor *d = findById(id);
+    if (d == nullptr){
+        return false; // no doctor with this ID
+    }
+
+    // keep the same Doc_id, replace the profile fields
+    d->Doc_name = newData.Doc_name;
+    d->speciality = newData.speciality;
+    d->gender = newData.gender;
+    d->age = newData.age;
+    d->Doc_phone = newData.Doc_phone;
+    d->shift = newData.shift;
+    return true;
+}
 bool DoctorManager::removeDoctor(int id){
     DoctorNode *current = head;
 

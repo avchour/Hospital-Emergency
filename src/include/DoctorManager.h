@@ -22,6 +22,7 @@ class DoctorManager{
         DoctorManager();
         ~DoctorManager();
         void addDoctor(const Doctor &d);
+        bool updateDoctor(int id, const Doctor &newData);
         bool removeDoctor(int id);
         Doctor *findById(int id);
         Doctor *getFirstAvailable();
