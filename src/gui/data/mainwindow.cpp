@@ -4,6 +4,7 @@
 #include "../include/triage.h"
 #include "../include/emergency.h"
 #include "../include/treatment.h"
+#include "../include/room.h"
 
 #include <QWidget>
 #include <QPushButton>
@@ -21,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
       triagePage(nullptr),
       emergencyQueuePage(nullptr),
       treatmentPage(nullptr),
+      roomPage(nullptr),
       pages(nullptr)
 {
     setWindowTitle("Hospital Emergency Management System");
@@ -164,12 +166,17 @@ void MainWindow::setupUI()
     treatmentPage = new TreatmentPage(&patientManager, &normalQueue);
     pages->addWidget(treatmentPage);
 
+    // 5: Room Management
+    roomPage = new RoomPage(&patientManager);
+    pages->addWidget(roomPage);
+
     // Connect cross-page synchronization
     connect(patientPage, &PatientPage::dataChanged, [this]() {
         dashboardPage->refreshStats();
         emergencyQueuePage->refreshQueue();
         triagePage->refreshData();
         treatmentPage->refreshQueue();
+        roomPage->refreshPatients();
     });
 
     connect(emergencyQueuePage, &EmergencyQueue::dataChanged, [this]() {
@@ -182,13 +189,18 @@ void MainWindow::setupUI()
         patientPage->refreshTable();
     });
 
+    connect(roomPage, &RoomPage::dataChanged, [this]() {
+        dashboardPage->refreshStats();
+    });
+
     // Navigation buttons
     QStringList menuItems = {
         "▦    Dashboard",
         "♙    Patient Management",
         "♥    Emergency Triage",
         "☷    Emergency Queue",
-        "✚    Treatment Management"
+        "✚    Treatment Management",
+        "🛏    Room Management"
     };
 
     navButtons.clear();
