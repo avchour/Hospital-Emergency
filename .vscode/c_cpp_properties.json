@@ -22,3 +22,13 @@
     "version": 4
 }
 '@ | Set-Content -Encoding UTF8 ".vscode/c_cpp_properties.json"
+
+"includePath": [
+    "${workspaceFolder}/**",
+    "C:/Qt/6.12.0/mingw_64/include",
+    "C:/Qt/6.12.0/mingw_64/include/QtWidgets",
+    "C:/Qt/6.12.0/mingw_64/include/QtCore",
+    "C:/Qt/6.12.0/mingw_64/include/QtGui"
+],
+"compilerPath": "C:/Qt/Tools/mingw1510_64/bin/g++.exe",
+"cppStandard": "c++17"
