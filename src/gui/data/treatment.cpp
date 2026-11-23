@@ -39,10 +39,10 @@ void TreatmentPage::setupUI()
 
     // Title
     QLabel *title = new QLabel("Normal Queue & Treatment Management");
-    title->setStyleSheet("font-size: 26px; font-weight: bold; color: #172554;");
+    title->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 26px; font-weight: bold; color: #172554;");
 
     QLabel *subtitle = new QLabel("Manage outpatient FIFO line, call waiting patients, and track clinical care");
-    subtitle->setStyleSheet("font-size: 15px; color: #64748B;");
+    subtitle->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 15px; color: #64748B;");
 
     mainLayout->addWidget(title);
     mainLayout->addWidget(subtitle);
@@ -50,10 +50,10 @@ void TreatmentPage::setupUI()
     // Section 1: Normal FIFO Queue
     QHBoxLayout *queueHeader = new QHBoxLayout();
     QLabel *qTitle = new QLabel("Outpatient Normal Queue (FIFO)");
-    qTitle->setStyleSheet("font-size: 18px; font-weight: bold; color: #1E293B;");
+    qTitle->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 18px; font-weight: bold; color: #1E293B;");
 
     waitingCountLabel = new QLabel("Waiting: 0");
-    waitingCountLabel->setStyleSheet("font-size: 14px; font-weight: bold; color: #2563EB;");
+    waitingCountLabel->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 14px; font-weight: bold; color: #2563EB;");
 
     addNormalButton = new QPushButton("+ Add to Normal Queue");
     addNormalButton->setStyleSheet(

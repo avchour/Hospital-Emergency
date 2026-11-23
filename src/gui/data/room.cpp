@@ -60,10 +60,10 @@ QWidget *RoomPage::buildHeader()
     textLayout->setSpacing(3);
 
     QLabel *title = new QLabel("Room Management");
-    title->setStyleSheet("font-size: 24px; font-weight: bold; color: #102F50;");
+    title->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 24px; font-weight: bold; color: #102F50;");
 
     QLabel *subtitle = new QLabel("Manage emergency hospital rooms and patient assignments in real time");
-    subtitle->setStyleSheet("font-size: 13px; color: #335372;");
+    subtitle->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 13px; color: #335372;");
 
     textLayout->addWidget(title);
     textLayout->addWidget(subtitle);
@@ -92,11 +92,11 @@ QFrame *RoomPage::buildSummaryCard(
     layout->setSpacing(4);
 
     QLabel *titleLabel = new QLabel(title);
-    titleLabel->setStyleSheet("font-size: 15px; font-weight: bold; color: #1E293B;");
+    titleLabel->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 15px; font-weight: bold; color: #1E293B;");
 
     valueLabel = new QLabel("0");
     valueLabel->setStyleSheet(
-        QString("font-size: 30px; font-weight: bold; color: %1;")
+        QString("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 30px; font-weight: bold; color: %1;")
             .arg(numberColor));
 
     layout->addWidget(titleLabel);
@@ -123,6 +123,7 @@ QFrame *RoomPage::buildPanel(const QString &title)
     heading->setMinimumHeight(48);
     heading->setStyleSheet(
         "QLabel {"
+        " font-family: 'Gotham', 'Montserrat', sans-serif;"
         " background-color: #1E3A8A;"
         " color: #FFFFFF;"
         " font-size: 16px;"
@@ -147,6 +148,7 @@ QPushButton *RoomPage::makeActionButton(
     button->setStyleSheet(
         QString(
             "QPushButton {"
+            " font-family: 'Gotham', 'Montserrat', sans-serif;"
             " background-color: %1;"
             " color: #FFFFFF;"
             " font-size: 14px;"
@@ -205,10 +207,11 @@ void RoomPage::buildInterface()
     bodyLayout->setSpacing(10);
 
     QLabel *roomLabel = new QLabel("Room (Select Room)");
-    roomLabel->setStyleSheet("font-size: 14px; font-weight: bold; color: #1E293B;");
+    roomLabel->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 14px; font-weight: bold; color: #1E293B;");
 
     const QString comboStyle =
         "QComboBox {"
+        " font-family: 'Gotham', 'Montserrat', sans-serif;"
         " background-color: #FFFFFF;"
         " color: #0F172A;"
         " border: 1.5px solid #CBD5E1;"
@@ -242,6 +245,7 @@ void RoomPage::buildInterface()
         " margin-right: 2px;"
         "}"
         "QComboBox QAbstractItemView {"
+        " font-family: 'Gotham', 'Montserrat', sans-serif;"
         " background-color: #FFFFFF;"
         " color: #0F172A;"
         " border: 1.5px solid #94A3B8;"
@@ -275,7 +279,7 @@ void RoomPage::buildInterface()
     roomSelector->view()->setMinimumWidth(300);
 
     QLabel *patientLabel = new QLabel("Patient (Select Patient)");
-    patientLabel->setStyleSheet("font-size: 14px; font-weight: bold; color: #1E293B; margin-top: 6px;");
+    patientLabel->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 14px; font-weight: bold; color: #1E293B; margin-top: 6px;");
 
     patientSelector = new QComboBox;
     patientSelector->setMinimumHeight(44);
@@ -326,6 +330,7 @@ void RoomPage::buildInterface()
     roomTable->setMinimumHeight(400);
     roomTable->setStyleSheet(
         "QTableWidget {"
+        " font-family: 'Gotham', 'Montserrat', sans-serif;"
         " background-color: #FFFFFF;"
         " alternate-background-color: #F8FAFC;"
         " gridline-color: #E2E8F0;"
@@ -334,6 +339,7 @@ void RoomPage::buildInterface()
         " color: #1E293B;"
         "}"
         "QHeaderView::section {"
+        " font-family: 'Gotham', 'Montserrat', sans-serif;"
         " background-color: #F1F5F9;"
         " color: #334155;"
         " font-size: 13px;"
@@ -455,7 +461,9 @@ void RoomPage::refreshRoomTable()
         bool isAvail = (room->status == AVAILABLE);
         QTableWidgetItem *statusItem = new QTableWidgetItem(isAvail ? "Available" : "Occupied");
         statusItem->setTextAlignment(Qt::AlignCenter);
-        statusItem->setFont(QFont("Segoe UI", 10, QFont::Bold));
+        QFont statusFont("Gotham", 10, QFont::Bold);
+        statusFont.setFamilies({"Gotham", "Montserrat", "Segoe UI", "sans-serif"});
+        statusItem->setFont(statusFont);
         statusItem->setForeground(QColor(isAvail ? "#16A34A" : "#DC2626"));
         roomTable->setItem(row, 4, statusItem);
     }

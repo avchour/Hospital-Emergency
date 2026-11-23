@@ -83,7 +83,9 @@ protected:
             painter.drawEllipse(holeRect);
 
             painter.setPen(QColor("#64748B"));
-            painter.setFont(QFont("Segoe UI", 10, QFont::Bold));
+            QFont emptyFont("Gotham", 10, QFont::Bold);
+            emptyFont.setFamilies({"Gotham", "Montserrat", "Segoe UI", "sans-serif"});
+            painter.setFont(emptyFont);
             painter.drawText(holeRect, Qt::AlignCenter, "0 Patients");
             return;
         }
@@ -91,7 +93,8 @@ protected:
         int startAngle = 90 * 16;
         for (int i = 0; i < priorityCounts.size(); i++)
         {
-            if (priorityCounts[i] == 0) continue;
+            if (priorityCounts[i] == 0)
+                continue;
             int spanAngle = (priorityCounts[i] * 360 * 16) / total;
 
             painter.setPen(Qt::NoPen);
@@ -111,13 +114,17 @@ protected:
         painter.drawEllipse(holeRect);
 
         painter.setPen(QColor("#0F172A"));
-        painter.setFont(QFont("Segoe UI", 16, QFont::Bold));
+        QFont centerValFont("Gotham", 16, QFont::Bold);
+        centerValFont.setFamilies({"Gotham", "Montserrat", "Segoe UI", "sans-serif"});
+        painter.setFont(centerValFont);
 
         QRectF textRect(holeRect.left(), holeRect.top() - 8, holeRect.width(), holeRect.height() / 2);
         painter.drawText(textRect, Qt::AlignBottom | Qt::AlignHCenter, QString::number(total));
 
         painter.setPen(QColor("#64748B"));
-        painter.setFont(QFont("Segoe UI", 9));
+        QFont centerSubFont("Gotham", 9, QFont::Normal);
+        centerSubFont.setFamilies({"Gotham", "Montserrat", "Segoe UI", "sans-serif"});
+        painter.setFont(centerSubFont);
         QRectF subRect(holeRect.left(), holeRect.center().y(), holeRect.width(), holeRect.height() / 2);
         painter.drawText(subRect, Qt::AlignTop | Qt::AlignHCenter, "In Queue");
     }
@@ -137,7 +144,7 @@ static QFrame *createPanel(const QString &title, QVBoxLayout *&contentLayout)
 
     QLabel *heading = new QLabel(title);
     heading->setObjectName("sectionTitle");
-    heading->setStyleSheet("font-size: 18px; font-weight: bold; color: #172554;");
+    heading->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 18px; font-weight: bold; color: #172554;");
     contentLayout->addWidget(heading);
 
     return panel;
@@ -154,21 +161,20 @@ static QFrame *createStatCard(const QString &title, const QString &description, 
         "border: 1px solid #E2E8F0;"
         "border-radius: 8px;"
         "padding: 12px;"
-        "}"
-    );
+        "}");
 
     QVBoxLayout *layout = new QVBoxLayout(card);
     layout->setContentsMargins(18, 15, 18, 15);
     layout->setSpacing(7);
 
     QLabel *titleLabel = new QLabel(title);
-    titleLabel->setStyleSheet("font-size: 14px; color: #64748B; font-weight: bold;");
+    titleLabel->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 14px; color: #64748B; font-weight: bold;");
 
     valRef = new QLabel("0");
-    valRef->setStyleSheet("font-size: 28px; font-weight: bold; color: #172554;");
+    valRef->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 28px; font-weight: bold; color: #172554;");
 
     QLabel *descriptionLabel = new QLabel(description);
-    descriptionLabel->setStyleSheet("font-size: 12px; color: #94A3B8;");
+    descriptionLabel->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 12px; color: #94A3B8;");
 
     layout->addWidget(titleLabel);
     layout->addWidget(valRef);
@@ -254,8 +260,7 @@ void Dashboard::setupUI()
             "}"
             "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {"
             "background: none;"
-            "}"
-        );
+            "}");
     }
 
     QWidget *container = new QWidget();
@@ -270,10 +275,10 @@ void Dashboard::setupUI()
     QVBoxLayout *headingLayout = new QVBoxLayout();
 
     QLabel *welcome = new QLabel("Welcome, Hospital Administrator");
-    welcome->setStyleSheet("font-size: 24px; font-weight: bold; color: #172554;");
+    welcome->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 24px; font-weight: bold; color: #172554;");
 
     QLabel *subtitle = new QLabel("Emergency Management System  |  Real-Time Overview");
-    subtitle->setStyleSheet("font-size: 14px; color: #64748B;");
+    subtitle->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 14px; color: #64748B;");
 
     headingLayout->addWidget(welcome);
     headingLayout->addWidget(subtitle);
@@ -317,16 +322,14 @@ void Dashboard::setupUI()
         "Emergent (Level 2)",
         "Urgent (Level 3)",
         "Less Urgent (Level 4)",
-        "Non-Urgent (Level 5)"
-    };
+        "Non-Urgent (Level 5)"};
 
     QVector<QColor> priorityColors = {
         QColor("#EF4444"),
         QColor("#F97316"),
         QColor("#EAB308"),
         QColor("#22C55E"),
-        QColor("#3B82F6")
-    };
+        QColor("#3B82F6")};
 
     for (int i = 0; i < 5; i++)
     {
@@ -336,10 +339,10 @@ void Dashboard::setupUI()
         dot->setStyleSheet(QString("background-color: %1; border-radius: 6px;").arg(priorityColors[i].name()));
 
         QLabel *lbl = new QLabel(priorityNames[i]);
-        lbl->setStyleSheet("font-size: 13px; color: #334155; font-weight: 500;");
+        lbl->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 13px; color: #334155; font-weight: 500;");
 
         priorityCountLabels[i] = new QLabel("0");
-        priorityCountLabels[i]->setStyleSheet("font-size: 14px; font-weight: bold; color: #0F172A;");
+        priorityCountLabels[i]->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 14px; font-weight: bold; color: #0F172A;");
 
         row->addWidget(dot);
         row->addWidget(lbl, 1);
@@ -366,20 +369,19 @@ void Dashboard::setupUI()
         "border: 1px solid #E2E8F0;"
         "border-radius: 6px;"
         "padding: 6px;"
-        "}"
-    );
+        "}");
     QVBoxLayout *priceCardLayout = new QVBoxLayout(priceCard);
     priceCardLayout->setContentsMargins(10, 8, 10, 8);
     priceCardLayout->setSpacing(2);
 
     QLabel *priceTitle = new QLabel("Service Price");
-    priceTitle->setStyleSheet("font-size: 11px; font-weight: bold; color: #64748B; border: none;");
+    priceTitle->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 11px; font-weight: bold; color: #64748B; border: none;");
 
     revenuePriceVal = new QLabel("$1,000");
-    revenuePriceVal->setStyleSheet("font-size: 18px; font-weight: bold; color: #172554; border: none;");
+    revenuePriceVal->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 18px; font-weight: bold; color: #172554; border: none;");
 
     QLabel *priceSub = new QLabel("Fixed per emergency case");
-    priceSub->setStyleSheet("font-size: 10px; color: #94A3B8; border: none;");
+    priceSub->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 10px; color: #94A3B8; border: none;");
 
     priceCardLayout->addWidget(priceTitle);
     priceCardLayout->addWidget(revenuePriceVal);
@@ -393,20 +395,19 @@ void Dashboard::setupUI()
         "border: 1px solid #BBF7D0;"
         "border-radius: 6px;"
         "padding: 6px;"
-        "}"
-    );
+        "}");
     QVBoxLayout *totalCardLayout = new QVBoxLayout(totalCard);
     totalCardLayout->setContentsMargins(10, 8, 10, 8);
     totalCardLayout->setSpacing(2);
 
     QLabel *totalTitle = new QLabel("Total Emergency Revenue");
-    totalTitle->setStyleSheet("font-size: 11px; font-weight: bold; color: #15803D; border: none;");
+    totalTitle->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 11px; font-weight: bold; color: #15803D; border: none;");
 
     revenueTotalVal = new QLabel("$0");
-    revenueTotalVal->setStyleSheet("font-size: 18px; font-weight: bold; color: #16A34A; border: none;");
+    revenueTotalVal->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 18px; font-weight: bold; color: #16A34A; border: none;");
 
     revenueCaseCountVal = new QLabel("0 cases at $1,000");
-    revenueCaseCountVal->setStyleSheet("font-size: 10px; color: #15803D; border: none;");
+    revenueCaseCountVal->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 10px; color: #15803D; border: none;");
 
     totalCardLayout->addWidget(totalTitle);
     totalCardLayout->addWidget(revenueTotalVal);
@@ -432,13 +433,14 @@ void Dashboard::setupUI()
     revenueTable->setMaximumHeight(220);
     revenueTable->setStyleSheet(
         "QTableWidget {"
+        "font-family: 'Gotham', 'Montserrat', sans-serif;"
         "background-color: white; border: 1px solid #E2E8F0; border-radius: 6px;"
         "}"
         "QHeaderView::section {"
+        "font-family: 'Gotham', 'Montserrat', sans-serif;"
         "background-color: #F8FAFC; color: #475569; font-weight: bold; padding: 5px;"
         "border: none; border-bottom: 1px solid #E2E8F0;"
-        "}"
-    );
+        "}");
     revenueLayout->addWidget(revenueTable);
 
     // View Revenue Report Button
@@ -447,6 +449,7 @@ void Dashboard::setupUI()
     viewRevenueReportBtn->setCursor(Qt::PointingHandCursor);
     viewRevenueReportBtn->setStyleSheet(
         "QPushButton {"
+        "font-family: 'Gotham', 'Montserrat', sans-serif;"
         "background-color: #2563EB;"
         "color: white;"
         "border: none;"
@@ -456,10 +459,10 @@ void Dashboard::setupUI()
         "padding: 6px 14px;"
         "}"
         "QPushButton:hover { background-color: #1D4ED8; }"
-        "QPushButton:pressed { background-color: #1E40AF; }"
-    );
+        "QPushButton:pressed { background-color: #1E40AF; }");
 
-    connect(viewRevenueReportBtn, &QPushButton::clicked, this, [this]() {
+    connect(viewRevenueReportBtn, &QPushButton::clicked, this, [this]()
+            {
         const int EMERGENCY_PRICE = 1000;
         int cases = priorityQueue ? priorityQueue->getQueueCount() : 0;
         long long total = static_cast<long long>(cases) * EMERGENCY_PRICE;
@@ -484,8 +487,7 @@ void Dashboard::setupUI()
         msgBox.setText(detail);
         msgBox.setIcon(QMessageBox::Information);
         msgBox.setStandardButtons(QMessageBox::Ok);
-        msgBox.exec();
-    });
+        msgBox.exec(); });
 
     revenueLayout->addWidget(viewRevenueReportBtn);
     revenueLayout->addStretch();
@@ -499,9 +501,7 @@ void Dashboard::setupUI()
 
     queueTable = new QTableWidget();
     queueTable->setColumnCount(5);
-    queueTable->setHorizontalHeaderLabels({
-        "Priority", "Patient ID", "Name", "Age", "Symptoms"
-    });
+    queueTable->setHorizontalHeaderLabels({"Priority", "Patient ID", "Name", "Age", "Symptoms"});
     queueTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     queueTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     queueTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -512,13 +512,14 @@ void Dashboard::setupUI()
     queueTable->setMaximumHeight(320);
     queueTable->setStyleSheet(
         "QTableWidget {"
+        "font-family: 'Gotham', 'Montserrat', sans-serif;"
         "background-color: white; border: 1px solid #E2E8F0; border-radius: 8px;"
         "}"
         "QHeaderView::section {"
+        "font-family: 'Gotham', 'Montserrat', sans-serif;"
         "background-color: #F8FAFC; color: #475569; font-weight: bold; padding: 6px;"
         "border: none; border-bottom: 1px solid #E2E8F0;"
-        "}"
-    );
+        "}");
 
     queueLayout->addWidget(queueTable);
     mainLayout->addWidget(queuePanel);
@@ -577,7 +578,8 @@ void Dashboard::refreshStats()
         for (int i = 0; i < previewCount; i++)
         {
             TriageRecord *tr = priorityQueue->getQueueRecordAt(i);
-            if (!tr) continue;
+            if (!tr)
+                continue;
 
             Patient *p = patientManager->findPatientInfo(tr->patientID);
             int row = queueTable->rowCount();
@@ -586,11 +588,21 @@ void Dashboard::refreshStats()
             QString pName;
             switch (tr->priority)
             {
-            case RESUSCITATION: pName = "Resuscitation (1)"; break;
-            case EMERGENT:      pName = "Emergent (2)"; break;
-            case URGENT:        pName = "Urgent (3)"; break;
-            case LESS_URGENT:   pName = "Less Urgent (4)"; break;
-            case NON_URGENT:    pName = "Non Urgent (5)"; break;
+            case RESUSCITATION:
+                pName = "Resuscitation (1)";
+                break;
+            case EMERGENT:
+                pName = "Emergent (2)";
+                break;
+            case URGENT:
+                pName = "Urgent (3)";
+                break;
+            case LESS_URGENT:
+                pName = "Less Urgent (4)";
+                break;
+            case NON_URGENT:
+                pName = "Non Urgent (5)";
+                break;
             }
 
             QTableWidgetItem *pItem = new QTableWidgetItem(pName);
@@ -598,11 +610,16 @@ void Dashboard::refreshStats()
             f.setBold(true);
             pItem->setFont(f);
 
-            if (tr->priority == RESUSCITATION) pItem->setForeground(QColor("#EF4444"));
-            else if (tr->priority == EMERGENT) pItem->setForeground(QColor("#F97316"));
-            else if (tr->priority == URGENT)   pItem->setForeground(QColor("#EAB308"));
-            else if (tr->priority == LESS_URGENT) pItem->setForeground(QColor("#22C55E"));
-            else pItem->setForeground(QColor("#3B82F6"));
+            if (tr->priority == RESUSCITATION)
+                pItem->setForeground(QColor("#EF4444"));
+            else if (tr->priority == EMERGENT)
+                pItem->setForeground(QColor("#F97316"));
+            else if (tr->priority == URGENT)
+                pItem->setForeground(QColor("#EAB308"));
+            else if (tr->priority == LESS_URGENT)
+                pItem->setForeground(QColor("#22C55E"));
+            else
+                pItem->setForeground(QColor("#0300cf"));
 
             queueTable->setItem(row, 0, pItem);
             queueTable->setItem(row, 1, new QTableWidgetItem(QString::number(tr->patientID)));
@@ -629,9 +646,9 @@ void Dashboard::refreshStats()
     if (revenueCaseCountVal)
     {
         revenueCaseCountVal->setText(QString("%1 %2 at $%3 fixed")
-            .arg(emergencyCases)
-            .arg(emergencyCases == 1 ? "case" : "cases")
-            .arg(locale.toString(EMERGENCY_PRICE_PER_CASE)));
+                                         .arg(emergencyCases)
+                                         .arg(emergencyCases == 1 ? "case" : "cases")
+                                         .arg(locale.toString(EMERGENCY_PRICE_PER_CASE)));
     }
 
     if (revenueTable)
@@ -640,7 +657,8 @@ void Dashboard::refreshStats()
         for (int i = 0; i < emergencyCases; ++i)
         {
             TriageRecord *tr = priorityQueue ? priorityQueue->getQueueRecordAt(i) : nullptr;
-            if (!tr) continue;
+            if (!tr)
+                continue;
 
             Patient *p = patientManager ? patientManager->findPatientInfo(tr->patientID) : nullptr;
             int row = revenueTable->rowCount();

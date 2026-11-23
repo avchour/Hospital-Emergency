@@ -1,4 +1,18 @@
 /* ==========================================================
+   GLOBAL APPLICATION TYPOGRAPHY
+   Primary Font: Gotham
+   Fallback Font: Montserrat (Cross-platform: Windows & Fedora)
+   ========================================================== */
+
+* {
+    font-family: "Gotham", "Montserrat", "Segoe UI", "Cantarell", "Liberation Sans", "DejaVu Sans", sans-serif;
+}
+
+QWidget, QLabel, QPushButton, QTableWidget, QTableView, QHeaderView, QHeaderView::section, QComboBox, QLineEdit, QSpinBox, QDoubleSpinBox, QTextEdit, QPlainTextEdit, QFrame {
+    font-family: "Gotham", "Montserrat", "Segoe UI", "Cantarell", "Liberation Sans", "DejaVu Sans", sans-serif;
+}
+
+/* ==========================================================
    13. DASHBOARD
    🎨 MODERN XIU XIAN
    ========================================================== */

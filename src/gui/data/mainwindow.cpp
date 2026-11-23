@@ -127,10 +127,10 @@ void MainWindow::setupUI()
     brandTextLayout->setSpacing(2);
 
     QLabel *brandTitle = new QLabel("HOSPITAL-EMERGENCY");
-    brandTitle->setStyleSheet("font-size: 13px; font-weight: bold; color: #1E293B; letter-spacing: 0.5px;");
+    brandTitle->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 13px; font-weight: bold; color: #1E293B; letter-spacing: 0.5px;");
 
     QLabel *brandSubtitle = new QLabel("Emergency & Queue System");
-    brandSubtitle->setStyleSheet("font-size: 11px; color: #64748B;");
+    brandSubtitle->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 11px; color: #64748B;");
 
     brandTextLayout->addWidget(brandTitle);
     brandTextLayout->addWidget(brandSubtitle);
@@ -142,7 +142,7 @@ void MainWindow::setupUI()
     sidebarLayout->addWidget(brandWidget);
 
     QLabel *menuLabel = new QLabel("MAIN MENU");
-    menuLabel->setStyleSheet("font-size: 11px; font-weight: bold; color: #94A3B8; margin-top: 10px;");
+    menuLabel->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 11px; font-weight: bold; color: #94A3B8; margin-top: 10px;");
     sidebarLayout->addWidget(menuLabel);
 
     // Pages stack
@@ -224,6 +224,7 @@ void MainWindow::setupUI()
         button->setCursor(Qt::PointingHandCursor);
         button->setStyleSheet(
             "QPushButton {"
+            "font-family: 'Gotham', 'Montserrat', sans-serif;"
             "text-align: left; padding-left: 18px; font-size: 14px; font-weight: 500;"
             "color: #475569; border: none; border-radius: 8px; background: transparent;"
             "}"

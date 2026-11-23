@@ -83,10 +83,10 @@ void Emergency::setupUI()
 
     // Page title
     QLabel *title = new QLabel("Emergency Triage Categories");
-    title->setStyleSheet("font-size: 26px; font-weight: bold; color: #172554;");
+    title->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 26px; font-weight: bold; color: #172554;");
 
     QLabel *subtitle = new QLabel("Monitor emergency triage patients by severity group");
-    subtitle->setStyleSheet("font-size: 15px; color: #64748B;");
+    subtitle->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 15px; color: #64748B;");
 
     mainLayout->addWidget(title);
     mainLayout->addWidget(subtitle);

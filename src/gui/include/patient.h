@@ -8,6 +8,7 @@ class QTableWidget;
 class QLineEdit;
 class QPushButton;
 class QLabel;
+class QCheckBox;
 class PatientManager;
 
 class PatientPage : public QWidget
@@ -33,11 +34,17 @@ private:
     QPushButton *removeButton;
     QLabel *totalLabel;
 
+    int selectedPatientId;
+    bool isUpdatingSelection;
+
     void setupUI();
     void addPatient();
     void editPatient();
     void removeSelectedPatient();
     void searchPatient();
+    void onPatientCheckboxToggled(int patientId, bool checked, QCheckBox *senderCheckBox);
+    void updateActionButtons();
+    void highlightRow(int row, bool selected);
 };
 
 #endif

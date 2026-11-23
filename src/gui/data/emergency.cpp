@@ -88,10 +88,10 @@ void EmergencyQueue::setupUI()
     mainLayout->setContentsMargins(20, 20, 20, 20);
 
     QLabel *title = new QLabel("Emergency Queue");
-    title->setStyleSheet("font-size: 26px; font-weight: bold; color: #172554;");
+    title->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 26px; font-weight: bold; color: #172554;");
 
     QLabel *subtitle = new QLabel("Patients waiting for emergency triage & treatment in priority order");
-    subtitle->setStyleSheet("font-size: 15px; color: #64748B;");
+    subtitle->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 15px; color: #64748B;");
 
     mainLayout->addWidget(title);
     mainLayout->addWidget(subtitle);
@@ -100,7 +100,7 @@ void EmergencyQueue::setupUI()
     setupPriorityCards();
 
     QLabel *managementTitle = new QLabel("Active Emergency Queue");
-    managementTitle->setStyleSheet("font-size: 20px; font-weight: bold; color: #172554;");
+    managementTitle->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 20px; font-weight: bold; color: #172554;");
     mainLayout->addWidget(managementTitle);
 
     // Controls: Search, Priority filter, Add, Treat

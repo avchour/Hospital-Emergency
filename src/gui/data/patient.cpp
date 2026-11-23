@@ -15,6 +15,7 @@
 #include <QSpinBox>
 #include <QComboBox>
 #include <QMessageBox>
+#include <QCheckBox>
 
 PatientPage::PatientPage(PatientManager *manager, QWidget *parent)
     : QWidget(parent),
@@ -24,7 +25,9 @@ PatientPage::PatientPage(PatientManager *manager, QWidget *parent)
       addButton(nullptr),
       editButton(nullptr),
       removeButton(nullptr),
-      totalLabel(nullptr)
+      totalLabel(nullptr),
+      selectedPatientId(-1),
+      isUpdatingSelection(false)
 {
     setupUI();
     refreshTable();
@@ -38,10 +41,10 @@ void PatientPage::setupUI()
 
     // Title & Subtitle
     QLabel *title = new QLabel("Patient Management");
-    title->setStyleSheet("font-size: 26px; font-weight: bold; color: #172554;");
+    title->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 26px; font-weight: bold; color: #172554;");
 
     QLabel *subtitle = new QLabel("View, register, and update patient records");
-    subtitle->setStyleSheet("font-size: 15px; color: #64748B;");
+    subtitle->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 15px; color: #64748B;");
 
     mainLayout->addWidget(title);
     mainLayout->addWidget(subtitle);
@@ -58,6 +61,7 @@ void PatientPage::setupUI()
     addButton->setMinimumHeight(40);
     addButton->setStyleSheet(
         "QPushButton {"
+        "font-family: 'Gotham', 'Montserrat', sans-serif;"
         "background-color: #16A34A;"
         "color: white;"
         "font-weight: bold;"
@@ -73,25 +77,32 @@ void PatientPage::setupUI()
     controls->addWidget(addButton);
     mainLayout->addLayout(controls);
 
-    // Table
+    // Table with Select checkbox column
     patientTable = new QTableWidget();
-    patientTable->setColumnCount(6);
+    patientTable->setColumnCount(7);
     patientTable->setHorizontalHeaderLabels({
-        "Patient ID", "Full Name", "Age", "Gender", "Phone", "Address"
+        "Select", "Patient ID", "Full Name", "Age", "Gender", "Phone", "Address"
     });
-    patientTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    patientTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-    patientTable->setSelectionMode(QAbstractItemView::SingleSelection);
+    patientTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+    patientTable->setColumnWidth(0, 65);
+    for (int col = 1; col < 7; ++col)
+    {
+        patientTable->horizontalHeader()->setSectionResizeMode(col, QHeaderView::Stretch);
+    }
+
+    patientTable->setSelectionMode(QAbstractItemView::NoSelection);
     patientTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     patientTable->verticalHeader()->setVisible(false);
     patientTable->setStyleSheet(
         "QTableWidget {"
+        "font-family: 'Gotham', 'Montserrat', sans-serif;"
         "background-color: white;"
         "border: 1px solid #E2E8F0;"
         "border-radius: 8px;"
         "gridline-color: #F1F5F9;"
         "}"
         "QHeaderView::section {"
+        "font-family: 'Gotham', 'Montserrat', sans-serif;"
         "background-color: #F8FAFC;"
         "color: #475569;"
         "font-weight: bold;"
@@ -106,12 +117,14 @@ void PatientPage::setupUI()
     QHBoxLayout *bottomLayout = new QHBoxLayout();
 
     totalLabel = new QLabel("Total Registered: 0");
-    totalLabel->setStyleSheet("font-size: 14px; font-weight: bold; color: #475569;");
+    totalLabel->setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; font-size: 14px; font-weight: bold; color: #475569;");
 
     editButton = new QPushButton("Edit Patient Details");
     editButton->setMinimumHeight(38);
+    editButton->setEnabled(false);
     editButton->setStyleSheet(
         "QPushButton {"
+        "font-family: 'Gotham', 'Montserrat', sans-serif;"
         "background-color: #2563EB;"
         "color: white;"
         "border-radius: 6px;"
@@ -119,13 +132,16 @@ void PatientPage::setupUI()
         "font-weight: bold;"
         "}"
         "QPushButton:hover { background-color: #1D4ED8; }"
+        "QPushButton:disabled { background-color: #94A3B8; color: #E2E8F0; }"
     );
     connect(editButton, &QPushButton::clicked, this, &PatientPage::editPatient);
 
     removeButton = new QPushButton("Remove Selected Patient");
     removeButton->setMinimumHeight(38);
+    removeButton->setEnabled(false);
     removeButton->setStyleSheet(
         "QPushButton {"
+        "font-family: 'Gotham', 'Montserrat', sans-serif;"
         "background-color: #DC2626;"
         "color: white;"
         "border-radius: 6px;"
@@ -133,6 +149,7 @@ void PatientPage::setupUI()
         "font-weight: bold;"
         "}"
         "QPushButton:hover { background-color: #B91C1C; }"
+        "QPushButton:disabled { background-color: #94A3B8; color: #E2E8F0; }"
     );
     connect(removeButton, &QPushButton::clicked, this, &PatientPage::removeSelectedPatient);
 
@@ -144,15 +161,99 @@ void PatientPage::setupUI()
     mainLayout->addLayout(bottomLayout);
 }
 
+void PatientPage::highlightRow(int row, bool selected)
+{
+    QColor bg = selected ? QColor("#EFF6FF") : QColor(row % 2 == 0 ? "#FFFFFF" : "#F8FAFC");
+    for (int c = 1; c < patientTable->columnCount(); ++c)
+    {
+        QTableWidgetItem *it = patientTable->item(row, c);
+        if (it)
+        {
+            it->setBackground(bg);
+        }
+    }
+}
+
+void PatientPage::updateActionButtons()
+{
+    bool hasSelection = (selectedPatientId >= 0);
+    if (editButton)
+        editButton->setEnabled(hasSelection);
+    if (removeButton)
+        removeButton->setEnabled(hasSelection);
+}
+
+void PatientPage::onPatientCheckboxToggled(int patientId, bool checked, QCheckBox *senderCheckBox)
+{
+    isUpdatingSelection = true;
+
+    if (checked)
+    {
+        selectedPatientId = patientId;
+
+        // Uncheck all other checkboxes in the table
+        for (int r = 0; r < patientTable->rowCount(); ++r)
+        {
+            QWidget *cellWidget = patientTable->cellWidget(r, 0);
+            if (cellWidget)
+            {
+                QCheckBox *cb = cellWidget->findChild<QCheckBox *>();
+                if (cb && cb != senderCheckBox)
+                {
+                    if (cb->isChecked())
+                    {
+                        cb->setChecked(false);
+                    }
+                    highlightRow(r, false);
+                }
+                else if (cb == senderCheckBox)
+                {
+                    highlightRow(r, true);
+                }
+            }
+        }
+    }
+    else
+    {
+        if (selectedPatientId == patientId)
+        {
+            selectedPatientId = -1;
+        }
+
+        for (int r = 0; r < patientTable->rowCount(); ++r)
+        {
+            QWidget *cellWidget = patientTable->cellWidget(r, 0);
+            if (cellWidget)
+            {
+                QCheckBox *cb = cellWidget->findChild<QCheckBox *>();
+                if (cb == senderCheckBox)
+                {
+                    highlightRow(r, false);
+                }
+            }
+        }
+    }
+
+    updateActionButtons();
+    isUpdatingSelection = false;
+}
+
 void PatientPage::refreshTable()
 {
     patientTable->setRowCount(0);
 
     if (!patientManager)
+    {
+        selectedPatientId = -1;
+        updateActionButtons();
         return;
+    }
 
     int count = patientManager->getPatientCount();
     totalLabel->setText("Total Registered: " + QString::number(count));
+
+    bool selectedStillExists = false;
+    isUpdatingSelection = true;
 
     for (int i = 0; i < count; i++)
     {
@@ -162,13 +263,58 @@ void PatientPage::refreshTable()
         int row = patientTable->rowCount();
         patientTable->insertRow(row);
 
-        patientTable->setItem(row, 0, new QTableWidgetItem(QString::number(p->id)));
-        patientTable->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(p->name)));
-        patientTable->setItem(row, 2, new QTableWidgetItem(QString::number(p->age)));
-        patientTable->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(p->gender)));
-        patientTable->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(p->phone)));
-        patientTable->setItem(row, 5, new QTableWidgetItem(QString::fromStdString(p->address)));
+        // Column 0: Checkbox
+        QWidget *cellWidget = new QWidget();
+        QHBoxLayout *cellLayout = new QHBoxLayout(cellWidget);
+        cellLayout->setContentsMargins(0, 0, 0, 0);
+        cellLayout->setAlignment(Qt::AlignCenter);
+
+        QCheckBox *cb = new QCheckBox(cellWidget);
+        cb->setCursor(Qt::PointingHandCursor);
+        bool isChecked = (p->id == selectedPatientId);
+        if (isChecked)
+        {
+            cb->setChecked(true);
+            selectedStillExists = true;
+        }
+
+        connect(cb, &QCheckBox::toggled, this, [this, pId = p->id, cb](bool checked) {
+            if (isUpdatingSelection) return;
+            onPatientCheckboxToggled(pId, checked, cb);
+        });
+
+        cellLayout->addWidget(cb);
+        patientTable->setCellWidget(row, 0, cellWidget);
+
+        // Columns 1-6: Patient data items (non-selectable to prevent row-click selection)
+        QTableWidgetItem *item0 = new QTableWidgetItem(QString::number(p->id));
+        QTableWidgetItem *item1 = new QTableWidgetItem(QString::fromStdString(p->name));
+        QTableWidgetItem *item2 = new QTableWidgetItem(QString::number(p->age));
+        QTableWidgetItem *item3 = new QTableWidgetItem(QString::fromStdString(p->gender));
+        QTableWidgetItem *item4 = new QTableWidgetItem(QString::fromStdString(p->phone));
+        QTableWidgetItem *item5 = new QTableWidgetItem(QString::fromStdString(p->address));
+
+        item0->setTextAlignment(Qt::AlignCenter);
+        item2->setTextAlignment(Qt::AlignCenter);
+        item3->setTextAlignment(Qt::AlignCenter);
+
+        QList<QTableWidgetItem *> items = {item0, item1, item2, item3, item4, item5};
+        for (int col = 0; col < items.size(); ++col)
+        {
+            items[col]->setFlags(Qt::ItemIsEnabled);
+            patientTable->setItem(row, col + 1, items[col]);
+        }
+
+        highlightRow(row, isChecked);
     }
+
+    isUpdatingSelection = false;
+
+    if (!selectedStillExists)
+    {
+        selectedPatientId = -1;
+    }
+    updateActionButtons();
 }
 
 void PatientPage::searchPatient()
@@ -186,7 +332,9 @@ void PatientPage::searchPatient()
 
     int total = patientManager->getPatientCount();
     int matchCount = 0;
+    bool foundSelectedInSearch = false;
 
+    isUpdatingSelection = true;
     for (int i = 0; i < total; i++)
     {
         Patient *p = patientManager->getPatientAt(i);
@@ -201,15 +349,59 @@ void PatientPage::searchPatient()
             int row = patientTable->rowCount();
             patientTable->insertRow(row);
 
-            patientTable->setItem(row, 0, new QTableWidgetItem(idStr));
-            patientTable->setItem(row, 1, new QTableWidgetItem(nameStr));
-            patientTable->setItem(row, 2, new QTableWidgetItem(QString::number(p->age)));
-            patientTable->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(p->gender)));
-            patientTable->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(p->phone)));
-            patientTable->setItem(row, 5, new QTableWidgetItem(QString::fromStdString(p->address)));
+            // Column 0: Checkbox
+            QWidget *cellWidget = new QWidget();
+            QHBoxLayout *cellLayout = new QHBoxLayout(cellWidget);
+            cellLayout->setContentsMargins(0, 0, 0, 0);
+            cellLayout->setAlignment(Qt::AlignCenter);
+
+            QCheckBox *cb = new QCheckBox(cellWidget);
+            cb->setCursor(Qt::PointingHandCursor);
+            bool isChecked = (p->id == selectedPatientId);
+            if (isChecked)
+            {
+                cb->setChecked(true);
+                foundSelectedInSearch = true;
+            }
+
+            connect(cb, &QCheckBox::toggled, this, [this, pId = p->id, cb](bool checked) {
+                if (isUpdatingSelection) return;
+                onPatientCheckboxToggled(pId, checked, cb);
+            });
+
+            cellLayout->addWidget(cb);
+            patientTable->setCellWidget(row, 0, cellWidget);
+
+            // Columns 1-6: Patient data items
+            QTableWidgetItem *item0 = new QTableWidgetItem(idStr);
+            QTableWidgetItem *item1 = new QTableWidgetItem(nameStr);
+            QTableWidgetItem *item2 = new QTableWidgetItem(QString::number(p->age));
+            QTableWidgetItem *item3 = new QTableWidgetItem(QString::fromStdString(p->gender));
+            QTableWidgetItem *item4 = new QTableWidgetItem(QString::fromStdString(p->phone));
+            QTableWidgetItem *item5 = new QTableWidgetItem(QString::fromStdString(p->address));
+
+            item0->setTextAlignment(Qt::AlignCenter);
+            item2->setTextAlignment(Qt::AlignCenter);
+            item3->setTextAlignment(Qt::AlignCenter);
+
+            QList<QTableWidgetItem *> items = {item0, item1, item2, item3, item4, item5};
+            for (int col = 0; col < items.size(); ++col)
+            {
+                items[col]->setFlags(Qt::ItemIsEnabled);
+                patientTable->setItem(row, col + 1, items[col]);
+            }
+
+            highlightRow(row, isChecked);
             matchCount++;
         }
     }
+    isUpdatingSelection = false;
+
+    if (!foundSelectedInSearch)
+    {
+        selectedPatientId = -1;
+    }
+    updateActionButtons();
 
     totalLabel->setText("Matches found: " + QString::number(matchCount));
 }
@@ -247,7 +439,8 @@ void PatientPage::addPatient()
     QHBoxLayout btnLayout;
     QPushButton saveBtn("Register Patient");
     QPushButton cancelBtn("Cancel");
-    saveBtn.setStyleSheet("background-color: #16A34A; color: white; font-weight: bold; padding: 6px 14px;");
+    saveBtn.setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; background-color: #16A34A; color: white; font-weight: bold; padding: 6px 14px;");
+    cancelBtn.setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; padding: 6px 14px;");
     btnLayout.addStretch();
     btnLayout.addWidget(&cancelBtn);
     btnLayout.addWidget(&saveBtn);
@@ -282,15 +475,14 @@ void PatientPage::addPatient()
 
 void PatientPage::editPatient()
 {
-    int row = patientTable->currentRow();
-    if (row < 0)
+    if (selectedPatientId < 0)
     {
-        QMessageBox::warning(this, "Select Patient", "Please select a patient from the table to edit.");
+        QMessageBox::warning(this, "Select Patient", "Please select a patient using the checkbox to edit.");
         return;
     }
 
-    int patientId = patientTable->item(row, 0)->text().toInt();
-    Patient *p = patientManager->findPatientInfo(patientId);
+    int patientId = selectedPatientId;
+    Patient *p = patientManager ? patientManager->findPatientInfo(patientId) : nullptr;
     if (!p)
     {
         QMessageBox::critical(this, "Error", "Could not find patient with ID: " + QString::number(patientId));
@@ -324,7 +516,8 @@ void PatientPage::editPatient()
     QHBoxLayout btnLayout;
     QPushButton saveBtn("Save Changes");
     QPushButton cancelBtn("Cancel");
-    saveBtn.setStyleSheet("background-color: #2563EB; color: white; font-weight: bold; padding: 6px 14px;");
+    saveBtn.setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; background-color: #2563EB; color: white; font-weight: bold; padding: 6px 14px;");
+    cancelBtn.setStyleSheet("font-family: 'Gotham', 'Montserrat', sans-serif; padding: 6px 14px;");
     btnLayout.addStretch();
     btnLayout.addWidget(&cancelBtn);
     btnLayout.addWidget(&saveBtn);
@@ -355,15 +548,15 @@ void PatientPage::editPatient()
 
 void PatientPage::removeSelectedPatient()
 {
-    int row = patientTable->currentRow();
-    if (row < 0)
+    if (selectedPatientId < 0)
     {
-        QMessageBox::warning(this, "Select Patient", "Please select a patient to remove.");
+        QMessageBox::warning(this, "Select Patient", "Please select a patient using the checkbox to remove.");
         return;
     }
 
-    int patientId = patientTable->item(row, 0)->text().toInt();
-    QString name = patientTable->item(row, 1)->text();
+    int patientId = selectedPatientId;
+    Patient *p = patientManager ? patientManager->findPatientInfo(patientId) : nullptr;
+    QString name = p ? QString::fromStdString(p->name) : ("#" + QString::number(patientId));
 
     auto reply = QMessageBox::question(
         this,
@@ -377,6 +570,7 @@ void PatientPage::removeSelectedPatient()
         if (patientManager->removePatient(patientId))
         {
             QMessageBox::information(this, "Removed", "Patient record successfully removed.");
+            selectedPatientId = -1;
             refreshTable();
             emit dataChanged();
         }
