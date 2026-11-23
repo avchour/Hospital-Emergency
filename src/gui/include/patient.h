@@ -9,6 +9,7 @@ class QLineEdit;
 class QPushButton;
 class QLabel;
 class QCheckBox;
+class QResizeEvent;
 class PatientManager;
 
 class PatientPage : public QWidget
@@ -23,6 +24,9 @@ signals:
 
 public slots:
     void refreshTable();
+
+protected:
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
     PatientManager *patientManager;
@@ -45,6 +49,7 @@ private:
     void onPatientCheckboxToggled(int patientId, bool checked, QCheckBox *senderCheckBox);
     void updateActionButtons();
     void highlightRow(int row, bool selected);
+    void adjustTableColumns();
 };
 
 #endif

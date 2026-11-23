@@ -11,6 +11,8 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QHeaderView>
+#include <QScrollBar>
+#include <QResizeEvent>
 #include <QDialog>
 #include <QSpinBox>
 #include <QComboBox>
@@ -85,6 +87,7 @@ void PatientPage::setupUI()
     });
     patientTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
     patientTable->setColumnWidth(0, 65);
+    patientTable->horizontalHeader()->setMinimumSectionSize(65);
     for (int col = 1; col < 7; ++col)
     {
         patientTable->horizontalHeader()->setSectionResizeMode(col, QHeaderView::Stretch);
@@ -93,6 +96,21 @@ void PatientPage::setupUI()
     patientTable->setSelectionMode(QAbstractItemView::NoSelection);
     patientTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     patientTable->verticalHeader()->setVisible(false);
+
+    // Scrollbar policies and smooth per-pixel scrolling
+    patientTable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    patientTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    patientTable->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    patientTable->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+    if (patientTable->verticalScrollBar())
+    {
+        patientTable->verticalScrollBar()->setSingleStep(20);
+    }
+    if (patientTable->horizontalScrollBar())
+    {
+        patientTable->horizontalScrollBar()->setSingleStep(20);
+    }
+
     patientTable->setStyleSheet(
         "QTableWidget {"
         "font-family: 'Gotham', 'Montserrat', sans-serif;"
@@ -110,8 +128,58 @@ void PatientPage::setupUI()
         "border: none;"
         "border-bottom: 1px solid #E2E8F0;"
         "}"
+        "QScrollBar:vertical {"
+        "background-color: #F1F5F9;"
+        "width: 12px;"
+        "margin: 0px;"
+        "border-radius: 6px;"
+        "}"
+        "QScrollBar::handle:vertical {"
+        "background-color: #94A3B8;"
+        "min-height: 36px;"
+        "border-radius: 6px;"
+        "}"
+        "QScrollBar::handle:vertical:hover {"
+        "background-color: #64748B;"
+        "}"
+        "QScrollBar::handle:vertical:pressed {"
+        "background-color: #475569;"
+        "}"
+        "QScrollBar::sub-line:vertical, QScrollBar::add-line:vertical {"
+        "height: 0px;"
+        "background: none;"
+        "border: none;"
+        "}"
+        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {"
+        "background: none;"
+        "}"
+        "QScrollBar:horizontal {"
+        "background-color: #F1F5F9;"
+        "height: 12px;"
+        "margin: 0px;"
+        "border-radius: 6px;"
+        "}"
+        "QScrollBar::handle:horizontal {"
+        "background-color: #94A3B8;"
+        "min-width: 36px;"
+        "border-radius: 6px;"
+        "}"
+        "QScrollBar::handle:horizontal:hover {"
+        "background-color: #64748B;"
+        "}"
+        "QScrollBar::handle:horizontal:pressed {"
+        "background-color: #475569;"
+        "}"
+        "QScrollBar::sub-line:horizontal, QScrollBar::add-line:horizontal {"
+        "width: 0px;"
+        "background: none;"
+        "border: none;"
+        "}"
+        "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {"
+        "background: none;"
+        "}"
     );
-    mainLayout->addWidget(patientTable);
+    mainLayout->addWidget(patientTable, 1);
 
     // Bottom action bar
     QHBoxLayout *bottomLayout = new QHBoxLayout();
@@ -159,6 +227,57 @@ void PatientPage::setupUI()
     bottomLayout->addWidget(removeButton);
 
     mainLayout->addLayout(bottomLayout);
+    adjustTableColumns();
+}
+
+void PatientPage::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
+    adjustTableColumns();
+}
+
+void PatientPage::adjustTableColumns()
+{
+    if (!patientTable || patientTable->columnCount() < 7)
+        return;
+
+    const int minW[7] = {65, 90, 150, 60, 80, 110, 150};
+    int totalMin = 0;
+    for (int i = 0; i < 7; ++i)
+        totalMin += minW[i]; // 705px
+
+    int availWidth = patientTable->viewport()->width();
+    if (availWidth <= 0)
+        availWidth = patientTable->width();
+
+    if (availWidth >= totalMin)
+    {
+        // Viewport is wide enough: avoid horizontal scrolling by stretching columns proportionally
+        patientTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+        patientTable->setColumnWidth(0, minW[0]);
+
+        int remaining = availWidth - minW[0];
+        int sumMinOther = totalMin - minW[0];
+        int allocated = 0;
+        for (int i = 1; i < 6; ++i)
+        {
+            patientTable->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Fixed);
+            int w = (minW[i] * remaining) / sumMinOther;
+            patientTable->setColumnWidth(i, w);
+            allocated += w;
+        }
+        patientTable->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Fixed);
+        patientTable->setColumnWidth(6, remaining - allocated);
+    }
+    else
+    {
+        // Window is too narrow to display columns legibly: enforce minimum sizes so horizontal scrollbar activates
+        for (int i = 0; i < 7; ++i)
+        {
+            patientTable->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Fixed);
+            patientTable->setColumnWidth(i, minW[i]);
+        }
+    }
 }
 
 void PatientPage::highlightRow(int row, bool selected)
@@ -240,6 +359,9 @@ void PatientPage::onPatientCheckboxToggled(int patientId, bool checked, QCheckBo
 
 void PatientPage::refreshTable()
 {
+    int savedVScroll = patientTable->verticalScrollBar() ? patientTable->verticalScrollBar()->value() : 0;
+    int savedHScroll = patientTable->horizontalScrollBar() ? patientTable->horizontalScrollBar()->value() : 0;
+
     patientTable->setRowCount(0);
 
     if (!patientManager)
@@ -315,6 +437,16 @@ void PatientPage::refreshTable()
         selectedPatientId = -1;
     }
     updateActionButtons();
+    adjustTableColumns();
+
+    if (patientTable->verticalScrollBar())
+    {
+        patientTable->verticalScrollBar()->setValue(savedVScroll);
+    }
+    if (patientTable->horizontalScrollBar())
+    {
+        patientTable->horizontalScrollBar()->setValue(savedHScroll);
+    }
 }
 
 void PatientPage::searchPatient()
@@ -325,6 +457,9 @@ void PatientPage::searchPatient()
         refreshTable();
         return;
     }
+
+    int savedVScroll = patientTable->verticalScrollBar() ? patientTable->verticalScrollBar()->value() : 0;
+    int savedHScroll = patientTable->horizontalScrollBar() ? patientTable->horizontalScrollBar()->value() : 0;
 
     patientTable->setRowCount(0);
     if (!patientManager)
@@ -404,6 +539,16 @@ void PatientPage::searchPatient()
     updateActionButtons();
 
     totalLabel->setText("Matches found: " + QString::number(matchCount));
+    adjustTableColumns();
+
+    if (patientTable->verticalScrollBar())
+    {
+        patientTable->verticalScrollBar()->setValue(savedVScroll);
+    }
+    if (patientTable->horizontalScrollBar())
+    {
+        patientTable->horizontalScrollBar()->setValue(savedHScroll);
+    }
 }
 
 void PatientPage::addPatient()
