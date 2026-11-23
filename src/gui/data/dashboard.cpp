@@ -17,6 +17,7 @@
 #include <QHeaderView>
 #include <QAbstractItemView>
 #include <QScrollArea>
+#include <QScrollBar>
 #include <QSizePolicy>
 #include <QStringList>
 #include <QColor>
@@ -209,14 +210,57 @@ Dashboard::Dashboard(
 
 void Dashboard::setupUI()
 {
+    setObjectName("dashboardPage");
+
     QVBoxLayout *rootLayout = new QVBoxLayout(this);
     rootLayout->setContentsMargins(0, 0, 0, 0);
+    rootLayout->setSpacing(0);
 
-    QScrollArea *scrollArea = new QScrollArea();
+    QScrollArea *scrollArea = new QScrollArea(this);
+    scrollArea->setObjectName("dashboardScroll");
     scrollArea->setWidgetResizable(true);
     scrollArea->setFrameShape(QFrame::NoFrame);
+    scrollArea->setLayoutDirection(Qt::LeftToRight);
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scrollArea->viewport()->setAutoFillBackground(false);
+
+    // Style the vertical scrollbar docked on the right side
+    if (scrollArea->verticalScrollBar())
+    {
+        scrollArea->verticalScrollBar()->setSingleStep(20);
+        scrollArea->verticalScrollBar()->setStyleSheet(
+            "QScrollBar:vertical {"
+            "background-color: #F1F5F9;"
+            "width: 12px;"
+            "margin: 0px;"
+            "border-radius: 6px;"
+            "}"
+            "QScrollBar::handle:vertical {"
+            "background-color: #94A3B8;"
+            "min-height: 36px;"
+            "border-radius: 6px;"
+            "}"
+            "QScrollBar::handle:vertical:hover {"
+            "background-color: #64748B;"
+            "}"
+            "QScrollBar::handle:vertical:pressed {"
+            "background-color: #475569;"
+            "}"
+            "QScrollBar::sub-line:vertical, QScrollBar::add-line:vertical {"
+            "height: 0px;"
+            "background: none;"
+            "border: none;"
+            "}"
+            "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {"
+            "background: none;"
+            "}"
+        );
+    }
 
     QWidget *container = new QWidget();
+    container->setObjectName("dashboardContainer");
+    container->setMinimumHeight(1020);
     QVBoxLayout *mainLayout = new QVBoxLayout(container);
     mainLayout->setContentsMargins(24, 20, 24, 24);
     mainLayout->setSpacing(20);
@@ -382,8 +426,10 @@ void Dashboard::setupUI()
     revenueTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     revenueTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     revenueTable->verticalHeader()->setVisible(false);
-    revenueTable->setMinimumHeight(130);
-    revenueTable->setMaximumHeight(160);
+    revenueTable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    revenueTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    revenueTable->setMinimumHeight(170);
+    revenueTable->setMaximumHeight(220);
     revenueTable->setStyleSheet(
         "QTableWidget {"
         "background-color: white; border: 1px solid #E2E8F0; border-radius: 6px;"
@@ -460,7 +506,10 @@ void Dashboard::setupUI()
     queueTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     queueTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     queueTable->verticalHeader()->setVisible(false);
-    queueTable->setMaximumHeight(180);
+    queueTable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    queueTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    queueTable->setMinimumHeight(220);
+    queueTable->setMaximumHeight(320);
     queueTable->setStyleSheet(
         "QTableWidget {"
         "background-color: white; border: 1px solid #E2E8F0; border-radius: 8px;"
@@ -473,6 +522,7 @@ void Dashboard::setupUI()
 
     queueLayout->addWidget(queueTable);
     mainLayout->addWidget(queuePanel);
+    mainLayout->addStretch();
 
     scrollArea->setWidget(container);
     rootLayout->addWidget(scrollArea);
@@ -522,7 +572,7 @@ void Dashboard::refreshStats()
     if (queueTable && priorityQueue && patientManager)
     {
         queueTable->setRowCount(0);
-        int previewCount = std::min(4, priorityQueue->getQueueCount());
+        int previewCount = priorityQueue->getQueueCount();
 
         for (int i = 0; i < previewCount; i++)
         {
