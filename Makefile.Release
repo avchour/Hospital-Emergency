@@ -2654,7 +2654,12 @@ release/dashboard.o: src/gui/data/dashboard.cpp src/gui/include/dashboard.h \
 		../../../../Qt/6.12.0/mingw_64/include/QtWidgets/QSizePolicy \
 		../../../../Qt/6.12.0/mingw_64/include/QtCore/QStringList \
 		../../../../Qt/6.12.0/mingw_64/include/QtGui/QColor \
-		../../../../Qt/6.12.0/mingw_64/include/QtGui/QFont
+		../../../../Qt/6.12.0/mingw_64/include/QtGui/QFont \
+		../../../../Qt/6.12.0/mingw_64/include/QtWidgets/QMessageBox \
+		../../../../Qt/6.12.0/mingw_64/include/QtWidgets/qmessagebox.h \
+		../../../../Qt/6.12.0/mingw_64/include/QtWidgets/qdialog.h \
+		../../../../Qt/6.12.0/mingw_64/include/QtWidgets/qdialogbuttonbox.h \
+		../../../../Qt/6.12.0/mingw_64/include/QtCore/QLocale
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\dashboard.o src/gui/data/dashboard.cpp
 
 release/triage.o: src/gui/data/triage.cpp src/gui/include/triage.h \

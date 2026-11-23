@@ -7,6 +7,7 @@
 
 class QLabel;
 class QTableWidget;
+class QPushButton;
 class PatientManager;
 class PriorityQueue;
 struct Queue;
@@ -42,6 +43,13 @@ private:
     PriorityDonutChart *donutChart;
     QLabel *priorityCountLabels[5];
     QTableWidget *queueTable;
+
+    // Emergency Revenue Card widgets
+    QLabel *revenuePriceVal;
+    QLabel *revenueTotalVal;
+    QLabel *revenueCaseCountVal;
+    QTableWidget *revenueTable;
+    QPushButton *viewRevenueReportBtn;
 
     void setupUI();
     void updateData();

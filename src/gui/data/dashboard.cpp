@@ -21,6 +21,8 @@
 #include <QStringList>
 #include <QColor>
 #include <QFont>
+#include <QMessageBox>
+#include <QLocale>
 
 // ==========================================================
 // 📊 CUSTOM DONUT CHART - FIVE TRIAGE PRIORITIES
@@ -191,7 +193,12 @@ Dashboard::Dashboard(
       normalWaitingVal(nullptr),
       treatedCountVal(nullptr),
       donutChart(nullptr),
-      queueTable(nullptr)
+      queueTable(nullptr),
+      revenuePriceVal(nullptr),
+      revenueTotalVal(nullptr),
+      revenueCaseCountVal(nullptr),
+      revenueTable(nullptr),
+      viewRevenueReportBtn(nullptr)
 {
     for (int i = 0; i < 5; i++)
         priorityCountLabels[i] = nullptr;
@@ -300,47 +307,143 @@ void Dashboard::setupUI()
     emergencyLayout->addLayout(chartLayout);
     middleLayout->addWidget(emergencyPanel, 3);
 
-    // Quick Actions Panel
-    QVBoxLayout *actionLayout = nullptr;
-    QFrame *actionPanel = createPanel("Quick Navigation", actionLayout);
+    // Emergency Revenue Panel
+    QVBoxLayout *revenueLayout = nullptr;
+    QFrame *revenuePanel = createPanel("Emergency Revenue", revenueLayout);
 
-    QStringList actionNames = {
-        "♙ Patient Management",
-        "♥ Emergency Triage",
-        "☷ Emergency Queue",
-        "✚ Normal Queue & Treatment"
-    };
+    QHBoxLayout *revMetricsLayout = new QHBoxLayout();
+    revMetricsLayout->setSpacing(10);
 
-    int pageIndices[] = {1, 2, 3, 4};
+    // Fixed Service Price Card
+    QFrame *priceCard = new QFrame();
+    priceCard->setStyleSheet(
+        "QFrame {"
+        "background-color: #F8FAFC;"
+        "border: 1px solid #E2E8F0;"
+        "border-radius: 6px;"
+        "padding: 6px;"
+        "}"
+    );
+    QVBoxLayout *priceCardLayout = new QVBoxLayout(priceCard);
+    priceCardLayout->setContentsMargins(10, 8, 10, 8);
+    priceCardLayout->setSpacing(2);
 
-    for (int i = 0; i < 4; i++)
-    {
-        QPushButton *btn = new QPushButton(actionNames[i]);
-        btn->setMinimumHeight(44);
-        btn->setStyleSheet(
-            "QPushButton {"
-            "background-color: #F8FAFC;"
-            "color: #1E293B;"
-            "border: 1px solid #CBD5E1;"
-            "border-radius: 6px;"
-            "font-weight: bold;"
-            "text-align: left;"
-            "padding-left: 16px;"
-            "}"
-            "QPushButton:hover { background-color: #E2E8F0; }"
-        );
+    QLabel *priceTitle = new QLabel("Service Price");
+    priceTitle->setStyleSheet("font-size: 11px; font-weight: bold; color: #64748B; border: none;");
 
-        int target = pageIndices[i];
-        if (navigateFn)
-        {
-            connect(btn, &QPushButton::clicked, [this, target]() {
-                navigateFn(target);
-            });
-        }
-        actionLayout->addWidget(btn);
-    }
-    actionLayout->addStretch();
-    middleLayout->addWidget(actionPanel, 2);
+    revenuePriceVal = new QLabel("$1,000");
+    revenuePriceVal->setStyleSheet("font-size: 18px; font-weight: bold; color: #172554; border: none;");
+
+    QLabel *priceSub = new QLabel("Fixed per emergency case");
+    priceSub->setStyleSheet("font-size: 10px; color: #94A3B8; border: none;");
+
+    priceCardLayout->addWidget(priceTitle);
+    priceCardLayout->addWidget(revenuePriceVal);
+    priceCardLayout->addWidget(priceSub);
+
+    // Total Emergency Revenue Card
+    QFrame *totalCard = new QFrame();
+    totalCard->setStyleSheet(
+        "QFrame {"
+        "background-color: #F0FDF4;"
+        "border: 1px solid #BBF7D0;"
+        "border-radius: 6px;"
+        "padding: 6px;"
+        "}"
+    );
+    QVBoxLayout *totalCardLayout = new QVBoxLayout(totalCard);
+    totalCardLayout->setContentsMargins(10, 8, 10, 8);
+    totalCardLayout->setSpacing(2);
+
+    QLabel *totalTitle = new QLabel("Total Emergency Revenue");
+    totalTitle->setStyleSheet("font-size: 11px; font-weight: bold; color: #15803D; border: none;");
+
+    revenueTotalVal = new QLabel("$0");
+    revenueTotalVal->setStyleSheet("font-size: 18px; font-weight: bold; color: #16A34A; border: none;");
+
+    revenueCaseCountVal = new QLabel("0 cases at $1,000");
+    revenueCaseCountVal->setStyleSheet("font-size: 10px; color: #15803D; border: none;");
+
+    totalCardLayout->addWidget(totalTitle);
+    totalCardLayout->addWidget(revenueTotalVal);
+    totalCardLayout->addWidget(revenueCaseCountVal);
+
+    revMetricsLayout->addWidget(priceCard);
+    revMetricsLayout->addWidget(totalCard);
+    revenueLayout->addLayout(revMetricsLayout);
+
+    // Emergency Cases & Revenue Table
+    revenueTable = new QTableWidget();
+    revenueTable->setColumnCount(3);
+    revenueTable->setHorizontalHeaderLabels({"Case ID", "Patient Name", "Price"});
+    revenueTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    revenueTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    revenueTable->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
+    revenueTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    revenueTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    revenueTable->verticalHeader()->setVisible(false);
+    revenueTable->setMinimumHeight(130);
+    revenueTable->setMaximumHeight(160);
+    revenueTable->setStyleSheet(
+        "QTableWidget {"
+        "background-color: white; border: 1px solid #E2E8F0; border-radius: 6px;"
+        "}"
+        "QHeaderView::section {"
+        "background-color: #F8FAFC; color: #475569; font-weight: bold; padding: 5px;"
+        "border: none; border-bottom: 1px solid #E2E8F0;"
+        "}"
+    );
+    revenueLayout->addWidget(revenueTable);
+
+    // View Revenue Report Button
+    viewRevenueReportBtn = new QPushButton("📊  View Revenue Report");
+    viewRevenueReportBtn->setMinimumHeight(38);
+    viewRevenueReportBtn->setCursor(Qt::PointingHandCursor);
+    viewRevenueReportBtn->setStyleSheet(
+        "QPushButton {"
+        "background-color: #2563EB;"
+        "color: white;"
+        "border: none;"
+        "border-radius: 6px;"
+        "font-weight: bold;"
+        "font-size: 13px;"
+        "padding: 6px 14px;"
+        "}"
+        "QPushButton:hover { background-color: #1D4ED8; }"
+        "QPushButton:pressed { background-color: #1E40AF; }"
+    );
+
+    connect(viewRevenueReportBtn, &QPushButton::clicked, this, [this]() {
+        const int EMERGENCY_PRICE = 1000;
+        int cases = priorityQueue ? priorityQueue->getQueueCount() : 0;
+        long long total = static_cast<long long>(cases) * EMERGENCY_PRICE;
+        QLocale loc(QLocale::English);
+
+        QString detail = QString(
+            "<h3>Emergency Revenue Report</h3>"
+            "<hr>"
+            "<p><b>Emergency Service Price:</b> $%1 per case (Fixed standard rate)</p>"
+            "<p><b>Active Emergency Cases:</b> %2</p>"
+            "<p><b>Total Emergency Revenue:</b> <span style='color: #16A34A; font-weight: bold;'>$%3</span></p>"
+            "<br>"
+            "<p><i>Data Source: PriorityQueue & PatientManager records.<br>"
+            "Note: Case IDs are not stored in TriageRecord; each active emergency case is billed at the standard rate of $1,000.</i></p>"
+        ).arg(loc.toString(EMERGENCY_PRICE))
+         .arg(cases)
+         .arg(loc.toString(total));
+
+        QMessageBox msgBox(this);
+        msgBox.setWindowTitle("Emergency Revenue Report");
+        msgBox.setTextFormat(Qt::RichText);
+        msgBox.setText(detail);
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.exec();
+    });
+
+    revenueLayout->addWidget(viewRevenueReportBtn);
+    revenueLayout->addStretch();
+    middleLayout->addWidget(revenuePanel, 2);
 
     mainLayout->addLayout(middleLayout);
 
@@ -456,6 +559,63 @@ void Dashboard::refreshStats()
             queueTable->setItem(row, 2, new QTableWidgetItem(p ? QString::fromStdString(p->name) : "Unknown"));
             queueTable->setItem(row, 3, new QTableWidgetItem(p ? QString::number(p->age) : "-"));
             queueTable->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(tr->symptoms)));
+        }
+    }
+
+    // Emergency Revenue updates
+    const int EMERGENCY_PRICE_PER_CASE = 1000;
+    int emergencyCases = priorityQueue ? priorityQueue->getQueueCount() : 0;
+    long long totalRevenue = static_cast<long long>(emergencyCases) * EMERGENCY_PRICE_PER_CASE;
+
+    QLocale locale(QLocale::English);
+    if (revenuePriceVal)
+    {
+        revenuePriceVal->setText(QString("$%1").arg(locale.toString(EMERGENCY_PRICE_PER_CASE)));
+    }
+    if (revenueTotalVal)
+    {
+        revenueTotalVal->setText(QString("$%1").arg(locale.toString(totalRevenue)));
+    }
+    if (revenueCaseCountVal)
+    {
+        revenueCaseCountVal->setText(QString("%1 %2 at $%3 fixed")
+            .arg(emergencyCases)
+            .arg(emergencyCases == 1 ? "case" : "cases")
+            .arg(locale.toString(EMERGENCY_PRICE_PER_CASE)));
+    }
+
+    if (revenueTable)
+    {
+        revenueTable->setRowCount(0);
+        for (int i = 0; i < emergencyCases; ++i)
+        {
+            TriageRecord *tr = priorityQueue ? priorityQueue->getQueueRecordAt(i) : nullptr;
+            if (!tr) continue;
+
+            Patient *p = patientManager ? patientManager->findPatientInfo(tr->patientID) : nullptr;
+            int row = revenueTable->rowCount();
+            revenueTable->insertRow(row);
+
+            // Case ID: Not stored in TriageRecord, clearly indicate missing info
+            QTableWidgetItem *caseItem = new QTableWidgetItem(QString("N/A (PID: %1)").arg(tr->patientID));
+            caseItem->setToolTip(QString("Case ID is not tracked in TriageRecord. Patient ID: %1").arg(tr->patientID));
+            caseItem->setTextAlignment(Qt::AlignCenter);
+
+            // Patient Name
+            QString patName = p ? QString::fromStdString(p->name) : QString("Patient #%1").arg(tr->patientID);
+            QTableWidgetItem *nameItem = new QTableWidgetItem(patName);
+
+            // Price: Fixed $1,000 per case
+            QTableWidgetItem *priceItem = new QTableWidgetItem(QString("$%1").arg(locale.toString(EMERGENCY_PRICE_PER_CASE)));
+            priceItem->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+            priceItem->setForeground(QColor("#16A34A"));
+            QFont priceFont = priceItem->font();
+            priceFont.setBold(true);
+            priceItem->setFont(priceFont);
+
+            revenueTable->setItem(row, 0, caseItem);
+            revenueTable->setItem(row, 1, nameItem);
+            revenueTable->setItem(row, 2, priceItem);
         }
     }
 }
